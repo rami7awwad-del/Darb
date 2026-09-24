@@ -1,232 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'app_colors.dart';
+
+import 'package:darb/core/style/app_colors.dart';
 
 abstract class AppTextStyles {
   static const String fontFamily = 'Noto Sans Arabic';
 
+  static TextStyle _style(double size, FontWeight weight) => TextStyle(
+    fontFamily: fontFamily,
+    fontSize: size.sp,
+    fontWeight: weight,
+    height: 1.4,
+    color: AppColors.black,
+  );
+
   // ==================== H1 (61px) ====================
-  static TextStyle font61Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 61.sp,
-    fontWeight: FontWeight.w400, // Regular
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font61Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 61.sp,
-    fontWeight: FontWeight.w700, // Bold
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font61Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 61.sp,
-    fontWeight: FontWeight.w500, // Medium
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font61Regular => _style(61, FontWeight.w400);
+  static TextStyle get font61Bold => _style(61, FontWeight.w700);
+  static TextStyle get font61Medium => _style(61, FontWeight.w500);
 
   // ==================== H2 (49px) ====================
-  static TextStyle font49Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 49.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font49Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 49.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font49Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 49.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font49Regular => _style(49, FontWeight.w400);
+  static TextStyle get font49Bold => _style(49, FontWeight.w700);
+  static TextStyle get font49Medium => _style(49, FontWeight.w500);
 
   // ==================== H3 (39px) ====================
-  static TextStyle font39Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 39.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font39Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 39.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font39Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 39.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font39Regular => _style(39, FontWeight.w400);
+  static TextStyle get font39Bold => _style(39, FontWeight.w700);
+  static TextStyle get font39Medium => _style(39, FontWeight.w500);
 
   // ==================== H4 (31px) ====================
-  static TextStyle font31Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 31.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font31Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 31.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font31Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 31.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font31Regular => _style(31, FontWeight.w400);
+  static TextStyle get font31Bold => _style(31, FontWeight.w700);
+  static TextStyle get font31Medium => _style(31, FontWeight.w500);
 
   // ==================== H5 (25px) ====================
-  static TextStyle font25Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 25.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font25Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 25.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font25Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 25.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font25Regular => _style(25, FontWeight.w400);
+  static TextStyle get font25Bold => _style(25, FontWeight.w700);
+  static TextStyle get font25Medium => _style(25, FontWeight.w500);
 
   // ==================== Title 1 (20px) ====================
-  static TextStyle font20Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font20Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font20Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font20Regular => _style(20, FontWeight.w400);
+  static TextStyle get font20Bold => _style(20, FontWeight.w700);
+  static TextStyle get font20Medium => _style(20, FontWeight.w500);
 
   // ==================== Title 2 (16px) ====================
-  static TextStyle font16Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 16.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font16Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 16.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font16Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 16.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font16Regular => _style(16, FontWeight.w400);
+  static TextStyle get font16Bold => _style(16, FontWeight.w700);
+  static TextStyle get font16Medium => _style(16, FontWeight.w500);
 
   // ==================== Body (14px) ====================
-  static TextStyle font14Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font14Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font14Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font14Regular => _style(14, FontWeight.w400);
+  static TextStyle get font14Bold => _style(14, FontWeight.w700);
+  static TextStyle get font14Medium => _style(14, FontWeight.w500);
 
   // ==================== Caption (12px) ====================
-  static TextStyle font12Regular = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w400,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font12Bold = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w700,
-    height: 1.4,
-    color: AppColors.black,
-  );
-
-  static TextStyle font12Medium = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 12.sp,
-    fontWeight: FontWeight.w500,
-    height: 1.4,
-    color: AppColors.black,
-  );
+  static TextStyle get font12Regular => _style(12, FontWeight.w400);
+  static TextStyle get font12Bold => _style(12, FontWeight.w700);
+  static TextStyle get font12Medium => _style(12, FontWeight.w500);
 }

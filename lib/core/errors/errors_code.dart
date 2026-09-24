@@ -1,4 +1,4 @@
-import 'error_messages.dart';
+// ignore_for_file: constant_identifier_names
 
 enum ErrorCode {
   // HTTP Errors
@@ -24,11 +24,4 @@ enum ErrorCode {
   APP_ERROR,
   USER_DATA_NOT_FOUND,
   UNKNOWN,
-}
-
-extension ErrorCodeLocalization on ErrorCode {
-  String getLocalizedMessage([String langCode = 'ar']) {
-    final languageMessages = errorMessages[langCode] ?? errorMessages['ar']!;
-    return languageMessages[this] ?? languageMessages[ErrorCode.UNKNOWN]!;
-  }
 }

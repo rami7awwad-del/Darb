@@ -1,4 +1,4 @@
-﻿import 'package:darb/core/services/api_constants.dart';
+import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/storage_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -37,11 +37,14 @@ class DioFactory {
         onError: (error, handler) async {
           final requestPath = error.requestOptions.path;
           final isAuthEndpoint =
-              requestPath == ApiConstants.login || requestPath == ApiConstants.active;
+              requestPath == ApiConstants.login ||
+              requestPath == ApiConstants.active;
 
           if (error.response?.statusCode == 401 && !isAuthEndpoint) {
-            await _storageService.deleteToken();
-            onUnauthorized?.call();
+            if (_storageService.hasToken) {
+              await _storageService.deleteToken();
+              onUnauthorized?.call();
+            }
           }
 
           return handler.next(error);

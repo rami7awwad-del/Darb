@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:darb/core/errors/errors_code.dart';
+import 'package:darb/core/errors/error_messages.dart';
 import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:dio/dio.dart';
 
@@ -7,15 +10,23 @@ class ErrorHandler {
 
   static RemoteExceptions handle(Object error) {
     if (error is RemoteExceptions) {
-      return error;
+      final message = error.response == null
+          ? error.errorCode.getLocalizedMessage()
+          : _extractServerMessage(error.response!) ??
+                error.errorCode.getLocalizedMessage();
+      return RemoteExceptions(
+        error.errorCode,
+        message,
+        response: error.response,
+      );
     }
     if (error is DioException) {
       return handleDioError(error);
     }
-    return const RemoteExceptions(
-      ErrorCode.UNKNOWN,
-      'An unexpected error occurred',
-    );
+    final errorCode = error is FormatException || error is TypeError
+        ? ErrorCode.APP_ERROR
+        : ErrorCode.UNKNOWN;
+    return RemoteExceptions(errorCode, errorCode.getLocalizedMessage());
   }
 
   static RemoteExceptions handleDioError(DioException error) {
@@ -23,45 +34,52 @@ class ErrorHandler {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const RemoteExceptions(ErrorCode.TIMEOUT, 'Connection timeout');
+      case DioExceptionType.transformTimeout:
+        return RemoteExceptions(
+          ErrorCode.TIMEOUT,
+          ErrorCode.TIMEOUT.getLocalizedMessage(),
+        );
 
       case DioExceptionType.badResponse:
         if (error.response != null) {
           return fromResponse(error.response!);
         }
-        return const RemoteExceptions(
+        return RemoteExceptions(
           ErrorCode.SERVER_ERROR,
-          'Server response error',
+          ErrorCode.SERVER_ERROR.getLocalizedMessage(),
         );
 
       case DioExceptionType.cancel:
-        return const RemoteExceptions(ErrorCode.CANCEL, 'Request cancelled');
+        return RemoteExceptions(
+          ErrorCode.CANCEL,
+          ErrorCode.CANCEL.getLocalizedMessage(),
+        );
 
       case DioExceptionType.connectionError:
-        return const RemoteExceptions(
+        return RemoteExceptions(
           ErrorCode.NO_INTERNET_CONNECTION,
-          'No internet connection',
+          ErrorCode.NO_INTERNET_CONNECTION.getLocalizedMessage(),
         );
 
       case DioExceptionType.badCertificate:
-        return const RemoteExceptions(
+        return RemoteExceptions(
           ErrorCode.BAD_CERTIFICATE,
-          'Bad certificate',
+          ErrorCode.BAD_CERTIFICATE.getLocalizedMessage(),
         );
 
       case DioExceptionType.unknown:
-      default:
-        return const RemoteExceptions(
-          ErrorCode.UNKNOWN,
-          'An unknown error occurred',
-        );
+        final errorCode = error.error is SocketException
+            ? ErrorCode.NO_INTERNET_CONNECTION
+            : ErrorCode.UNKNOWN;
+        return RemoteExceptions(errorCode, errorCode.getLocalizedMessage());
     }
   }
 
   static RemoteExceptions fromResponse(Response response) {
     final statusCode = response.statusCode ?? 500;
     final errorCode = _mapStatusCode(statusCode);
-    final message = _extractServerMessage(response) ?? 'An error occurred';
+    final message =
+        _extractServerMessage(response) ?? errorCode.getLocalizedMessage();
     return RemoteExceptions(errorCode, message, response: response);
   }
 
@@ -72,8 +90,10 @@ class ErrorHandler {
       403 => ErrorCode.FORBIDDEN,
       404 => ErrorCode.NOT_FOUND,
       408 => ErrorCode.TIMEOUT,
+      // TODO: unverified assumptions, confirm real status codes against the backend
       409 => ErrorCode.PENDING_APPROVAL,
       422 => ErrorCode.UNPROCESSABLE_ENTITY,
+      // TODO: unverified assumptions, confirm real status codes against the backend
       426 => ErrorCode.NOT_EXIST_ACCOUNT,
       500 || 501 || 502 || 503 || 504 => ErrorCode.SERVER_ERROR,
       _ => ErrorCode.UNKNOWN,

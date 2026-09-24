@@ -1,6 +1,6 @@
 import 'package:darb/core/errors/errors_code.dart';
 
-final Map<String, Map<ErrorCode, String>> errorMessages = {
+const Map<String, Map<ErrorCode, String>> errorMessages = {
   'en': {
     ErrorCode.UNAUTHENTICATED: 'You are not authenticated.',
     ErrorCode.FORBIDDEN: 'Access denied.',
@@ -36,5 +36,12 @@ final Map<String, Map<ErrorCode, String>> errorMessages = {
     ErrorCode.UNKNOWN: 'حدث خطأ غير معروف.',
     ErrorCode.CANCEL: 'تم إلغاء الطلب.',
     ErrorCode.BAD_CERTIFICATE: 'شهادة SSL غير صالحة.',
-  }
+  },
 };
+
+extension ErrorCodeLocalization on ErrorCode {
+  String getLocalizedMessage([String langCode = 'ar']) {
+    final languageMessages = errorMessages[langCode] ?? errorMessages['ar']!;
+    return languageMessages[this] ?? languageMessages[ErrorCode.UNKNOWN]!;
+  }
+}
