@@ -1,37 +1,71 @@
-
-import 'package:darb/core/services/api_constants.dart';
+﻿import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/storage_service.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 class DioFactory {
   final StorageService _storageService;
+  final VoidCallback? onUnauthorized;
 
-  DioFactory(this._storageService);
+  DioFactory(this._storageService, {this.onUnauthorized});
 
   Dio getDio() {
-    Dio dio = Dio(
+    final dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
+        listFormat: ListFormat.multiCompatible,
         headers: {
           'Accept': 'application/json',
-          'Accept-Language': 'ar', // متوافق مع خريطة الرسائل العربية لديك[cite: 5]
+          'Accept-Language': 'ar',
         },
       ),
     );
 
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          String? token = await _storageService.getToken();
-          if (token != null && token.isNotEmpty) {
+        onRequest: (options, handler) {
+          final token = _storageService.token ?? '';
+          if (token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
+          } else {
+            options.headers.remove('Authorization');
           }
           return handler.next(options);
         },
+        onError: (error, handler) async {
+          final requestPath = error.requestOptions.path;
+          final isAuthEndpoint =
+              requestPath == ApiConstants.login || requestPath == ApiConstants.active;
+
+          if (error.response?.statusCode == 401 && !isAuthEndpoint) {
+            await _storageService.deleteToken();
+            onUnauthorized?.call();
+          }
+
+          return handler.next(error);
+        },
       ),
     );
+
+    if (kDebugMode) {
+      dio.interceptors.add(
+        LogInterceptor(
+          request: true,
+          requestBody: true,
+          responseBody: true,
+          error: true,
+          logPrint: (object) {
+            final message = object.toString().replaceAll(
+              RegExp(r'Authorization:\s*Bearer\s*[^\r\n]+'),
+              'Authorization: Bearer [REDACTED]',
+            );
+            debugPrint(message);
+          },
+        ),
+      );
+    }
 
     return dio;
   }
