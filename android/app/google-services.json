@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "675747972996",
+    "project_id": "darrb-app",
+    "storage_bucket": "darrb-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675747972996:android:6e1aa7202f4ff63f1c7fd1",
+        "android_client_info": {
+          "package_name": "com.example.darb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtGhr-e6fuAYN4UfZteVt0-QNoeaedUnU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
