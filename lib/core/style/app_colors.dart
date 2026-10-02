@@ -69,4 +69,14 @@ abstract class AppShadows {
       spreadRadius: 0,
     ),
   ];
+
+static final List<BoxShadow> midPurple = [
+  const BoxShadow(
+    color: Color(0xFFA55DBB),
+    offset: Offset(1, 1),
+    blurRadius: 7,
+    spreadRadius: 0,
+  ),
+];
+
 }

@@ -7,6 +7,7 @@ enum ErrorCode {
   FORBIDDEN,
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
+  TOO_MANY_REQUESTS,
   SERVER_ERROR,
 
   // Network Errors

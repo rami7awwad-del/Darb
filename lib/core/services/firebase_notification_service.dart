@@ -83,13 +83,15 @@ class FirebaseNotificationService {
   void listenToForegroundNotifications({
     void Function(RemoteMessage message)? onMessage,
   }) {
-    _foregroundMessageSubscription ??= FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    _foregroundMessageSubscription ??=
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (kDebugMode) {
         debugPrint('Foreground Message Title: ${message.notification?.title}');
         debugPrint('Foreground Message Body: ${message.notification?.body}');
       }
 
-      // TODO: show a local notification on Android when the app is in the foreground.
+      // TODO: show a local notification on Android when the app is in the
+      // foreground (requires the flutter_local_notifications package).
       onMessage?.call(message);
     });
   }
@@ -97,7 +99,8 @@ class FirebaseNotificationService {
   void setupNotificationTapHandler({
     void Function(RemoteMessage message)? onNotificationTap,
   }) {
-    _messageOpenedAppSubscription ??= FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    _messageOpenedAppSubscription ??=
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (kDebugMode) {
         debugPrint('Notification clicked with data: ${message.data}');
       }
@@ -108,5 +111,8 @@ class FirebaseNotificationService {
   void dispose() {
     _foregroundMessageSubscription?.cancel();
     _messageOpenedAppSubscription?.cancel();
+    // نعيدها إلى null حتى يعمل الاستماع من جديد عبر ??= بعد أي dispose.
+    _foregroundMessageSubscription = null;
+    _messageOpenedAppSubscription = null;
   }
 }

@@ -93,6 +93,8 @@ class ErrorHandler {
       // TODO: unverified assumptions, confirm real status codes against the backend
       409 => ErrorCode.PENDING_APPROVAL,
       422 => ErrorCode.UNPROCESSABLE_ENTITY,
+      // Laravel throttle (مثل كثرة طلبات auth/resend)
+      429 => ErrorCode.TOO_MANY_REQUESTS,
       // TODO: unverified assumptions, confirm real status codes against the backend
       426 => ErrorCode.NOT_EXIST_ACCOUNT,
       500 || 501 || 502 || 503 || 504 => ErrorCode.SERVER_ERROR,

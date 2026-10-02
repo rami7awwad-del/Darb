@@ -9,12 +9,29 @@ class DioFactory {
 
   DioFactory(this._storageService, {this.onUnauthorized});
 
+  /// endpoints لا تحتاج توكن حسب الكولكشن (لا يُرسل معها Authorization،
+  /// حتى لا يسبب توكن قديم رد 401 عليها).
+  static const Set<String> _publicPaths = {
+    ApiConstants.login,
+    ApiConstants.resend,
+    ApiConstants.active,
+    ApiConstants.paymentMethodsAll,
+    ApiConstants.settingsAll,
+    ApiConstants.infosAll,
+    ApiConstants.contactUsAdd,
+    ApiConstants.pagesAll,
+    ApiConstants.pagesPrivacyPolicy,
+    ApiConstants.pagesTermsConditions,
+    ApiConstants.pagesAboutApplication,
+  };
+
   Dio getDio() {
     final dio = Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 60), // رفع الصور
         listFormat: ListFormat.multiCompatible,
         headers: {
           'Accept': 'application/json',
@@ -27,7 +44,9 @@ class DioFactory {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           final token = _storageService.token ?? '';
-          if (token.isNotEmpty) {
+          final isPublic = _publicPaths.contains(options.path);
+
+          if (token.isNotEmpty && !isPublic) {
             options.headers['Authorization'] = 'Bearer $token';
           } else {
             options.headers.remove('Authorization');
