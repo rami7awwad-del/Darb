@@ -1,7 +1,7 @@
-import 'package:darb/core/routing/app_routes%20.dart';
-import 'package:darb/core/widget/app_primary_button.dart';
-import 'package:darb/core/widget/app_snack_bar.dart';
-import 'package:darb/core/widget/app_text_field%20.dart' show AppTextField;
+import 'package:darb/core/routing/app_routes.dart';
+import 'package:darb/core/widgets/app_primary_button.dart';
+import 'package:darb/core/widgets/app_snack_bar.dart';
+import 'package:darb/core/widgets/app_text_field.dart' show AppTextField;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

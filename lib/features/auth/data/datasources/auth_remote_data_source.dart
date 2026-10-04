@@ -3,7 +3,7 @@ import 'package:darb/core/errors/errors_code.dart';
 import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
-import 'package:darb/features/auth/data/models/auth_response_model%20.dart';
+import 'package:darb/features/auth/data/models/auth_response_model.dart';
 
 
 /// طلبات API فقط، بدون تخزين ولا منطق.

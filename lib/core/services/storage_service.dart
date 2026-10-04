@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/services.dart';
 
 class StorageService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-    // TODO: upgrade the flutter_secure_storage version if the app needs
-    // AndroidOptions(encryptedSharedPreferences: true) support.
-    aOptions: AndroidOptions(),
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
 
   static const String _tokenKey = 'auth_token';
@@ -17,8 +16,30 @@ class StorageService {
 
   /// يُستدعى مرة واحدة في main() قبل إنشاء Dio.
   Future<void> init() async {
-    _cachedToken = await _storage.read(key: _tokenKey);
-    _cachedDeviceId = await _storage.read(key: _deviceIdKey);
+    _cachedToken = await _read(_tokenKey);
+    _cachedDeviceId = await _read(_deviceIdKey);
+  }
+
+  Future<String?> _read(String key) async {
+    try {
+      return await _storage.read(key: key);
+    } on PlatformException catch (error) {
+      final message =
+          '${error.code} ${error.message} ${error.details}'.toLowerCase();
+      if (!message.contains('wrong_final_block_length') &&
+          !message.contains('illegalblocksizeexception')) {
+        rethrow;
+      }
+
+      _cachedToken = null;
+      _cachedDeviceId = null;
+      try {
+        await _storage.deleteAll();
+      } on PlatformException {
+        // Keep the app running if the corrupted store cannot be cleared.
+      }
+      return null;
+    }
   }
 
   // ==================== Token ====================
@@ -37,7 +58,7 @@ class StorageService {
       return _cachedToken;
     }
 
-    _cachedToken = await _storage.read(key: _tokenKey);
+    _cachedToken = await _read(_tokenKey);
     return _cachedToken;
   }
 
@@ -53,7 +74,7 @@ class StorageService {
       return _cachedDeviceId;
     }
 
-    _cachedDeviceId = await _storage.read(key: _deviceIdKey);
+    _cachedDeviceId = await _read(_deviceIdKey);
     return _cachedDeviceId;
   }
 

@@ -15,7 +15,8 @@ class ApiConstants {
   static const String profileCups = '/profile/cups'; // GET
 
   // Users
-  static const String userEdit = '/users/edit'; // POST
+  static const String usersEdit = '/users/edit'; // POST
+  static const String userEdit = usersEdit;
   static const String userUpdate = '/users/update'; // POST
   static const String userUpdateImage = '/users/update-image'; // POST
   static const String topUsers = '/users/top'; // GET

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:darb/core/errors/error_messages.dart';
 import 'package:darb/core/errors/errors_code.dart';
 import 'package:darb/core/errors/remote_exceptions.dart';
-import 'package:darb/features/auth/data/repositories/auth_repository%20.dart';
+import 'package:darb/features/auth/data/repositories/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'otp_state.dart';

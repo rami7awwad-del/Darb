@@ -1,5 +1,6 @@
-import 'package:darb/core/widget/app_primary_button.dart';
-import 'package:darb/core/widget/app_snack_bar.dart';
+import 'package:darb/core/routing/app_routes.dart';
+import 'package:darb/core/widgets/app_primary_button.dart';
+import 'package:darb/core/widgets/app_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,19 +39,21 @@ class _OtpScreenState extends State<OtpScreen> {
             _otpKey.currentState?.clear();
             showAppSnackBar(context, 'تم إرسال الرمز مجددًا', isError: false);
           } else if (state.status == OtpStatus.verified) {
-            // TODO: عند إنشاء الشاشتين:
-            // Navigator.pushNamedAndRemoveUntil(
-            //   context,
-            //   state.isNewUser ? AppRoutes.register : AppRoutes.mainLayout,
-            //   (_) => false,
-            // );
-            showAppSnackBar(
-              context,
-              state.isNewUser
-                  ? 'تم التفعيل: مستخدم جديد (إكمال البيانات)'
-                  : 'تم التفعيل: مستخدم موجود (الرئيسية)',
-              isError: false,
-            );
+            if (state.isNewUser) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.register,
+                (_) => false,
+                arguments: widget.phone,
+              );
+            } else {
+              // TODO: Navigate to MainLayout when that screen exists.
+              showAppSnackBar(
+                context,
+                'تم التفعيل: مستخدم موجود (الرئيسية)',
+                isError: false,
+              );
+            }
           }
         },
         builder: (context, state) {
