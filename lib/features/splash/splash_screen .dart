@@ -1,7 +1,11 @@
-import 'package:darb/core/routing/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:darb/core/services/storage_service.dart';
 import 'package:darb/core/style/app_colors.dart';
+
+import '../../core/routing/app_routes .dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,13 +26,13 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
 
-    // TODO: عند إنشاء MainLayout:
-    // final hasToken = context.read<StorageService>().hasToken;
-    // Navigator.pushReplacementNamed(
-    //   context,
-    //   hasToken ? AppRoutes.mainLayout : AppRoutes.login,
-    // );
-    Navigator.pushReplacementNamed(context, AppRoutes.login);
+    // توكن محفوظ → الرئيسية، وإلا → تسجيل الدخول.
+    // (انتهاء صلاحية التوكن يعالجه onUnauthorized في main.dart: يعيد إلى الدخول)
+    final hasToken = context.read<StorageService>().hasToken;
+    Navigator.pushReplacementNamed(
+      context,
+      hasToken ? AppRoutes.mainLayout : AppRoutes.login,
+    );
   }
 
   @override

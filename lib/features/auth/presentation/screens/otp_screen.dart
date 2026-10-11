@@ -1,4 +1,4 @@
-import 'package:darb/core/routing/app_routes.dart';
+
 import 'package:darb/core/widgets/app_primary_button.dart';
 import 'package:darb/core/widgets/app_snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,8 @@ import 'package:darb/features/auth/presentation/cubit/otp/otp_cubit.dart';
 import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
 import 'package:darb/features/auth/presentation/widgets/otp_input_row.dart';
 import 'package:darb/features/auth/presentation/widgets/resend_timer.dart';
+
+import '../../../../core/routing/app_routes .dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key, required this.phone});

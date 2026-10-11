@@ -1,4 +1,4 @@
-import 'package:darb/core/routing/app_routes.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +10,8 @@ import 'package:darb/features/auth/presentation/cubit/register/register_cubit.da
 import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
 import 'package:darb/features/auth/presentation/widgets/register_steps.dart';
 import 'package:darb/features/auth/presentation/widgets/terms_sheet.dart';
+
+import '../../../../core/routing/app_routes .dart';
 
 /// معالج إكمال البيانات: شاشة واحدة تبدّل الخطوات حسب [RegisterCubit].
 class RegisterScreen extends StatefulWidget {

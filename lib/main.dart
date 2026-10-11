@@ -1,5 +1,4 @@
 import 'package:darb/core/navigation/app_navigator.dart';
-import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/core/services/dio_factory.dart';
 import 'package:darb/core/services/firebase_notification_service.dart';
@@ -10,6 +9,7 @@ import 'package:darb/features/auth/data/datasources/auth_remote_data_source.dart
 import 'package:darb/features/auth/data/datasources/registration_remote_data_source.dart';
 import 'package:darb/features/auth/data/repositories/auth_repository.dart';
 import 'package:darb/features/auth/data/repositories/registration_repository.dart';
+import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 import 'package:darb/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -17,6 +17,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darb/features/home/data/datasources/home_remote_data_source.dart';
+import 'package:darb/features/home/data/repositories/home_repository.dart';
+import 'package:darb/features/gallery/data/datasources/gallery_remote_data_source.dart';
+import 'package:darb/features/gallery/data/repositories/gallery_repository.dart';
+import 'package:darb/features/profile/data/datasources/profile_remote_data_source.dart';
+
+import 'core/routing/app_routes .dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,21 +63,22 @@ void main() async {
     RegistrationRemoteDataSource(apiService),
   );
 
+final homeRepository = HomeRepository(HomeRemoteDataSource(apiService));
+final profileRepository = ProfileRepository(ProfileRemoteDataSource(apiService));
+final galleryRepository = GalleryRepository(GalleryRemoteDataSource(apiService));
+
   runApp(
     MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<HomeRepository>.value(value: homeRepository),
+        RepositoryProvider<ProfileRepository>.value(value: profileRepository),
+        RepositoryProvider<GalleryRepository>.value(value: galleryRepository),
         RepositoryProvider<StorageService>.value(value: storageService),
         RepositoryProvider<ApiService>.value(value: apiService),
-        RepositoryProvider<FirebaseNotificationService>.value(
-          value: notificationService,
-        ),
-        RepositoryProvider<AuthRemoteDataSource>.value(
-          value: authRemoteDataSource,
-        ),
+        RepositoryProvider<FirebaseNotificationService>.value(value: notificationService,),
+        RepositoryProvider<AuthRemoteDataSource>.value(value: authRemoteDataSource,),
         RepositoryProvider<AuthRepository>.value(value: authRepository),
-        RepositoryProvider<RegistrationRepository>.value(
-          value: registrationRepository,
-        ),
+        RepositoryProvider<RegistrationRepository>.value(value: registrationRepository,),
       ],
       child: const MyApp(),
     ),
