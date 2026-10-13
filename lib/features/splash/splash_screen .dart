@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:darb/core/services/storage_service.dart';
 import 'package:darb/core/style/app_colors.dart';
-
-import '../../core/routing/app_routes .dart';
+import 'package:darb/core/routing/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

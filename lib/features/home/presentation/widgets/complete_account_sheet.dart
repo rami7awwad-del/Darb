@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_sizes.dart';
 import 'package:darb/core/style/app_text_styles.dart';
@@ -27,15 +29,17 @@ class CompleteAccountSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<CompleteAccountCubit>();
 
-    return BlocConsumer<CompleteAccountCubit, CompleteAccountState>(
+    return BlocConsumer<CompleteAccountCubit, BaseState<CompleteAccountData>>(
       listenWhen: (p, c) =>
-          p.submitStatus != c.submitStatus &&
-          c.submitStatus == SubmitStatus.success,
-      listener: (context, state) => Navigator.pop(context, state.result),
+          p.data?.submitStatus != c.data?.submitStatus &&
+          c.stateValue == StateValue.loaded &&
+          c.data?.submitStatus == SubmitStatus.success,
+      listener: (context, state) => Navigator.pop(context, state.data!.result),
       builder: (context, state) {
-        final submitting = state.submitStatus == SubmitStatus.submitting;
-        final schoolsLoading = state.schoolsStatus == SchoolsStatus.loading;
-        final schoolsReady = state.schoolsStatus == SchoolsStatus.ready;
+        final data = state.data!;
+        final submitting = data.submitStatus == SubmitStatus.submitting;
+        final schoolsLoading = data.schoolsStateValue == StateValue.loading;
+        final schoolsReady = data.schoolsStateValue == StateValue.loaded;
 
         return PopScope(
           canPop: !submitting,
@@ -62,8 +66,9 @@ class CompleteAccountSheet extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'أكمل حسابك',
-                        style: AppTextStyles.font20Medium
-                            .copyWith(color: AppColors.grey500),
+                        style: AppTextStyles.font20Medium.copyWith(
+                          color: AppColors.grey500,
+                        ),
                       ),
                     ),
                     InkWell(
@@ -107,9 +112,9 @@ class CompleteAccountSheet extends StatelessWidget {
                 AppGaps.gapH24,
 
                 // ---------- المدرسة ----------
-                if (state.schoolsStatus == SchoolsStatus.failure)
+                if (data.schoolsStateValue == StateValue.error)
                   _SchoolsError(
-                    message: state.schoolsMessage,
+                    message: data.schoolsMessage,
                     onRetry: cubit.loadSchools,
                   )
                 else
@@ -117,7 +122,7 @@ class CompleteAccountSheet extends StatelessWidget {
                     hint: schoolsLoading ? 'جاري تحميل المدارس...' : 'المدرسة',
                     prefixIcon: Icon(PhosphorIconsRegular.graduationCap),
                     items: [
-                      for (final school in state.schools)
+                      for (final school in data.schools)
                         DropdownMenuItem<int>(
                           value: school.id,
                           child: Text(
@@ -126,8 +131,9 @@ class CompleteAccountSheet extends StatelessWidget {
                           ),
                         ),
                     ],
-                    onChanged:
-                        schoolsReady && !submitting ? cubit.schoolChanged : null,
+                    onChanged: schoolsReady && !submitting
+                        ? cubit.schoolChanged
+                        : null,
                   ),
                 AppGaps.gapH24,
 
@@ -144,12 +150,13 @@ class CompleteAccountSheet extends StatelessWidget {
                 AppGaps.gapH24,
 
                 // ---------- خطأ الإرسال ----------
-                if (state.submitStatus == SubmitStatus.failure &&
-                    state.message != null) ...[
+                if (data.submitStatus == SubmitStatus.failure &&
+                    state.errorMessage != null) ...[
                   Text(
-                    state.message!,
-                    style: AppTextStyles.font12Regular
-                        .copyWith(color: AppColors.danger),
+                    state.errorMessage!,
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.danger,
+                    ),
                   ),
                   AppGaps.gapH12,
                 ],
@@ -161,15 +168,16 @@ class CompleteAccountSheet extends StatelessWidget {
                       child: AppPrimaryButton(
                         text: 'التأكيد',
                         isLoading: submitting,
-                        onPressed: state.canSubmit ? cubit.submit : null,
+                        onPressed: data.canSubmit ? cubit.submit : null,
                       ),
                     ),
                     AppGaps.gapW16,
                     Expanded(
                       child: AppOutlineButton(
                         text: 'الخروج',
-                        onPressed:
-                            submitting ? null : () => Navigator.pop(context),
+                        onPressed: submitting
+                            ? null
+                            : () => Navigator.pop(context),
                       ),
                     ),
                   ],
@@ -203,16 +211,18 @@ class _SchoolsError extends StatelessWidget {
           Expanded(
             child: Text(
               message ?? 'تعذر تحميل المدارس',
-              style: AppTextStyles.font12Regular
-                  .copyWith(color: AppColors.danger),
+              style: AppTextStyles.font12Regular.copyWith(
+                color: AppColors.danger,
+              ),
             ),
           ),
           InkWell(
             onTap: onRetry,
             child: Text(
               'إعادة المحاولة',
-              style: AppTextStyles.font12Medium
-                  .copyWith(color: AppColors.main600),
+              style: AppTextStyles.font12Medium.copyWith(
+                color: AppColors.main600,
+              ),
             ),
           ),
         ],

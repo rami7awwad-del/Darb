@@ -32,7 +32,7 @@ class NewsSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: news.length,
-            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            separatorBuilder: (_, _) => SizedBox(width: 12.w),
             itemBuilder: (context, i) => InkWell(
               borderRadius: BorderRadius.circular(16.r),
               onTap: () => onNewsTap?.call(news[i]),

@@ -4,11 +4,12 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:darb/features/home/presentation/screens/home_screen.dart';
+import 'package:darb/features/library/presentation/screens/library_screen.dart';
 import 'package:darb/features/main/presentation/widgets/app_bottom_nav_bar.dart';
 
 /// الهيكل الرئيسي بعد الدخول: تبويبات مع شريط سفلي.
 /// IndexedStack يحفظ حالة كل تبويب (الرئيسية لا تُعاد عند التنقل).
-/// TODO: استبدل الأماكن المؤقتة بالشاشات الحقيقية (المكتبة، الحساب).
+/// TODO: استبدل المكان المؤقت بالشاشة الحقيقية (الحساب).
 class MainLayoutScreen extends StatefulWidget {
   const MainLayoutScreen({super.key});
 
@@ -27,7 +28,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         children: const [
           HomeScreen(),
           GalleryScreen(),
-          _ComingSoon(title: 'المكتبة'),
+          LibraryScreen(),
           _ComingSoon(title: 'حسابي'),
         ],
       ),

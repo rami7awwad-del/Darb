@@ -1,8 +1,8 @@
-
-
 import 'package:darb/core/widgets/app_primary_button.dart';
 import 'package:darb/core/widgets/app_snack_bar.dart';
 import 'package:darb/core/widgets/app_text_field.dart' show AppTextField;
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,8 +11,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
-
-import '../../../../core/routing/app_routes .dart';
+import 'package:darb/core/routing/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -48,12 +47,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<LoginCubit, LoginState>(
+      body: BlocConsumer<LoginCubit, BaseState<String>>(
         listener: (context, state) {
-          if (state is LoginSuccess) {
-            Navigator.pushNamed(context, AppRoutes.otp, arguments: state.phone);
-          } else if (state is LoginFailure) {
-            showAppSnackBar(context, state.message);
+          if (state.stateValue == StateValue.loaded) {
+            Navigator.pushNamed(context, AppRoutes.otp, arguments: state.data!);
+          } else if (state.stateValue == StateValue.error) {
+            showAppSnackBar(context, state.errorMessage ?? '');
           }
         },
         builder: (context, state) {
@@ -96,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       AppPrimaryButton(
                         text: 'سجّل دخولك',
-                        isLoading: state is LoginLoading,
+                        isLoading: state.stateValue == StateValue.loading,
                         onPressed: _submit,
                       ),
                     ],

@@ -43,7 +43,7 @@ class SubjectsSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: subjects.length,
-            separatorBuilder: (_, __) => SizedBox(width: AppGrid.gutter),
+            separatorBuilder: (_, _) => SizedBox(width: AppGrid.gutter),
             itemBuilder: (context, i) => _SubjectItem(
               subject: subjects[i],
               onTap: () => onSubjectTap?.call(subjects[i]),
@@ -83,8 +83,9 @@ class _SubjectItem extends StatelessWidget {
                 subject.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.font12Regular
-                    .copyWith(color: AppColors.white),
+                style: AppTextStyles.font12Regular.copyWith(
+                  color: AppColors.white,
+                ),
               ),
             ),
             SizedBox(height: 8.h),

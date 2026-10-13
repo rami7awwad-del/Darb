@@ -6,11 +6,13 @@ import 'package:darb/features/auth/presentation/cubit/register/register_cubit.da
 import 'package:darb/features/auth/presentation/screens/login_screen.dart';
 import 'package:darb/features/auth/presentation/screens/otp_screen.dart';
 import 'package:darb/features/auth/presentation/screens/register_screen.dart';
-import 'package:darb/features/auth/presentation/screens/register_success_screen%20.dart';
+import 'package:darb/features/auth/presentation/screens/register_success_screen.dart';
 import 'package:darb/features/gallery/data/models/gallery_model.dart';
 import 'package:darb/features/gallery/data/repositories/gallery_repository.dart';
 import 'package:darb/features/gallery/presentation/cubit/gallery_cubit.dart';
 import 'package:darb/features/gallery/presentation/screens/gallery_album_screen.dart';
+import 'package:darb/features/library/data/repositories/library_repository.dart';
+import 'package:darb/features/library/presentation/cubit/library_cubit.dart';
 import 'package:darb/features/home/data/repositories/home_repository.dart';
 import 'package:darb/features/home/presentation/cubit/home_cubit.dart';
 import 'package:darb/features/main/presentation/screens/main_layout_screen.dart';
@@ -94,6 +96,10 @@ abstract class AppRouter {
               BlocProvider(
                 create: (context) =>
                     GalleryCubit(context.read<GalleryRepository>())..load(),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    LibraryCubit(context.read<LibraryRepository>())..load(),
               ),
             ],
             child: const MainLayoutScreen(),

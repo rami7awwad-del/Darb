@@ -1,6 +1,7 @@
 import 'package:darb/core/widgets/app_outline_button.dart';
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/features/home/presentation/cubit/home_cubit.dart';
-import 'package:darb/features/home/presentation/cubit/home_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,26 +40,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final cubit = context.read<HomeCubit>();
 
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<HomeCubit, BaseState<HomeData>>(
       builder: (context, state) {
-        if (state.status == HomeStatus.loading) {
+        if (state.stateValue == StateValue.loading) {
           return const Center(
             child: CircularProgressIndicator(color: AppColors.main600),
           );
         }
 
-        if (state.status == HomeStatus.failure ||
-            state.profile == null ||
-            state.home == null) {
-          return _LoadError(message: state.message, onRetry: cubit.load);
+        final data = state.data!;
+        if (state.stateValue == StateValue.error ||
+            data.profile == null ||
+            data.home == null) {
+          return _LoadError(message: state.errorMessage, onRetry: cubit.load);
         }
 
-        final home = state.home!;
+        final home = data.home!;
 
         return Column(
           children: [
             HomeHeader(
-              profile: state.profile!,
+              profile: data.profile!,
               unreadCount: home.notificationUnread,
               // TODO: شاشة الإشعارات وشاشة الإنجازات عند إنشائهما.
             ),
@@ -70,8 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: state.isSearching
-                  ? SearchResultsView(state: state)
+              child: data.isSearching
+                  ? SearchResultsView(data: data)
                   : _HomeContent(
                       home: home,
                       onRefresh: () => cubit.load(silent: true),
@@ -114,9 +116,7 @@ class _HomeContent extends StatelessWidget {
           gap,
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: PromoBanner(
-              onTap: () => showCompleteAccountFlow(context),
-            ),
+            child: PromoBanner(onTap: () => showCompleteAccountFlow(context)),
           ),
           gap,
           SubjectsSection(
@@ -154,7 +154,9 @@ class _LoadError extends StatelessWidget {
             Text(
               message ?? 'تعذر تحميل البيانات',
               textAlign: TextAlign.center,
-              style: AppTextStyles.font14Regular.copyWith(color: AppColors.grey400),
+              style: AppTextStyles.font14Regular.copyWith(
+                color: AppColors.grey400,
+              ),
             ),
             AppOutlineButton(text: 'إعادة المحاولة', onPressed: onRetry),
           ],

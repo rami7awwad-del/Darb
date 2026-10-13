@@ -1,6 +1,8 @@
-
+import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/widgets/app_primary_button.dart';
 import 'package:darb/core/widgets/app_snack_bar.dart';
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +12,6 @@ import 'package:darb/features/auth/presentation/cubit/otp/otp_cubit.dart';
 import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
 import 'package:darb/features/auth/presentation/widgets/otp_input_row.dart';
 import 'package:darb/features/auth/presentation/widgets/resend_timer.dart';
-
-import '../../../../core/routing/app_routes .dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key, required this.phone});
@@ -31,17 +31,22 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<OtpCubit, OtpState>(
+      body: BlocConsumer<OtpCubit, BaseState<OtpData>>(
         // نستمع فقط عند تغيّر الحالة (وليس مع كل ثانية من العدّاد).
-        listenWhen: (previous, current) => previous.status != current.status,
+        listenWhen: (previous, current) =>
+            previous.data?.status != current.data?.status,
         listener: (context, state) {
-          if (state.status == OtpStatus.failure) {
-            showAppSnackBar(context, state.message ?? '');
-          } else if (state.status == OtpStatus.resent) {
+          final data = state.data!;
+          if (state.stateValue == StateValue.error &&
+              data.status == OtpStatus.failure) {
+            showAppSnackBar(context, state.errorMessage ?? '');
+          } else if (state.stateValue == StateValue.loaded &&
+              data.status == OtpStatus.resent) {
             _otpKey.currentState?.clear();
             showAppSnackBar(context, 'تم إرسال الرمز مجددًا', isError: false);
-          } else if (state.status == OtpStatus.verified) {
-            if (state.isNewUser) {
+          } else if (state.stateValue == StateValue.loaded &&
+              data.status == OtpStatus.verified) {
+            if (data.isNewUser) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 AppRoutes.register,
@@ -49,17 +54,19 @@ class _OtpScreenState extends State<OtpScreen> {
                 arguments: widget.phone,
               );
             } else {
-              // TODO: Navigate to MainLayout when that screen exists.
-              showAppSnackBar(
+              Navigator.pushNamedAndRemoveUntil(
                 context,
-                'تم التفعيل: مستخدم موجود (الرئيسية)',
-                isError: false,
+                AppRoutes.mainLayout,
+                (_) => false,
               );
             }
           }
         },
         builder: (context, state) {
-          final isVerifying = state.status == OtpStatus.verifying;
+          final data = state.data!;
+          final isVerifying =
+              state.stateValue == StateValue.loading &&
+              data.status == OtpStatus.verifying;
 
           return SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -76,8 +83,9 @@ class _OtpScreenState extends State<OtpScreen> {
                       Text(
                         'أدخل الرمز الذي أُرسل إلى الرقم : ${widget.phone}',
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.font14Regular
-                            .copyWith(color: AppColors.grey400),
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.grey400,
+                        ),
                       ),
                       OtpInputRow(
                         key: _otpKey,
@@ -86,8 +94,10 @@ class _OtpScreenState extends State<OtpScreen> {
                         onChanged: (code) => setState(() => _code = code),
                       ),
                       ResendTimer(
-                        secondsLeft: state.secondsLeft,
-                        isResending: state.status == OtpStatus.resending,
+                        secondsLeft: data.secondsLeft,
+                        isResending:
+                            state.stateValue == StateValue.loading &&
+                            data.status == OtpStatus.resending,
                         onResend: () => context.read<OtpCubit>().resend(),
                       ),
                       AppPrimaryButton(

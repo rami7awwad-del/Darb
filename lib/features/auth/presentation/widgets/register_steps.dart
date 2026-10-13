@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_dropdown_field.dart';
@@ -89,7 +88,7 @@ class PersonalInfoStep extends StatelessWidget {
     required this.onOpenTerms,
   });
 
-  final RegisterState state;
+  final RegisterData state;
   final GlobalKey<FormState> formKey;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
@@ -219,7 +218,9 @@ class _TermsCheckbox extends StatelessWidget {
             onChanged: (v) => onChanged(v ?? false),
             activeColor: AppColors.success,
             side: const BorderSide(color: AppColors.grey100),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4.r),
+            ),
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             visualDensity: VisualDensity.compact,
           ),
@@ -230,7 +231,9 @@ class _TermsCheckbox extends StatelessWidget {
             children: [
               Text(
                 'أنا أوافق على ',
-                style: AppTextStyles.font12Regular.copyWith(color: AppColors.grey400),
+                style: AppTextStyles.font12Regular.copyWith(
+                  color: AppColors.grey400,
+                ),
               ),
               GestureDetector(
                 onTap: onOpenTerms,
@@ -256,7 +259,7 @@ class _TermsCheckbox extends StatelessWidget {
 class SourceStep extends StatelessWidget {
   const SourceStep({super.key, required this.state});
 
-  final RegisterState state;
+  final RegisterData state;
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +314,7 @@ class SourceStep extends StatelessWidget {
 class GenderStep extends StatelessWidget {
   const GenderStep({super.key, required this.state});
 
-  final RegisterState state;
+  final RegisterData state;
 
   @override
   Widget build(BuildContext context) {
@@ -347,7 +350,7 @@ class GenderStep extends StatelessWidget {
 class AgeStep extends StatelessWidget {
   const AgeStep({super.key, required this.state});
 
-  final RegisterState state;
+  final RegisterData state;
 
   @override
   Widget build(BuildContext context) {
@@ -361,8 +364,12 @@ class AgeStep extends StatelessWidget {
       ],
       child: AgeCounter(
         age: state.age,
-        onIncrement: state.age < RegisterCubit.maxAge ? cubit.incrementAge : null,
-        onDecrement: state.age > RegisterCubit.minAge ? cubit.decrementAge : null,
+        onIncrement: state.age < RegisterCubit.maxAge
+            ? cubit.incrementAge
+            : null,
+        onDecrement: state.age > RegisterCubit.minAge
+            ? cubit.decrementAge
+            : null,
       ),
     );
   }
@@ -373,7 +380,7 @@ class AgeStep extends StatelessWidget {
 class InstitutionStep extends StatelessWidget {
   const InstitutionStep({super.key, required this.state});
 
-  final RegisterState state;
+  final RegisterData state;
 
   @override
   Widget build(BuildContext context) {
@@ -410,7 +417,7 @@ class InstitutionStep extends StatelessWidget {
 class BranchStep extends StatelessWidget {
   const BranchStep({super.key, required this.state});
 
-  final RegisterState state;
+  final RegisterData state;
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +438,9 @@ class BranchStep extends StatelessWidget {
               child: Text(
                 'لا توجد فروع متاحة حاليًا',
                 textAlign: TextAlign.center,
-                style: AppTextStyles.font14Regular.copyWith(color: AppColors.grey300),
+                style: AppTextStyles.font14Regular.copyWith(
+                  color: AppColors.grey300,
+                ),
               ),
             )
           : Column(

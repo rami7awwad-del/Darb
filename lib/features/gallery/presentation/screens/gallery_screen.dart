@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:darb/core/routing/app_routes%20.dart';
+import 'package:darb/core/routing/app_routes.dart';
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_outline_button.dart';
@@ -22,19 +23,22 @@ class GalleryScreen extends StatelessWidget {
         // TODO: شاشة الإشعارات عند إنشائها (onNotifications).
         const GalleryHeader(),
         Expanded(
-          child: BlocBuilder<GalleryCubit, GalleryState>(
+          child: BlocBuilder<GalleryCubit, BaseState<GalleryData>>(
             builder: (context, state) {
               final cubit = context.read<GalleryCubit>();
 
-              if (state.status == GalleryStatus.loading) {
+              if (state.stateValue == StateValue.loading) {
                 return const Center(
                   child: CircularProgressIndicator(color: AppColors.main600),
                 );
               }
-              if (state.status == GalleryStatus.failure) {
-                return _LoadError(message: state.message, onRetry: cubit.load);
+              if (state.stateValue == StateValue.error) {
+                return _LoadError(
+                  message: state.errorMessage,
+                  onRetry: cubit.load,
+                );
               }
-              return _AlbumsGrid(state: state);
+              return _AlbumsGrid(state: state.data!);
             },
           ),
         ),
@@ -46,7 +50,7 @@ class GalleryScreen extends StatelessWidget {
 class _AlbumsGrid extends StatelessWidget {
   const _AlbumsGrid({required this.state});
 
-  final GalleryState state;
+  final GalleryData state;
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +73,9 @@ class _AlbumsGrid extends StatelessWidget {
                   Center(
                     child: Text(
                       'لا توجد ألبومات حاليًا',
-                      style: AppTextStyles.font14Regular
-                          .copyWith(color: AppColors.grey300),
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: AppColors.grey300,
+                      ),
                     ),
                   ),
                 ],
@@ -138,8 +143,9 @@ class _LoadError extends StatelessWidget {
             Text(
               message ?? 'تعذر تحميل البيانات',
               textAlign: TextAlign.center,
-              style:
-                  AppTextStyles.font14Regular.copyWith(color: AppColors.grey400),
+              style: AppTextStyles.font14Regular.copyWith(
+                color: AppColors.grey400,
+              ),
             ),
             AppOutlineButton(text: 'إعادة المحاولة', onPressed: onRetry),
           ],

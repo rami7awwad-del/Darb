@@ -1,4 +1,6 @@
-
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
+import 'package:darb/core/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +13,6 @@ import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
 import 'package:darb/features/auth/presentation/widgets/register_steps.dart';
 import 'package:darb/features/auth/presentation/widgets/terms_sheet.dart';
 
-import '../../../../core/routing/app_routes .dart';
 
 /// معالج إكمال البيانات: شاشة واحدة تبدّل الخطوات حسب [RegisterCubit].
 class RegisterScreen extends StatefulWidget {
@@ -45,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final cubit = context.read<RegisterCubit>();
-    if (!cubit.state.termsAccepted) {
+    if (!cubit.state.data!.termsAccepted) {
       showAppSnackBar(context, 'يجب الموافقة على الشروط والأحكام');
       return;
     }
@@ -70,14 +71,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     await showTermsSheet(context, terms);
   }
 
-  Widget _buildBody(BuildContext context, RegisterState state) {
-    if (state.status == RegisterStatus.loading) {
+  Widget _buildBody(BuildContext context, BaseState<RegisterData> state) {
+    final data = state.data!;
+    if (state.stateValue == StateValue.loading &&
+        data.status == RegisterStatus.loading) {
       return const Center(
         child: CircularProgressIndicator(color: AppColors.main600),
       );
     }
 
-    if (state.status == RegisterStatus.loadFailed) {
+    if (state.stateValue == StateValue.error &&
+        data.status == RegisterStatus.loadFailed) {
       return Center(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -86,9 +90,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             spacing: 16.h,
             children: [
               Text(
-                state.message ?? 'تعذر تحميل البيانات',
+                state.errorMessage ?? 'تعذر تحميل البيانات',
                 textAlign: TextAlign.center,
-                style: AppTextStyles.font14Regular.copyWith(color: AppColors.grey400),
+                style: AppTextStyles.font14Regular.copyWith(
+                  color: AppColors.grey400,
+                ),
               ),
               AppOutlineButton(
                 text: 'إعادة المحاولة',
@@ -100,33 +106,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     }
 
-    return switch (state.step) {
+    return switch (data.step) {
       RegisterStep.personal => PersonalInfoStep(
-          state: state,
-          formKey: _formKey,
-          firstNameController: _firstName,
-          lastNameController: _lastName,
-          emailController: _email,
-          phoneController: _phone,
-          onNext: _onPersonalNext,
-          onOpenTerms: _openTerms,
-        ),
-      RegisterStep.source => SourceStep(state: state),
-      RegisterStep.gender => GenderStep(state: state),
-      RegisterStep.age => AgeStep(state: state),
-      RegisterStep.institution => InstitutionStep(state: state),
-      RegisterStep.branch => BranchStep(state: state),
+        state: data,
+        formKey: _formKey,
+        firstNameController: _firstName,
+        lastNameController: _lastName,
+        emailController: _email,
+        phoneController: _phone,
+        onNext: _onPersonalNext,
+        onOpenTerms: _openTerms,
+      ),
+      RegisterStep.source => SourceStep(state: data),
+      RegisterStep.gender => GenderStep(state: data),
+      RegisterStep.age => AgeStep(state: data),
+      RegisterStep.institution => InstitutionStep(state: data),
+      RegisterStep.branch => BranchStep(state: data),
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RegisterCubit, RegisterState>(
-      listenWhen: (previous, current) => previous.status != current.status,
+    return BlocConsumer<RegisterCubit, BaseState<RegisterData>>(
+      listenWhen: (previous, current) =>
+          previous.data?.status != current.data?.status,
       listener: (context, state) {
-        if (state.status == RegisterStatus.submitFailed) {
-          showAppSnackBar(context, state.message ?? '');
-        } else if (state.status == RegisterStatus.submitted) {
+        final data = state.data!;
+        if (state.stateValue == StateValue.error &&
+            data.status == RegisterStatus.submitFailed) {
+          showAppSnackBar(context, state.errorMessage ?? '');
+        } else if (state.stateValue == StateValue.loaded &&
+            data.status == RegisterStatus.submitted) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             AppRoutes.registerSuccess,
@@ -135,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       },
       builder: (context, state) {
-        final isFirstStep = state.step == RegisterStep.personal;
+        final isFirstStep = state.data!.step == RegisterStep.personal;
 
         return PopScope(
           // زر الرجوع (النظام أو السهم) يرجع خطوة، ويخرج فقط من الخطوة الأولى.
@@ -149,7 +159,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // السهم يظهر من الخطوة الثانية فما فوق (لا رجوع من الأولى إلى OTP).
                 AuthHeader(showBack: !isFirstStep),
                 Expanded(
-                  child: SafeArea(top: false, child: _buildBody(context, state)),
+                  child: SafeArea(
+                    top: false,
+                    child: _buildBody(context, state),
+                  ),
                 ),
               ],
             ),

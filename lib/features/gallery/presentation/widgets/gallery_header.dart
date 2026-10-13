@@ -11,7 +11,17 @@ import 'package:darb/core/style/app_text_styles.dart';
 /// ⚠️ قياس تقديري: حجم عناصر الصف (36)، الحشوات، نصف قطر الحواف (32)،
 /// حجم الشعار (36)، حجم سهم الرجوع (24). الحشوات والحواف مأخوذة من HomeHeader.
 class GalleryHeader extends StatelessWidget {
-  const GalleryHeader({super.key, this.onBack, this.onNotifications});
+  const GalleryHeader({
+    super.key,
+    this.onBack,
+    this.onNotifications,
+    this.title = 'المعرض',
+    this.icon = PhosphorIconsRegular.image,
+  });
+
+  /// عنوان الشريط (الافتراضي: المعرض). تستخدمه أيضًا صفحة "موادي".
+  final String title;
+  final IconData icon;
 
   /// إن كان null يظهر الشعار بدل سهم الرجوع.
   final VoidCallback? onBack;
@@ -42,13 +52,13 @@ class GalleryHeader extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          PhosphorIconsRegular.image,
+                          icon,
                           size: 20.w,
                           color: AppColors.white,
                         ),
                         SizedBox(width: 8.w),
                         Text(
-                          'المعرض',
+                          title,
                           style: AppTextStyles.font16Medium
                               .copyWith(color: AppColors.white),
                         ),

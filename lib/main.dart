@@ -1,4 +1,5 @@
 import 'package:darb/core/navigation/app_navigator.dart';
+import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/core/services/dio_factory.dart';
 import 'package:darb/core/services/firebase_notification_service.dart';
@@ -21,9 +22,10 @@ import 'package:darb/features/home/data/datasources/home_remote_data_source.dart
 import 'package:darb/features/home/data/repositories/home_repository.dart';
 import 'package:darb/features/gallery/data/datasources/gallery_remote_data_source.dart';
 import 'package:darb/features/gallery/data/repositories/gallery_repository.dart';
+import 'package:darb/features/library/data/datasources/library_remote_data_source.dart';
+import 'package:darb/features/library/data/repositories/library_repository.dart';
 import 'package:darb/features/profile/data/datasources/profile_remote_data_source.dart';
 
-import 'core/routing/app_routes .dart';
 
 
 void main() async {
@@ -66,6 +68,7 @@ void main() async {
 final homeRepository = HomeRepository(HomeRemoteDataSource(apiService));
 final profileRepository = ProfileRepository(ProfileRemoteDataSource(apiService));
 final galleryRepository = GalleryRepository(GalleryRemoteDataSource(apiService));
+final libraryRepository = LibraryRepository(LibraryRemoteDataSource(apiService));
 
   runApp(
     MultiRepositoryProvider(
@@ -73,6 +76,7 @@ final galleryRepository = GalleryRepository(GalleryRemoteDataSource(apiService))
         RepositoryProvider<HomeRepository>.value(value: homeRepository),
         RepositoryProvider<ProfileRepository>.value(value: profileRepository),
         RepositoryProvider<GalleryRepository>.value(value: galleryRepository),
+        RepositoryProvider<LibraryRepository>.value(value: libraryRepository),
         RepositoryProvider<StorageService>.value(value: storageService),
         RepositoryProvider<ApiService>.value(value: apiService),
         RepositoryProvider<FirebaseNotificationService>.value(value: notificationService,),

@@ -1,36 +1,35 @@
 import 'package:darb/core/widgets/app_network_image.dart';
-import 'package:darb/features/home/presentation/cubit/home_state.dart';
+import 'package:darb/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
-import 'package:darb/features/home/data/models/search_result_model.dart';
 import 'package:darb/features/home/presentation/widgets/section_header.dart';
 
 /// نتائج البحث (المواد والاختبارات).
 /// ⚠️ لا يوجد تصميم لنتائج البحث في Figma: هذا تصميم مبدئي بسيط، استبدله عند توفره.
 class SearchResultsView extends StatelessWidget {
-  const SearchResultsView({super.key, required this.state});
+  const SearchResultsView({super.key, required this.data});
 
-  final HomeState state;
+  final HomeData data;
 
   @override
   Widget build(BuildContext context) {
-    switch (state.searchStatus) {
+    switch (data.searchStatus) {
       case SearchStatus.loading:
         return const Center(
           child: CircularProgressIndicator(color: AppColors.main600),
         );
       case SearchStatus.failure:
-        return _Message(text: state.searchMessage ?? 'تعذر إتمام البحث');
+        return _Message(text: data.searchMessage ?? 'تعذر إتمام البحث');
       case SearchStatus.idle:
       case SearchStatus.ready:
         break;
     }
 
-    final result = state.searchResult;
+    final result = data.searchResult;
     if (result.isEmpty) return const _Message(text: 'لا توجد نتائج');
 
     return ListView(
@@ -43,17 +42,16 @@ class SearchResultsView extends StatelessWidget {
           for (final s in result.subjects)
             _ResultTile(
               leading: ClipOval(
-                child: AppNetworkImage(
-                  url: s.image,
-                  width: 44.w,
-                  height: 44.w,
-                ),
+                child: AppNetworkImage(url: s.image, width: 44.w, height: 44.w),
               ),
               title: s.name,
               trailing: s.isFree
                   ? null
-                  : Icon(PhosphorIconsRegular.lock,
-                      size: 18.w, color: AppColors.grey200),
+                  : Icon(
+                      PhosphorIconsRegular.lock,
+                      size: 18.w,
+                      color: AppColors.grey200,
+                    ),
             ),
           SizedBox(height: 16.h),
         ],
@@ -62,8 +60,11 @@ class SearchResultsView extends StatelessWidget {
           SizedBox(height: 8.h),
           for (final e in result.exams)
             _ResultTile(
-              leading: Icon(PhosphorIconsRegular.exam,
-                  size: 28.w, color: AppColors.second500),
+              leading: Icon(
+                PhosphorIconsRegular.exam,
+                size: 28.w,
+                color: AppColors.second500,
+              ),
               title: e.title,
               subtitle: '${e.professor} · ${e.questionsCount} سؤال',
             ),
@@ -106,19 +107,21 @@ class _ResultTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTextStyles.font14Medium
-                      .copyWith(color: AppColors.grey500),
+                  style: AppTextStyles.font14Medium.copyWith(
+                    color: AppColors.grey500,
+                  ),
                 ),
                 if (subtitle != null)
                   Text(
                     subtitle!,
-                    style: AppTextStyles.font12Regular
-                        .copyWith(color: AppColors.grey300),
+                    style: AppTextStyles.font12Regular.copyWith(
+                      color: AppColors.grey300,
+                    ),
                   ),
               ],
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

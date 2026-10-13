@@ -5,9 +5,7 @@ import 'package:flutter/services.dart';
 
 class StorageService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
-  aOptions: const AndroidOptions(
-  resetOnError: true,
-),
+    aOptions: AndroidOptions(resetOnError: true),
   );
 
   static const String _tokenKey = 'auth_token';
@@ -26,8 +24,8 @@ class StorageService {
     try {
       return await _storage.read(key: key);
     } on PlatformException catch (error) {
-      final message =
-          '${error.code} ${error.message} ${error.details}'.toLowerCase();
+      final message = '${error.code} ${error.message} ${error.details}'
+          .toLowerCase();
       if (!message.contains('wrong_final_block_length') &&
           !message.contains('illegalblocksizeexception')) {
         rethrow;
@@ -104,8 +102,7 @@ class StorageService {
     final bytes = List<int>.generate(16, (_) => random.nextInt(256));
     bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
     bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant
-    final hex =
-        bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    final hex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
     return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-'
         '${hex.substring(12, 16)}-${hex.substring(16, 20)}-'
         '${hex.substring(20)}';

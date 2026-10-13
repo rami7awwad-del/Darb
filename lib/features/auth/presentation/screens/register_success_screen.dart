@@ -1,12 +1,11 @@
 
+import 'package:darb/core/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/phosphor_icons.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_primary_button.dart';
-
-import '../../../../core/routing/app_routes .dart';
 
 /// شاشة "مبروك!" بعد حفظ البيانات. لا رجوع منها.
 /// ⚠️ قياس تقديري: حجم الشارة (100)، الفراغ بين العناصر (32)، حجم العنوان (32).

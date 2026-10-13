@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
-import 'package:darb/core/widgets/app_network_image.dart';
 import 'package:darb/features/gallery/data/models/gallery_model.dart';
+import 'package:darb/features/gallery/presentation/widgets/stacked_photos.dart';
 
-/// بطاقة ألبوم: صورة الغلاف واسم الألبوم وعدد صوره.
-/// ⚠️ قياس تقديري: نصف قطر البطاقة (16) والصورة (12)، الحشوة (8)،
-/// لون الحد (second100)، والمسافة بين الصورة والنص (8).
+/// بطاقة ألبوم: صور متتالية (ستاك) واسم الألبوم وعدد صوره.
+/// ⚠️ قياس تقديري: نصف قطر البطاقة (16)، الحشوة (8)، لون الحد (second100)،
+/// والمسافة بين الصور والنص (8). إزاحة الستاك داخل StackedPhotos.
 /// ⚠️ النص "ألبوم {الاسم} ({العدد})" افتراض من Figma؛ إن كان الاسم القادم من
 /// الـ API يحمل كلمة "ألبوم" أصلًا فاحذفها من هنا.
 class GalleryAlbumCard extends StatelessWidget {
@@ -34,16 +34,7 @@ class GalleryAlbumCard extends StatelessWidget {
           padding: EdgeInsets.all(8.w),
           child: Column(
             children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: AppNetworkImage(
-                    url: album.cover,
-                    width: double.infinity,
-                    height: double.infinity,
-                  ),
-                ),
-              ),
+              Expanded(child: StackedPhotos(images: album.images)),
               SizedBox(height: 8.h),
               Text(
                 'ألبوم ${album.name} (${album.count})',

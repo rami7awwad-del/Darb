@@ -34,7 +34,7 @@ class CoursesSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             itemCount: courses.length,
-            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            separatorBuilder: (_, _) => SizedBox(width: 12.w),
             itemBuilder: (context, i) => _CourseCard(
               course: courses[i],
               onTap: () => onCourseTap?.call(courses[i]),
@@ -79,7 +79,10 @@ class _CourseCard extends StatelessWidget {
                     top: 8.h,
                     end: 8.w,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.white.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(8.r),
@@ -88,12 +91,16 @@ class _CourseCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         spacing: 4.w,
                         children: [
-                          Icon(PhosphorIconsRegular.users,
-                              size: 12.w, color: AppColors.second500),
+                          Icon(
+                            PhosphorIconsRegular.users,
+                            size: 12.w,
+                            color: AppColors.second500,
+                          ),
                           Text(
                             '${course.subscriptionsCount}',
-                            style: AppTextStyles.font12Regular
-                                .copyWith(color: AppColors.grey500),
+                            style: AppTextStyles.font12Regular.copyWith(
+                              color: AppColors.grey500,
+                            ),
                           ),
                         ],
                       ),
@@ -110,22 +117,25 @@ class _CourseCard extends StatelessWidget {
                       course.courseName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.font14Medium
-                          .copyWith(color: AppColors.second500),
+                      style: AppTextStyles.font14Medium.copyWith(
+                        color: AppColors.second500,
+                      ),
                     ),
                     SizedBox(height: 2.h),
                     Text(
                       course.professor,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.font12Regular
-                          .copyWith(color: AppColors.grey400),
+                      style: AppTextStyles.font12Regular.copyWith(
+                        color: AppColors.grey400,
+                      ),
                     ),
                     SizedBox(height: 4.h),
                     Text(
                       '${course.semestersCount} فصول ، ${course.lessonsCount} درس',
-                      style: AppTextStyles.font12Medium
-                          .copyWith(color: AppColors.second500),
+                      style: AppTextStyles.font12Medium.copyWith(
+                        color: AppColors.second500,
+                      ),
                     ),
                   ],
                 ),
