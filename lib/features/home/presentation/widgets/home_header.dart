@@ -35,7 +35,7 @@ class HomeHeader extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 20.h),
         decoration: BoxDecoration(
           color: AppColors.main600,
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(32.r)),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(22.r)),
         ),
         child: SafeArea(
           bottom: false,
@@ -65,10 +65,10 @@ class HomeHeader extends StatelessWidget {
                             icon: PhosphorIconsRegular.star,
                             text: '${profile.points} نقطة',
                           ),
-                          _Stat(
+                        /*  _Stat(
                             icon: PhosphorIconsRegular.trophy,
                             text: '${profile.medals} ميدالية',
-                          ),
+                          ),*/
                           _Stat(
                             icon: PhosphorIconsRegular.books,
                             text: '${profile.packageCount} دورات',
@@ -78,16 +78,11 @@ class HomeHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-                _HeaderButton(
-                  icon: PhosphorIconsRegular.bell,
-                  showDot: unreadCount > 0,
-                  onTap: onNotifications,
-                ),
+                _HeaderButton(icon: PhosphorIconsRegular.medal,onTap: onAchievements,),
+               
                 SizedBox(width: 8.w),
-                _HeaderButton(
-                  icon: PhosphorIconsRegular.medal,
-                  onTap: onAchievements,
-                ),
+                
+                _HeaderButton(icon: PhosphorIconsRegular.bell,showDot: unreadCount > 0,onTap: onNotifications,),
               ],
             ),
           ),

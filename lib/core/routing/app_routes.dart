@@ -1,3 +1,5 @@
+import 'package:darb/features/achievements/presentation/cubit/achievements_cubit.dart';
+import 'package:darb/features/achievements/presentation/screens/achievements_screen.dart';
 import 'package:darb/features/auth/data/repositories/auth_repository.dart';
 import 'package:darb/features/auth/data/repositories/registration_repository.dart';
 import 'package:darb/features/auth/presentation/cubit/login/login_cubit.dart';
@@ -7,6 +9,7 @@ import 'package:darb/features/auth/presentation/screens/login_screen.dart';
 import 'package:darb/features/auth/presentation/screens/otp_screen.dart';
 import 'package:darb/features/auth/presentation/screens/register_screen.dart';
 import 'package:darb/features/auth/presentation/screens/register_success_screen.dart';
+import 'package:darb/features/downloads/presentation/screens/downloaded_courses_screen.dart';
 import 'package:darb/features/gallery/data/models/gallery_model.dart';
 import 'package:darb/features/gallery/data/repositories/gallery_repository.dart';
 import 'package:darb/features/gallery/presentation/cubit/gallery_cubit.dart';
@@ -16,8 +19,24 @@ import 'package:darb/features/library/presentation/cubit/library_cubit.dart';
 import 'package:darb/features/home/data/repositories/home_repository.dart';
 import 'package:darb/features/home/presentation/cubit/home_cubit.dart';
 import 'package:darb/features/main/presentation/screens/main_layout_screen.dart';
+import 'package:darb/features/notifications/data/repositories/notifications_repository.dart';
+import 'package:darb/features/notifications/presentation/cubit/notifications_cubit.dart';
+import 'package:darb/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
-import 'package:darb/features/splash/splash_screen%20.dart';
+import 'package:darb/features/home/data/models/subject_model.dart';
+import 'package:darb/features/splash/splash_screen.dart';
+import 'package:darb/features/subjects/data/repositories/subjects_repository.dart';
+import 'package:darb/features/subjects/presentation/cubit/subject_details_cubit.dart';
+import 'package:darb/features/subjects/presentation/cubit/subjects_cubit.dart';
+import 'package:darb/features/subjects/presentation/screens/subject_details_screen.dart';
+import 'package:darb/features/subjects/presentation/screens/subjects_screen.dart';
+import 'package:darb/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:darb/features/support/data/models/info_page_type.dart';
+import 'package:darb/features/support/data/repositories/support_repository.dart';
+import 'package:darb/features/support/presentation/cubit/faqs_cubit.dart';
+import 'package:darb/features/support/presentation/cubit/info_page_cubit.dart';
+import 'package:darb/features/support/presentation/screens/faqs_screen.dart';
+import 'package:darb/features/support/presentation/screens/info_page_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,6 +49,13 @@ abstract class AppRoutes {
   static const String registerSuccess = '/registerSuccess';
   static const String mainLayout = '/mainLayout';
   static const String galleryAlbum = '/galleryAlbum';
+  static const String faqs = '/faqs';
+  static const String infoPage = '/infoPage';
+  static const String downloadedCourses = '/downloadedCourses';
+  static const String achievements = '/achievements';
+  static const String subjects = '/subjects';
+  static const String subjectDetails = '/subjectDetails';
+  static const String notifications = '/notifications';
 }
 
 /// ربط أسماء المسارات بالشاشات.
@@ -101,6 +127,10 @@ abstract class AppRouter {
                 create: (context) =>
                     LibraryCubit(context.read<LibraryRepository>())..load(),
               ),
+              BlocProvider(
+                create: (context) =>
+                    ProfileCubit(context.read<ProfileRepository>())..load(),
+              ),
             ],
             child: const MainLayoutScreen(),
           ),
@@ -111,6 +141,81 @@ abstract class AppRouter {
         final album = settings.arguments as GalleryModel;
         return MaterialPageRoute(
           builder: (_) => GalleryAlbumScreen(album: album),
+          settings: settings,
+        );
+
+      case AppRoutes.faqs:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                FaqsCubit(context.read<SupportRepository>())..load(),
+            child: const FaqsScreen(),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.infoPage:
+        final type = settings.arguments as InfoPageType;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                InfoPageCubit(context.read<SupportRepository>(), type: type)
+                  ..load(),
+            child: InfoPageScreen(type: type),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.downloadedCourses:
+        // TODO: مرّر العناصر من مخزن التنزيلات عند بنائه.
+        return MaterialPageRoute(
+          builder: (_) => const DownloadedCoursesScreen(),
+          settings: settings,
+        );
+
+      case AppRoutes.achievements:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => AchievementsCubit(
+              context.read<ProfileRepository>(),
+              context.read<LibraryRepository>(),
+            )..load(),
+            child: const AchievementsScreen(),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.notifications:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                NotificationsCubit(context.read<NotificationsRepository>())
+                  ..load(),
+            child: const NotificationsScreen(),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.subjects:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                SubjectsCubit(context.read<SubjectsRepository>())..load(),
+            child: const SubjectsScreen(),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.subjectDetails:
+        final subject = settings.arguments as SubjectModel;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => SubjectDetailsCubit(
+              context.read<SubjectsRepository>(),
+              subjectId: subject.id,
+            )..load(),
+            child: SubjectDetailsScreen(subject: subject),
+          ),
           settings: settings,
         );
 

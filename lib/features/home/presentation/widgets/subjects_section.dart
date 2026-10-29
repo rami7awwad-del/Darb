@@ -38,7 +38,7 @@ class SubjectsSection extends StatelessWidget {
         ),
         SizedBox(height: 12.h),
         SizedBox(
-          height: 112.h,
+          height: 113.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -67,12 +67,12 @@ class _SubjectItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(8.r),
       onTap: onTap,
       child: SizedBox(
-        width: AppGrid.columnWidth,
+        width: 127.w,
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              height: 32.h,
+              height: 40.h,
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 6.w),
               decoration: BoxDecoration(
@@ -89,11 +89,13 @@ class _SubjectItem extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
-            AppNetworkImage(
-              url: subject.image,
-              width: 60.w,
-              height: 60.w,
-              fit: BoxFit.contain,
+            Expanded(
+              child: AppNetworkImage(
+                url: subject.image,
+                width: 65.w,
+                height: 65.h,
+                fit: BoxFit.contain,
+              ),
             ),
           ],
         ),

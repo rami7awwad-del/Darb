@@ -73,8 +73,7 @@ class _OtpScreenState extends State<OtpScreen> {
             child: Column(
               children: [
                 const AuthHeader(showBack: true),
-                // ⚠️ قياس تقديري: المسافة بين الترويسة والبطاقة (20)
-                SizedBox(height: 20.h),
+                SizedBox(height: 16.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.5.w),
                   child: AuthCard(

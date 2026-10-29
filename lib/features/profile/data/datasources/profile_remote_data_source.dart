@@ -37,14 +37,13 @@ class ProfileRemoteDataSource {
     required String firstName,
     required String lastName,
     required int schoolId,
-    required int gender,
+    int? gender,
   }) async {
     final response = await _api.postFormData(ApiConstants.userUpdate, {
       'f_name': firstName,
       'l_name': lastName,
       'school_id': schoolId,
-      // ⚠️ افتراض غير مُتحقَّق منه: users/update في Postman تحتوي f_name و
-      // l_name و school_id فقط. إن تجاهلها الخادم فلن يُحفظ الجنس.
+      // الجنس اختياري: users/update في Postman تحتوي f_name و l_name و school_id فقط.
       'gender': gender,
     });
     return _parse(response);

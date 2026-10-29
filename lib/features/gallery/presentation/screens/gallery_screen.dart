@@ -20,7 +20,6 @@ class GalleryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // TODO: شاشة الإشعارات عند إنشائها (onNotifications).
         const GalleryHeader(),
         Expanded(
           child: BlocBuilder<GalleryCubit, BaseState<GalleryData>>(

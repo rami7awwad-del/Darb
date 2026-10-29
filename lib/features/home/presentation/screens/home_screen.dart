@@ -3,6 +3,7 @@ import 'package:darb/core/models/base_state.dart';
 import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/features/home/presentation/cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:darb/core/routing/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -62,7 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
             HomeHeader(
               profile: data.profile!,
               unreadCount: home.notificationUnread,
-              // TODO: شاشة الإشعارات وشاشة الإنجازات عند إنشائهما.
+              onNotifications: () =>
+                  Navigator.pushNamed(context, AppRoutes.notifications),
+              // TODO: ربط onAchievements بشاشة الإنجازات.
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 4.h),
@@ -121,7 +124,12 @@ class _HomeContent extends StatelessWidget {
           gap,
           SubjectsSection(
             subjects: home.subjects,
-            // TODO: "أظهر الكل" → قائمة المواد (subjects/all جاهز في HomeRepository).
+            onShowAll: () => Navigator.pushNamed(context, AppRoutes.subjects),
+            onSubjectTap: (subject) => Navigator.pushNamed(
+              context,
+              AppRoutes.subjectDetails,
+              arguments: subject,
+            ),
           ),
           gap,
           NewsSection(

@@ -39,7 +39,7 @@ class DioFactory {
         },
       ),
     );
-
+//ليش بتحط  انترسيبتر    ؟    لحتى اتحكم بطليبات او الاخطاء  قبل اراسلها  او بعد استلامها 
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {

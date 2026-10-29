@@ -24,6 +24,8 @@ class AppTextField extends StatefulWidget {
     this.onSubmitted,
     this.inputFormatters,
     this.enabled = true,
+    this.minLines,
+    this.maxLines = 1,
   });
 
   final TextEditingController? controller;
@@ -39,6 +41,10 @@ class AppTextField extends StatefulWidget {
   final ValueChanged<String>? onSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final bool enabled;
+
+  /// للحقول متعددة الأسطر (مثل الوصف). كلمة المرور تبقى سطرًا واحدًا.
+  final int? minLines;
+  final int? maxLines;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -58,6 +64,8 @@ class _AppTextFieldState extends State<AppTextField> {
       controller: widget.controller,
       enabled: widget.enabled,
       obscureText: _obscure,
+      minLines: widget.isPassword ? 1 : widget.minLines,
+      maxLines: widget.isPassword ? 1 : widget.maxLines,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       validator: widget.validator,

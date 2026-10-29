@@ -22,18 +22,21 @@ class AuthRemoteDataSource {
     await _api.postFormData(ApiConstants.resend, {'phone': phone});
   }
 
+  /// GET auth/logout → إنهاء الجلسة في الخادم.
+  Future<void> logout() async {
+    await _api.getRequest(ApiConstants.logout);
+  }
+
   /// POST auth/active → يعيد التوكن وبيانات المستخدم.
   Future<AuthResponseModel> activate({
     required String phone,
     required String code,
     required String deviceId,
-    String? fcmToken,
   }) async {
     final response = await _api.postFormData(ApiConstants.active, {
       'phone': phone,
       'verification_code': code,
       'device_id': deviceId,
-      if (fcmToken != null && fcmToken.isNotEmpty) 'fcm_token': fcmToken,
     });
 
     try {

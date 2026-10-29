@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:phosphor_icons/phosphor_icons.dart';
 
+import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
@@ -17,15 +18,25 @@ class GalleryHeader extends StatelessWidget {
     this.onNotifications,
     this.title = 'المعرض',
     this.icon = PhosphorIconsRegular.image,
+    this.bottom,
+    this.trailing,
   });
 
   /// عنوان الشريط (الافتراضي: المعرض). تستخدمه أيضًا صفحة "موادي".
   final String title;
-  final IconData icon;
+  /// null = بدون أيقونة بجانب العنوان (شاشات المعلومات الداخلية).
+  final IconData? icon;
 
   /// إن كان null يظهر الشعار بدل سهم الرجوع.
   final VoidCallback? onBack;
   final VoidCallback? onNotifications;
+
+  /// عنصر اختياري تحت صف العنوان داخل الشريط (مثل حقل البحث في صفحة المادة).
+  final Widget? bottom;
+
+  /// يستبدل زر الإشعارات (مثل عدّاد غير المقروء في شاشة الإشعارات نفسها).
+  /// يُعرض بحجم 36×36 ليبقى العنوان في الوسط.
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +53,10 @@ class GalleryHeader extends StatelessWidget {
           bottom: false,
           child: Padding(
             padding: EdgeInsets.only(top: 16.h),
-            child: SizedBox(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+            SizedBox(
               height: 36.w,
               child: Row(
                 children: [
@@ -51,12 +65,14 @@ class GalleryHeader extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          icon,
-                          size: 20.w,
-                          color: AppColors.white,
-                        ),
-                        SizedBox(width: 8.w),
+                        if (icon != null) ...[
+                          Icon(
+                            icon,
+                            size: 20.w,
+                            color: AppColors.white,
+                          ),
+                          SizedBox(width: 8.w),
+                        ],
                         Text(
                           title,
                           style: AppTextStyles.font16Medium
@@ -65,9 +81,25 @@ class GalleryHeader extends StatelessWidget {
                       ],
                     ),
                   ),
-                  _BellButton(onTap: onNotifications),
+                  if (trailing != null)
+                    SizedBox(width: 36.w, height: 36.w, child: trailing)
+                  else
+                    _BellButton(
+                      // الافتراضي: فتح شاشة الإشعارات.
+                      onTap: onNotifications ??
+                          () => Navigator.pushNamed(
+                                context,
+                                AppRoutes.notifications,
+                              ),
+                    ),
                 ],
               ),
+            ),
+                if (bottom != null) ...[
+                  SizedBox(height: 16.h), // 📏
+                  bottom!,
+                ],
+              ],
             ),
           ),
         ),

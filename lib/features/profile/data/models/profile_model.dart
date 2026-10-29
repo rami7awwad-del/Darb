@@ -1,5 +1,5 @@
-/// رد profile/get. الحقول المتداخلة (school, branch, gender, know_about_app)
-/// غير مقروءة حاليًا. TODO: تُضاف عند بناء شاشة الملف الشخصي.
+/// رد profile/get. المقروء من الحقول المتداخلة: school (للتعديل) و gender.
+/// branch و know_about_app غير مقروءتين حاليًا.
 class ProfileModel {
   const ProfileModel({
     required this.id,
@@ -8,6 +8,9 @@ class ProfileModel {
     required this.phone,
     this.email,
     this.image,
+    this.schoolId,
+    this.schoolName,
+    this.gender,
     this.points = 0,
     this.medals = 0,
     this.cups = 0,
@@ -22,6 +25,11 @@ class ProfileModel {
   final String phone;
   final String? email;
   final String? image;
+  final int? schoolId;
+  final String? schoolName;
+
+  /// 0 أنثى، 1 ذكر.
+  final int? gender;
   final int points;
   final int medals;
   final int cups;
@@ -40,6 +48,9 @@ class ProfileModel {
         phone: json['phone']?.toString() ?? '',
         email: json['email'] as String?,
         image: json['image'] as String?,
+        schoolId: (json['school'] as Map?)?['id'] as int?,
+        schoolName: (json['school'] as Map?)?['name'] as String?,
+        gender: (json['gender'] as Map?)?['id'] as int?,
         points: _int(json['points']),
         medals: _int(json['medals']),
         cups: _int(json['cups']),

@@ -49,7 +49,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
     return Column(
       children: [
-        // TODO: شاشة الإشعارات عند إنشائها (onNotifications).
         const GalleryHeader(title: 'موادي', icon: Icons.library_books_rounded),
         Padding(
           padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),

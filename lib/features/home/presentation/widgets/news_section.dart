@@ -27,7 +27,7 @@ class NewsSection extends StatelessWidget {
         ),
         SizedBox(height: 12.h),
         SizedBox(
-          height: 120.h,
+          height: 152.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -40,8 +40,9 @@ class NewsSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
                 child: AppNetworkImage(
                   url: news[i].image,
+                  fit: BoxFit.cover,
                   width: cardWidth,
-                  height: 120.h,
+                  height: 152.h,
                 ),
               ),
             ),

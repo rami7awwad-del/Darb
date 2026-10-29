@@ -19,9 +19,10 @@ pluginManagement {
 
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
-    id("com.android.application") version "8.11.1" apply false // تحديث AGP
-    id("org.jetbrains.kotlin.android") version "2.2.20" apply false // تحديث Kotlin
-    id("com.google.gms.google-services") version "4.4.1" apply false
+    // تغيير الإصدار إلى 8.3.2 وهو إصدار مستقر ومتوافق تماماً
+    id("com.android.application") version "8.11.1" apply false
+    // تغيير إصدار Kotlin إلى 1.9.22 ليتوافق مع أندرويد وفلاتر بدون مشاكل
+    id("org.jetbrains.kotlin.android") version "2.2.20" apply false
 }
 
 include(":app")

@@ -13,7 +13,7 @@ class ProfileRepository {
     required String firstName,
     required String lastName,
     required int schoolId,
-    required int gender,
+    int? gender,
   }) =>
       _remote.updateProfile(
         firstName: firstName,

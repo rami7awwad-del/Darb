@@ -2,7 +2,6 @@ import 'package:darb/core/navigation/app_navigator.dart';
 import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/core/services/dio_factory.dart';
-import 'package:darb/core/services/firebase_notification_service.dart';
 import 'package:darb/core/services/storage_service.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
@@ -11,9 +10,7 @@ import 'package:darb/features/auth/data/datasources/registration_remote_data_sou
 import 'package:darb/features/auth/data/repositories/auth_repository.dart';
 import 'package:darb/features/auth/data/repositories/registration_repository.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
-import 'package:darb/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -25,15 +22,17 @@ import 'package:darb/features/gallery/data/repositories/gallery_repository.dart'
 import 'package:darb/features/library/data/datasources/library_remote_data_source.dart';
 import 'package:darb/features/library/data/repositories/library_repository.dart';
 import 'package:darb/features/profile/data/datasources/profile_remote_data_source.dart';
+import 'package:darb/features/support/data/datasources/support_remote_data_source.dart';
+import 'package:darb/features/support/data/repositories/support_repository.dart';
+import 'package:darb/features/subjects/data/datasources/subjects_remote_data_source.dart';
+import 'package:darb/features/subjects/data/repositories/subjects_repository.dart';
+import 'package:darb/features/notifications/data/datasources/notifications_remote_data_source.dart';
+import 'package:darb/features/notifications/data/repositories/notifications_repository.dart';
 
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   // Storage: يجب أن يُهيَّأ قبل إنشاء Dio ليكون التوكن جاهزًا في أول طلب
   final storageService = StorageService();
@@ -51,15 +50,13 @@ void main() async {
   ).getDio();
   final apiService = ApiService(dio);
 
-  // Notifications
-  final notificationService = FirebaseNotificationService();
-  await notificationService.init();
+  
 
   final authRemoteDataSource = AuthRemoteDataSource(apiService);
   final authRepository = AuthRepository(
     authRemoteDataSource,
     storageService,
-    notificationService,
+
   );
   final registrationRepository = RegistrationRepository(
     RegistrationRemoteDataSource(apiService),
@@ -69,6 +66,9 @@ final homeRepository = HomeRepository(HomeRemoteDataSource(apiService));
 final profileRepository = ProfileRepository(ProfileRemoteDataSource(apiService));
 final galleryRepository = GalleryRepository(GalleryRemoteDataSource(apiService));
 final libraryRepository = LibraryRepository(LibraryRemoteDataSource(apiService));
+final supportRepository = SupportRepository(SupportRemoteDataSource(apiService));
+final subjectsRepository = SubjectsRepository(SubjectsRemoteDataSource(apiService));
+final notificationsRepository = NotificationsRepository(NotificationsRemoteDataSource(apiService));
 
   runApp(
     MultiRepositoryProvider(
@@ -77,9 +77,11 @@ final libraryRepository = LibraryRepository(LibraryRemoteDataSource(apiService))
         RepositoryProvider<ProfileRepository>.value(value: profileRepository),
         RepositoryProvider<GalleryRepository>.value(value: galleryRepository),
         RepositoryProvider<LibraryRepository>.value(value: libraryRepository),
+        RepositoryProvider<SupportRepository>.value(value: supportRepository),
+        RepositoryProvider<SubjectsRepository>.value(value: subjectsRepository),
+        RepositoryProvider<NotificationsRepository>.value(value: notificationsRepository),
         RepositoryProvider<StorageService>.value(value: storageService),
         RepositoryProvider<ApiService>.value(value: apiService),
-        RepositoryProvider<FirebaseNotificationService>.value(value: notificationService,),
         RepositoryProvider<AuthRemoteDataSource>.value(value: authRemoteDataSource,),
         RepositoryProvider<AuthRepository>.value(value: authRepository),
         RepositoryProvider<RegistrationRepository>.value(value: registrationRepository,),

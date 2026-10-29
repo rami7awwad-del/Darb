@@ -1,5 +1,6 @@
 class ApiConstants {
-  static const String baseUrl = 'https://training.tamkeen-dev.com/dareb/public/api';
+  static const String baseUrl =
+      'https://training.tamkeen-dev.com/dareb/public/api';
 
   // Auth
   static const String login = '/auth/login'; // POST
@@ -16,7 +17,6 @@ class ApiConstants {
 
   // Users
   static const String usersEdit = '/users/edit'; // POST
-  static const String userEdit = usersEdit;
   static const String userUpdate = '/users/update'; // POST
   static const String userUpdateImage = '/users/update-image'; // POST
   static const String topUsers = '/users/top'; // GET
@@ -61,7 +61,8 @@ class ApiConstants {
   static const String ytDlp = '/yt-dlp'; // GET
   static const String ytDlp720Audio = '/yt-dlp-720-audio'; // GET
   static const String lessonsAttend = '/lessions/attend-lession'; // POST
-  static const String lessonsLastAttend = '/lessions/last-attend-lession'; // POST
+  static const String lessonsLastAttend =
+      '/lessions/last-attend-lession'; // POST
 
   // Packages
   static const String packagesAll = '/packages/all'; // GET
@@ -81,7 +82,8 @@ class ApiConstants {
 
   // Subscriptions
   static const String subscriptionsMy = '/subscriptions/my'; // GET
-  static const String subscriptionsCheckOutCode = '/subscriptions/check-out-code'; // GET
+  static const String subscriptionsCheckOutCode =
+      '/subscriptions/check-out-code'; // GET
   static const String subscriptionsAdd = '/subscriptions/add'; // POST
 
   // Notifications

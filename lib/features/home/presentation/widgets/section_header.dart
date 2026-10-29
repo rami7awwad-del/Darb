@@ -11,11 +11,15 @@ class SectionHeader extends StatelessWidget {
     required this.title,
     this.actionLabel,
     this.onAction,
+    this.color = AppColors.second500,
   });
 
   final String title;
   final String? actionLabel;
   final VoidCallback? onAction;
+
+  /// لون العنوان والرابط (الافتراضي second500، وقسم الدورات يستخدم main600).
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class SectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: AppTextStyles.font16Medium.copyWith(color: AppColors.second500),
+            style: AppTextStyles.font16Medium.copyWith(color: color),
           ),
         ),
         if (actionLabel != null)
@@ -33,7 +37,7 @@ class SectionHeader extends StatelessWidget {
             behavior: HitTestBehavior.opaque,
             child: Text(
               actionLabel!,
-              style: AppTextStyles.font12Regular.copyWith(color: AppColors.second500),
+              style: AppTextStyles.font12Regular.copyWith(color: color),
             ),
           ),
       ],

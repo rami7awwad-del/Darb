@@ -8,8 +8,9 @@ import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/home/presentation/widgets/section_header.dart';
 
 /// قسم "أبرز الدورات": بطاقات أفقية.
-/// ⚠️ قياس تقديري: عرض البطاقة (170) وارتفاع الصورة (105) وارتفاع القائمة (205)
-/// ولون الخلفية (second100).
+/// ⚠️ قياس تقديري: عرض البطاقة (170) وارتفاع الصورة (110) وارتفاع القائمة (212)،
+/// ورأس البطاقة (second100) فوق جسم أبيض، والألوان التفاعلية main600 حسب Figma.
+/// ⚠️ أيقونة العنوان بديلة مؤقتًا (التصميم فيه رسمة دفتر لم تصلنا كملف).
 /// ⚠️ الشارة العلوية = subscriptions_count، والعنوان = course_name (افتراضان).
 class CoursesSection extends StatelessWidget {
   const CoursesSection({super.key, required this.courses, this.onCourseTap});
@@ -25,11 +26,14 @@ class CoursesSection extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: const SectionHeader(title: 'أبرز الدورات'),
+          child: const SectionHeader(
+            title: 'أبرز الدورات',
+            color: AppColors.main600,
+          ),
         ),
         SizedBox(height: 12.h),
         SizedBox(
-          height: 205.h,
+          height: 212.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -57,9 +61,12 @@ class _CourseCard extends StatelessWidget {
     final radius = BorderRadius.circular(14.r);
 
     return Material(
-      color: AppColors.second100,
-      borderRadius: radius,
+      color: AppColors.white,
       clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: radius,
+        side: const BorderSide(color: AppColors.grey50),
+      ),
       child: InkWell(
         onTap: onTap,
         child: SizedBox(
@@ -67,59 +74,77 @@ class _CourseCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  AppNetworkImage(
-                    url: course.image,
-                    width: double.infinity,
-                    height: 105.h,
-                    fit: BoxFit.contain,
-                  ),
-                  PositionedDirectional(
-                    top: 8.h,
-                    end: 8.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 2.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.white.withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: 4.w,
-                        children: [
-                          Icon(
-                            PhosphorIconsRegular.users,
-                            size: 12.w,
-                            color: AppColors.second500,
-                          ),
-                          Text(
-                            '${course.subscriptionsCount}',
-                            style: AppTextStyles.font12Regular.copyWith(
-                              color: AppColors.grey500,
-                            ),
-                          ),
-                        ],
+              // رأس البطاقة: خلفية زرقاء فاتحة والصورة فوقها.
+              Container(
+                color: AppColors.second100,
+                width: double.infinity,
+                height: 110.h,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: AppNetworkImage(
+                        url: course.image,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                  ),
-                ],
+                    PositionedDirectional(
+                      top: 8.h,
+                      end: 8.w,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.white.withValues(alpha: 0.8),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 4.w,
+                          children: [
+                            Icon(
+                              PhosphorIconsRegular.users,
+                              size: 12.w,
+                              color: AppColors.second500,
+                            ),
+                            Text(
+                              '${course.subscriptionsCount}',
+                              style: AppTextStyles.font12Regular.copyWith(
+                                color: AppColors.grey500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      course.courseName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.font14Medium.copyWith(
-                        color: AppColors.second500,
-                      ),
+                    Row(
+                      spacing: 6.w,
+                      children: [
+                        Icon(
+                          Icons.edit_note_rounded,
+                          size: 20.w,
+                          color: AppColors.second400,
+                        ),
+                        Expanded(
+                          child: Text(
+                            course.courseName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.font14Medium.copyWith(
+                              color: AppColors.main600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 2.h),
                     Text(
@@ -127,14 +152,14 @@ class _CourseCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.font12Regular.copyWith(
-                        color: AppColors.grey400,
+                        color: AppColors.grey500,
                       ),
                     ),
                     SizedBox(height: 4.h),
                     Text(
                       '${course.semestersCount} فصول ، ${course.lessonsCount} درس',
-                      style: AppTextStyles.font12Medium.copyWith(
-                        color: AppColors.second500,
+                      style: AppTextStyles.font14Regular.copyWith(
+                        color: AppColors.main600,
                       ),
                     ),
                   ],

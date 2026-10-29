@@ -17,6 +17,7 @@ class CourseModel {
     this.lessonRate = 0,
     this.subjectRate = 0,
     this.pointsCount = 0,
+    this.pointRate = 0,
   });
 
   final int id;
@@ -37,6 +38,9 @@ class CourseModel {
   final double subjectRate;
   final int pointsCount;
 
+  /// نسبة النقاط من 0 إلى 100 (point_rate).
+  final double pointRate;
+
   static int _int(dynamic v) => (v as num?)?.toInt() ?? 0;
   static double _double(dynamic v) => (v as num?)?.toDouble() ?? 0;
 
@@ -56,5 +60,6 @@ class CourseModel {
         lessonRate: _double(json['lession_rate']),
         subjectRate: _double(json['subject_rate']),
         pointsCount: _int(json['points_count']),
+        pointRate: _double(json['point_rate']),
       );
 }

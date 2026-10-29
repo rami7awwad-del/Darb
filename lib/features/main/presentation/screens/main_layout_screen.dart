@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:darb/core/style/app_colors.dart';
-import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/gallery/presentation/screens/gallery_screen.dart';
 import 'package:darb/features/home/presentation/screens/home_screen.dart';
 import 'package:darb/features/library/presentation/screens/library_screen.dart';
 import 'package:darb/features/main/presentation/widgets/app_bottom_nav_bar.dart';
+import 'package:darb/features/profile/presentation/screens/profile_screen.dart';
 
 /// الهيكل الرئيسي بعد الدخول: تبويبات مع شريط سفلي.
 /// IndexedStack يحفظ حالة كل تبويب (الرئيسية لا تُعاد عند التنقل).
-/// TODO: استبدل المكان المؤقت بالشاشة الحقيقية (الحساب).
 class MainLayoutScreen extends StatefulWidget {
   const MainLayoutScreen({super.key});
 
@@ -29,28 +27,12 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
           HomeScreen(),
           GalleryScreen(),
           LibraryScreen(),
-          _ComingSoon(title: 'حسابي'),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: _index,
         onTap: (i) => setState(() => _index = i),
-      ),
-    );
-  }
-}
-
-class _ComingSoon extends StatelessWidget {
-  const _ComingSoon({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        '$title: قيد البناء',
-        style: AppTextStyles.font16Medium.copyWith(color: AppColors.grey300),
       ),
     );
   }

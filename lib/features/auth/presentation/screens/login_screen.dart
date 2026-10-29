@@ -61,20 +61,17 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 const AuthHeader(),
-                // ⚠️ قياس تقديري: المسافة بين الترويسة والبطاقة (20)
-                SizedBox(height: 20.h),
+                SizedBox(height: 31.h), //  258-227
                 Padding(
-                  // Figma: البطاقة 405 من 430 → 12.5 من كل جانب
                   padding: EdgeInsets.symmetric(horizontal: 12.5.w),
                   child: AuthCard(
                     children: [
-                      const AuthTitle(first: 'أدخل', second: 'إلى حسابك'),
-                      // ⚠️ نص مؤقت: لم أستطع قراءة النص الفرعي في Figma، استبدله.
+                      const AuthTitle(first: 'أدخل إلى', second: 'حسابك'),
                       Text(
-                        'سنرسل لك رمز التحقق عبر واتساب',
+                        'أهلاً بك من جديد ! سجّل دخولك للمتابعة',
                         textAlign: TextAlign.center,
-                        style: AppTextStyles.font14Regular.copyWith(
-                          color: AppColors.grey300,
+                        style: AppTextStyles.font14Medium.copyWith(
+                          color: AppColors.grey400,
                         ),
                       ),
                       Form(

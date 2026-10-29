@@ -7,10 +7,7 @@ class ApiService {
 
   ApiService(this._dio);
 
-  Future<Response> _send(
-    Future<Response> Function() call,
-    String tag,
-  ) async {
+  Future<Response> _send(Future<Response> Function() call, String tag) async {
     try {
       return await call();
     } catch (e) {
@@ -21,7 +18,6 @@ class ApiService {
     }
   }
 
-  /// طلبات GET (تمرير المعاملات عبر [queryParameters] مثل page و perPage).
   Future<Response> getRequest(
     String endpoint, {
     Map<String, dynamic>? queryParameters,
@@ -39,10 +35,6 @@ class ApiService {
     );
   }
 
-  /// ⚠️ يرسل الـ body بصيغة JSON.
-  /// كل طلبات POST في الـ API الحالي (حسب الكولكشن) تعتمد form-data،
-  /// لذلك استخدم [postFormData] لها. هذه الدالة للاستخدام فقط
-  /// إن احتاج endpoint مستقبلي إلى JSON.
   Future<Response> postRequest(
     String endpoint, {
     Map<String, dynamic>? body,
@@ -64,11 +56,6 @@ class ApiService {
     );
   }
 
-  /// طلبات POST بصيغة form-data (الأساسية في هذا الـ API).
-  /// - القوائم تُرسل بمفتاح بدون أقواس: {'answers_id': [1, 2, 3]}
-  ///   وتتحول تلقائيًا إلى answers_id[] بفضل ListFormat.multiCompatible.
-  /// - الملفات (مثل الصورة) تُمرَّر كـ MultipartFile:
-  ///   {'image': await MultipartFile.fromFile(path)}
   Future<Response> postFormData(
     String endpoint,
     Map<String, dynamic> body, {

@@ -56,8 +56,7 @@ class OtpInputRowState extends State<OtpInputRow> {
   KeyEventResult _onKey(int i, KeyEvent event) {
     if (event is KeyDownEvent &&
         event.logicalKey == LogicalKeyboardKey.backspace &&
-        _controllers[i].text.isEmpty &&
-        i > 0) {
+        _controllers[i].text.isEmpty && i > 0) {
       _controllers[i - 1].clear();
       _focusNodes[i - 1].requestFocus();
       widget.onChanged(code);
@@ -108,14 +107,13 @@ class OtpInputRowState extends State<OtpInputRow> {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Row(
-        // ⚠️ قياس تقديري: المسافة بين المربعات 16 وارتفاع المربع 58
-        // (مأخوذان من لقطة Figma، وليس من لوحة القياسات).
-        spacing: 16.w,
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 11.w,
         children: [
           for (var i = 0; i < widget.length; i++)
-            Expanded(
-              child: SizedBox(
-                height: 58.h,
+               SizedBox(
+                height: 60.h,
+                width: 70.w,
                 child: TextField(
                   controller: _controllers[i],
                   focusNode: _focusNodes[i],
@@ -126,7 +124,7 @@ class OtpInputRowState extends State<OtpInputRow> {
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   cursorColor: AppColors.main600,
                   style: AppTextStyles.font20Regular
-                      .copyWith(color: AppColors.grey500),
+                      .copyWith(color: AppColors.grey800),
                   onChanged: (v) => _onChanged(i, v),
                   decoration: InputDecoration(
                     hintText: '-',
@@ -135,15 +133,14 @@ class OtpInputRowState extends State<OtpInputRow> {
                     filled: true,
                     fillColor: AppColors.white,
                     isDense: true,
-                    contentPadding: EdgeInsets.zero,
+                    contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                     enabledBorder: _border(AppColors.grey100),
                     disabledBorder: _border(AppColors.grey100),
-                    // ⚠️ قياس تقديري: حد التركيز يبدو أزرق (second500) في Figma
-                    focusedBorder: _border(AppColors.second500),
+                    focusedBorder: _border(AppColors.second600),
                   ),
                 ),
               ),
-            ),
+            
         ],
       ),
     );
