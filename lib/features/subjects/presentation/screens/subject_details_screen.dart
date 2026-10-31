@@ -4,13 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:darb/core/models/base_state.dart';
 import 'package:darb/core/models/enums/state_value.dart';
+import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_load_error.dart';
 import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 import 'package:darb/features/home/data/models/subject_model.dart';
 import 'package:darb/features/home/presentation/widgets/home_search_field.dart';
+import 'package:darb/features/quiz/data/models/quiz_models.dart';
 import 'package:darb/features/subjects/data/models/subject_details_model.dart';
+import 'package:darb/features/subjects/data/models/subject_exam_model.dart';
 import 'package:darb/features/subjects/presentation/cubit/subject_details_cubit.dart';
 import 'package:darb/features/subjects/presentation/widgets/subject_cards.dart';
 import 'package:darb/features/subjects/presentation/widgets/subject_tabs.dart';
@@ -46,28 +49,57 @@ class _SubjectDetailsScreenState extends State<SubjectDetailsScreen> {
       a.toLowerCase().contains(_query) ||
       b.toLowerCase().contains(_query);
 
+  void _openQuiz(SubjectExamModel exam, String prefix) {
+    if (exam.questions.isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(const SnackBar(content: Text('لا توجد أسئلة حاليًا')));
+      return;
+    }
+    Navigator.pushNamed(
+      context,
+      AppRoutes.quiz,
+      arguments: QuizArgs(
+        title: '$prefix ${widget.subject.name}',
+        questions: exam.questions,
+      ),
+    );
+  }
+
   List<Widget> _items(SubjectDetailsModel d) {
     switch (_tab) {
       case 0:
         return [
           for (final c in d.courses)
             if (_match(c.courseName, c.professor))
-              // TODO: فتح تفاصيل الدورة (courses/details).
-              SubjectCourseCard(course: c),
+              SubjectCourseCard(
+                course: c,
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.courseDetails,
+                  arguments: c,
+                ),
+              ),
         ];
       case 1:
         return [
           for (final e in d.exams)
             if (_match(e.title, e.professor))
-              // TODO: شاشة الاختبار (exams/result و exams/attend-exam).
-              SubjectExamCard(exam: e, kind: SubjectExamKind.exam),
+              SubjectExamCard(
+                exam: e,
+                kind: SubjectExamKind.exam,
+                onTap: () => _openQuiz(e, 'إختبار'),
+              ),
         ];
       default:
         return [
           for (final e in d.dailyActivities)
             if (_match(e.title, e.professor))
-              // TODO: شاشة النشاط (exams/result و exams/attend-exam).
-              SubjectExamCard(exam: e, kind: SubjectExamKind.activity),
+              SubjectExamCard(
+                exam: e,
+                kind: SubjectExamKind.activity,
+                onTap: () => _openQuiz(e, 'نشاط'),
+              ),
         ];
     }
   }

@@ -19,6 +19,10 @@ import 'package:darb/features/home/data/datasources/home_remote_data_source.dart
 import 'package:darb/features/home/data/repositories/home_repository.dart';
 import 'package:darb/features/gallery/data/datasources/gallery_remote_data_source.dart';
 import 'package:darb/features/gallery/data/repositories/gallery_repository.dart';
+import 'package:darb/features/courses/data/datasources/courses_remote_data_source.dart';
+import 'package:darb/features/courses/data/repositories/courses_repository.dart';
+import 'package:darb/features/lessons/data/datasources/lessons_remote_data_source.dart';
+import 'package:darb/features/lessons/data/repositories/lessons_repository.dart';
 import 'package:darb/features/library/data/datasources/library_remote_data_source.dart';
 import 'package:darb/features/library/data/repositories/library_repository.dart';
 import 'package:darb/features/profile/data/datasources/profile_remote_data_source.dart';
@@ -69,6 +73,8 @@ final libraryRepository = LibraryRepository(LibraryRemoteDataSource(apiService))
 final supportRepository = SupportRepository(SupportRemoteDataSource(apiService));
 final subjectsRepository = SubjectsRepository(SubjectsRemoteDataSource(apiService));
 final notificationsRepository = NotificationsRepository(NotificationsRemoteDataSource(apiService));
+final coursesRepository = CoursesRepository(CoursesRemoteDataSource(apiService));
+final lessonsRepository = LessonsRepository(LessonsRemoteDataSource(apiService));
 
   runApp(
     MultiRepositoryProvider(
@@ -80,6 +86,8 @@ final notificationsRepository = NotificationsRepository(NotificationsRemoteDataS
         RepositoryProvider<SupportRepository>.value(value: supportRepository),
         RepositoryProvider<SubjectsRepository>.value(value: subjectsRepository),
         RepositoryProvider<NotificationsRepository>.value(value: notificationsRepository),
+        RepositoryProvider<CoursesRepository>.value(value: coursesRepository),
+        RepositoryProvider<LessonsRepository>.value(value: lessonsRepository),
         RepositoryProvider<StorageService>.value(value: storageService),
         RepositoryProvider<ApiService>.value(value: apiService),
         RepositoryProvider<AuthRemoteDataSource>.value(value: authRemoteDataSource,),

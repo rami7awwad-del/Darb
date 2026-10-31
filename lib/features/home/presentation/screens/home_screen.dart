@@ -97,7 +97,7 @@ class _HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ⚠️ قياس تقديري: الفراغ بين الأقسام (20)
+   
     final gap = SizedBox(height: 20.h);
 
     return RefreshIndicator(

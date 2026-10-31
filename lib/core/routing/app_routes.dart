@@ -1,3 +1,16 @@
+import 'package:darb/features/courses/data/repositories/courses_repository.dart';
+import 'package:darb/features/courses/presentation/cubit/course_details_cubit.dart';
+import 'package:darb/features/courses/presentation/screens/course_details_screen.dart';
+import 'package:darb/features/courses/data/models/course_details_model.dart';
+import 'package:darb/features/home/data/models/course_model.dart';
+import 'package:darb/features/lessons/data/repositories/lessons_repository.dart';
+import 'package:darb/features/lessons/presentation/cubit/lesson_cubit.dart';
+import 'package:darb/features/lessons/presentation/screens/lesson_screen.dart';
+import 'package:darb/features/quiz/data/models/quiz_models.dart';
+import 'package:darb/features/quiz/presentation/cubit/quiz_cubit.dart';
+import 'package:darb/features/quiz/presentation/screens/quiz_result_screen.dart';
+import 'package:darb/features/quiz/presentation/screens/quiz_review_screen.dart';
+import 'package:darb/features/quiz/presentation/screens/quiz_screen.dart';
 import 'package:darb/features/achievements/presentation/cubit/achievements_cubit.dart';
 import 'package:darb/features/achievements/presentation/screens/achievements_screen.dart';
 import 'package:darb/features/auth/data/repositories/auth_repository.dart';
@@ -56,6 +69,11 @@ abstract class AppRoutes {
   static const String subjects = '/subjects';
   static const String subjectDetails = '/subjectDetails';
   static const String notifications = '/notifications';
+  static const String courseDetails = '/courseDetails';
+  static const String lesson = '/lesson';
+  static const String quiz = '/quiz';
+  static const String quizResult = '/quizResult';
+  static const String quizReview = '/quizReview';
 }
 
 /// ربط أسماء المسارات بالشاشات.
@@ -216,6 +234,56 @@ abstract class AppRouter {
             )..load(),
             child: SubjectDetailsScreen(subject: subject),
           ),
+          settings: settings,
+        );
+
+      case AppRoutes.courseDetails:
+        final course = settings.arguments as CourseModel;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => CourseDetailsCubit(
+              context.read<CoursesRepository>(),
+              courseId: course.id,
+            )..load(),
+            child: CourseDetailsScreen(course: course),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.lesson:
+        final lesson = settings.arguments as CourseLessonModel;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => LessonCubit(
+              context.read<LessonsRepository>(),
+              lessonId: lesson.id,
+            )..load(),
+            child: LessonScreen(lesson: lesson),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.quiz:
+        final args = settings.arguments as QuizArgs;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => QuizCubit(),
+            child: QuizScreen(args: args),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.quizResult:
+        final outcome = settings.arguments as QuizOutcome;
+        return MaterialPageRoute(
+          builder: (_) => QuizResultScreen(outcome: outcome),
+          settings: settings,
+        );
+
+      case AppRoutes.quizReview:
+        final outcome = settings.arguments as QuizOutcome;
+        return MaterialPageRoute(
+          builder: (_) => QuizReviewScreen(outcome: outcome),
           settings: settings,
         );
 
