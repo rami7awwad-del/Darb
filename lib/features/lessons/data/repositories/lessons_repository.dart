@@ -16,4 +16,6 @@ class LessonsRepository {
       _remote.addComment(lessonId: lessonId, comment: comment);
 
   Future<void> attend(int lessonId) => _remote.attend(lessonId);
+
+  Future<String> getLessonFile(int lessonId) => _remote.getLessonFile(lessonId);
 }

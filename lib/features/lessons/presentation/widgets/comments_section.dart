@@ -197,7 +197,6 @@ class _CommentInputState extends State<CommentInput> {
     );
     return Container(
       color: AppColors.white,
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 8.h), // 📏
       child: SafeArea(
         top: false,
         child: Row(

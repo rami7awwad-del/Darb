@@ -1,5 +1,25 @@
 import 'package:darb/features/home/data/models/course_model.dart';
 
+/// يقرأ رابط المحتوى بتسامح: file كنص، أو كائن فيه url/path، أو مفاتيح بديلة.
+String readLessonFile(Map<String, dynamic> json) {
+  String? pick(dynamic v) {
+    if (v is String && v.trim().isNotEmpty) return v.trim();
+    if (v is Map) {
+      for (final k in const ['url', 'path', 'link', 'file']) {
+        final r = pick(v[k]);
+        if (r != null) return r;
+      }
+    }
+    return null;
+  }
+
+  for (final k in const ['file', 'video', 'video_url', 'url', 'link']) {
+    final r = pick(json[k]);
+    if (r != null) return r;
+  }
+  return '';
+}
+
 /// درس داخل فصل (courses/details → semesters[].lessions[]).
 class CourseLessonModel {
   const CourseLessonModel({
@@ -46,7 +66,7 @@ class CourseLessonModel {
       typeId: (type['id'] as num?)?.toInt() ?? 0,
       typeName: type['name'] as String? ?? '',
       time: json['time']?.toString() ?? '',
-      file: json['file'] as String? ?? '',
+      file: readLessonFile(json),
       isFree: json['is_free'] as bool? ?? false,
       isSubscription: json['is_subscription'] as bool? ?? false,
       isAttended: json['is_attended'] as bool? ?? false,

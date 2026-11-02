@@ -251,14 +251,15 @@ abstract class AppRouter {
         );
 
       case AppRoutes.lesson:
-        final lesson = settings.arguments as CourseLessonModel;
+        final args = settings.arguments as LessonArgs;
+        final lesson = args.lesson;
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) => LessonCubit(
               context.read<LessonsRepository>(),
               lessonId: lesson.id,
             )..load(),
-            child: LessonScreen(lesson: lesson),
+            child: LessonScreen(args: args),
           ),
           settings: settings,
         );

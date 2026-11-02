@@ -14,6 +14,7 @@ import 'package:darb/features/courses/data/models/course_details_model.dart';
 import 'package:darb/features/courses/presentation/cubit/course_details_cubit.dart';
 import 'package:darb/features/courses/presentation/widgets/lesson_timeline_tile.dart';
 import 'package:darb/features/home/data/models/course_model.dart';
+import 'package:darb/features/lessons/presentation/screens/lesson_screen.dart';
 
 /// صفحة تفاصيل الدورة (Detail Page): صورة الدورة في شريط تركوازي، ثم الاسم والمدرّس
 /// والوصف، ثم "مسار التعلم": كل فصل ودروسه. معلومات الرأس تأتي من [course] فورًا،
@@ -26,6 +27,7 @@ class CourseDetailsScreen extends StatelessWidget {
   Future<void> _openLesson(
     BuildContext context,
     CourseLessonModel lesson,
+    CourseSemesterModel semester,
   ) async {
     if (lesson.isLocked) {
       ScaffoldMessenger.of(context)
@@ -36,7 +38,12 @@ class CourseDetailsScreen extends StatelessWidget {
       return;
     }
     final cubit = context.read<CourseDetailsCubit>();
-    await Navigator.pushNamed(context, AppRoutes.lesson, arguments: lesson);
+    await Navigator.pushNamed(context, AppRoutes.lesson, arguments: LessonArgs(
+        lesson: lesson,
+        semesterName: semester.name,
+        lessons: semester.lessons,
+      ),
+    );
     // بعد العودة: تحديث الدروس ليظهر الدرس كمشاهَد.
     if (context.mounted) cubit.load(silent: true);
   }
@@ -149,7 +156,7 @@ class CourseDetailsScreen extends StatelessWidget {
             LessonTimelineTile(
               lesson: s.lessons[i],
               isLast: i == s.lessons.length - 1,
-              onTap: () => _openLesson(context, s.lessons[i]),
+              onTap: () => _openLesson(context, s.lessons[i], s),
             ),
       ],
     ];

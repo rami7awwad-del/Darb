@@ -3,6 +3,7 @@ import 'package:darb/core/errors/errors_code.dart';
 import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
+import 'package:darb/features/courses/data/models/course_details_model.dart';
 import 'package:darb/features/lessons/data/models/comment_model.dart';
 
 class LessonsRemoteDataSource {
@@ -50,5 +51,21 @@ class LessonsRemoteDataSource {
     await _api.postFormData(ApiConstants.lessonsAttend, {
       'lession_id': lessonId,
     });
+  }
+
+  /// GET lessions/details?id= → رابط المحتوى (احتياط إن جاء file فارغًا
+  /// في courses/details). يقبل data ككائن أو داخل قائمة.
+  Future<String> getLessonFile(int lessonId) async {
+    final response = await _api.getRequest(
+      ApiConstants.lessonsDetails,
+      queryParameters: {'id': lessonId},
+    );
+    try {
+      var data = (response.data as Map<String, dynamic>)['data'];
+      if (data is List && data.isNotEmpty) data = data.first;
+      return data is Map<String, dynamic> ? readLessonFile(data) : '';
+    } catch (_) {
+      return '';
+    }
   }
 }
