@@ -13,8 +13,7 @@ import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
 import 'package:darb/features/auth/presentation/widgets/register_steps.dart';
 import 'package:darb/features/auth/presentation/widgets/terms_sheet.dart';
 
-
-/// معالج إكمال البيانات: شاشة واحدة تبدّل الخطوات حسب [RegisterCubit].
+/// Screen that shows the register.
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key, required this.phone});
 
@@ -24,6 +23,7 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
+/// State for the register screen widget.
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _firstName = TextEditingController();
@@ -41,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  /// Handles personal next.
   void _onPersonalNext() {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
@@ -57,6 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  /// Opens terms.
   Future<void> _openTerms() async {
     if (_openingTerms) return;
     _openingTerms = true;
@@ -71,6 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     await showTermsSheet(context, terms);
   }
 
+  /// Builds body.
   Widget _buildBody(BuildContext context, BaseState<RegisterData> state) {
     final data = state.data!;
     if (state.stateValue == StateValue.loading &&
@@ -148,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final isFirstStep = state.data!.step == RegisterStep.personal;
 
         return PopScope(
-          // زر الرجوع (النظام أو السهم) يرجع خطوة، ويخرج فقط من الخطوة الأولى.
+          // Back moves one step back and only leaves from the first step.
           canPop: isFirstStep,
           onPopInvokedWithResult: (didPop, _) {
             if (!didPop) context.read<RegisterCubit>().back();
@@ -156,7 +159,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Scaffold(
             body: Column(
               children: [
-                // السهم يظهر من الخطوة الثانية فما فوق (لا رجوع من الأولى إلى OTP).
                 AuthHeader(showBack: !isFirstStep),
                 Expanded(
                   child: SafeArea(

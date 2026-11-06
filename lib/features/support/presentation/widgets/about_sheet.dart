@@ -14,10 +14,7 @@ import 'package:darb/features/support/data/models/about_model.dart';
 import 'package:darb/features/support/data/repositories/support_repository.dart';
 import 'package:darb/features/support/presentation/cubit/about_cubit.dart';
 
-/// ورقة "حول التطبيق": الشعار، النص، وأزرار التواصل الاجتماعي.
-/// 📏 ارتفاع الشعار 104، حجم أزرار التواصل 40 والمسافة 12، حجم نص الوصف 12،
-/// وبقية القياسات من [showAppSheet].
-/// يحتاج حزمة url_launcher في pubspec.yaml لفتح الروابط.
+/// Shows about sheet.
 Future<void> showAboutSheet(BuildContext context) {
   final repository = context.read<SupportRepository>();
   return showAppSheet<void>(
@@ -31,6 +28,7 @@ Future<void> showAboutSheet(BuildContext context) {
   );
 }
 
+/// Body content of the about.
 class _AboutBody extends StatelessWidget {
   const _AboutBody();
 
@@ -40,7 +38,7 @@ class _AboutBody extends StatelessWidget {
       builder: (context, state) {
         if (state.stateValue == StateValue.loading) {
           return SizedBox(
-            height: 200.h, // 📏
+            height: 200.h,
             child: const Center(
               child: CircularProgressIndicator(color: AppColors.main600),
             ),
@@ -48,7 +46,7 @@ class _AboutBody extends StatelessWidget {
         }
         if (state.stateValue == StateValue.error) {
           return SizedBox(
-            height: 200.h, // 📏
+            height: 200.h,
             child: AppLoadError(
               message: state.errorMessage,
               onRetry: context.read<AboutCubit>().load,
@@ -69,10 +67,10 @@ class _AboutBody extends StatelessWidget {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              height: 104.h, // 📏
+              height: 104.h,
               fit: BoxFit.contain,
             ),
-            SizedBox(height: 12.h), // 📏
+            SizedBox(height: 12.h),
             if (about.text.isNotEmpty)
               Text(
                 about.text,
@@ -81,10 +79,10 @@ class _AboutBody extends StatelessWidget {
                   color: AppColors.main600,
                 ),
               ),
-            SizedBox(height: 16.h), // 📏
+            SizedBox(height: 16.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 12.w, // 📏
+              spacing: 12.w,
               children: [
                 for (final s in socials)
                   _SocialButton(icon: s.$1, color: s.$2, url: s.$3!),
@@ -97,6 +95,7 @@ class _AboutBody extends StatelessWidget {
   }
 }
 
+/// Button widget for the social.
 class _SocialButton extends StatelessWidget {
   const _SocialButton({
     required this.icon,
@@ -120,10 +119,10 @@ class _SocialButton extends StatelessWidget {
       customBorder: const CircleBorder(),
       onTap: _open,
       child: Container(
-        width: 40.w, // 📏
-        height: 40.w, // 📏
+        width: 40.w,
+        height: 40.w,
         decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        child: Icon(icon, size: 22.w, color: AppColors.white), // 📏
+        child: Icon(icon, size: 22.w, color: AppColors.white),
       ),
     );
   }

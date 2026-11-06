@@ -5,12 +5,12 @@ import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/features/notifications/data/models/notification_model.dart';
 
+/// Remote data source that calls the notifications endpoints.
 class NotificationsRemoteDataSource {
   NotificationsRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// GET notifications/get?page=1 → data: قائمة إشعارات.
   Future<List<NotificationModel>> getNotifications({required int page}) async {
     final response = await _api.getRequest(
       ApiConstants.notificationsGet,

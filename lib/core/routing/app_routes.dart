@@ -62,7 +62,7 @@ import 'package:darb/features/support/presentation/screens/info_page_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// أسماء المسارات. تُضاف هنا مسارات كل شاشة عند بنائها.
+/// Route names used by the app.
 abstract class AppRoutes {
   static const String splash = '/splash';
   static const String login = '/login';
@@ -89,10 +89,9 @@ abstract class AppRoutes {
   static const String mySubscriptions = '/mySubscriptions';
 }
 
-/// ربط أسماء المسارات بالشاشات.
-/// - المعاملات تُمرَّر عبر settings.arguments.
-/// - أنشئ BlocProvider الخاص بكل شاشة هنا عند الحاجة.
+/// Maps route names to screens and their providers.
 abstract class AppRouter {
+  /// Handles generate route.
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.splash:
@@ -140,7 +139,6 @@ abstract class AppRouter {
         );
 
       case AppRoutes.mainLayout:
-        // Cubits التبويبات على مستوى المسار حتى تبقى بياناتها عند التنقل بين التبويبات.
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
@@ -198,7 +196,6 @@ abstract class AppRouter {
         );
 
       case AppRoutes.downloadedCourses:
-        // TODO: مرّر العناصر من مخزن التنزيلات عند بنائه.
         return MaterialPageRoute(
           builder: (_) => const DownloadedCoursesScreen(),
           settings: settings,

@@ -16,13 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// خيارات الصفحة الأربعة (Figma: Categories page).
+/// Small private widget used only in this file.
 enum _Option { year, free, codeSubject, codeCount }
 
-/// صفحة الاشتراكات (Figma). البطاقتان العلويتان (سنة واحدة / مجاني) شكليتان،
-/// والاشتراك الفعلي بالكود فقط (subscriptions/add) عبر أي من حقلي الكود.
-/// "أشترك الان" مع "سنة واحدة" ← صفحة خيارات الدفع (شكلية).
-/// تُغلق بـ true بعد تفعيل ناجح ليحدّث المستدعي بياناته أو يدخل المادة.
+/// Screen that shows the subscription.
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
 
@@ -30,6 +27,7 @@ class SubscriptionScreen extends StatefulWidget {
   State<SubscriptionScreen> createState() => _SubscriptionScreenState();
 }
 
+/// State for the subscription screen widget.
 class _SubscriptionScreenState extends State<SubscriptionScreen> {
   final _subjectCode = TextEditingController();
   final _countCode = TextEditingController();
@@ -101,7 +99,6 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                     child: CircularProgressIndicator(color: AppColors.main600),
                   );
                 }
-                // مواد النافذة: كل مواد الباقات بلا تكرار (المجانية للبطاقة المجانية).
                 final all = <int, SubjectModel>{
                   for (final p in data.packages)
                     for (final s in p.subjects) s.id: s,
@@ -109,7 +106,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 final free = all.where((s) => s.isFree).toList();
 
                 return ListView(
-                  padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h), // 📏
+                  padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h),
                   children: [
                     _PlanCard(
                       title: 'سنة واحدة',
@@ -121,7 +118,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       onTap: () => setState(() => _selected = _Option.year),
                       onDetails: () => _showSubjects(context, all),
                     ),
-                    SizedBox(height: 16.h), // 📏
+                    SizedBox(height: 16.h),
                     _PlanCard(
                       title: 'مجاني',
                       description: 'لتحصل على بعض الميزات التطبيق',
@@ -132,7 +129,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       onTap: () => setState(() => _selected = _Option.free),
                       onDetails: () => _showSubjects(context, free),
                     ),
-                    SizedBox(height: 16.h), // 📏
+                    SizedBox(height: 16.h),
                     _CodeField(
                       controller: _subjectCode,
                       hint: 'أكتب كود لمادة أو لمنهاج كامل',
@@ -140,7 +137,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       onSelect: () =>
                           setState(() => _selected = _Option.codeSubject),
                     ),
-                    SizedBox(height: 16.h), // 📏
+                    SizedBox(height: 16.h),
                     _CodeField(
                       controller: _countCode,
                       hint: 'أكتب كود لعدد من المواد..',
@@ -148,7 +145,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       onSelect: () =>
                           setState(() => _selected = _Option.codeCount),
                     ),
-                    SizedBox(height: 24.h), // 📏
+                    SizedBox(height: 24.h),
                     AppPrimaryButton(
                       text: 'أشترك الان',
                       isLoading: data.redeeming,
@@ -165,7 +162,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 }
 
-/// دائرة اختيار في نهاية البطاقة (يسار في RTL) كما في Figma.
+/// Widget that shows the radio dot.
 class _RadioDot extends StatelessWidget {
   const _RadioDot({required this.selected, this.light = false});
 
@@ -176,8 +173,8 @@ class _RadioDot extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = light ? AppColors.white : AppColors.main600;
     return Container(
-      width: 22.w, // 📏
-      height: 22.w, // 📏
+      width: 22.w,
+      height: 22.w,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -185,8 +182,8 @@ class _RadioDot extends StatelessWidget {
       ),
       child: selected
           ? Container(
-              width: 12.w, // 📏
-              height: 12.w, // 📏
+              width: 12.w,
+              height: 12.w,
               decoration: BoxDecoration(
                 color: light ? AppColors.grey50 : AppColors.main600,
                 shape: BoxShape.circle,
@@ -197,6 +194,7 @@ class _RadioDot extends StatelessWidget {
   }
 }
 
+/// Card widget for the plan.
 class _PlanCard extends StatelessWidget {
   const _PlanCard({
     required this.title,
@@ -215,14 +213,13 @@ class _PlanCard extends StatelessWidget {
   final String priceSuffix;
   final bool selected;
 
-  /// البطاقة الزرقاء الممتلئة (سنة واحدة) مقابل البطاقة ذات الحد (مجاني).
   final bool filled;
   final VoidCallback onTap;
   final VoidCallback onDetails;
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(12.r); // 📏
+    final radius = BorderRadius.circular(12.r);
     final titleColor = filled ? AppColors.white : AppColors.main600;
     final textColor = filled ? AppColors.white : AppColors.grey400;
     final priceColor = filled ? AppColors.white : AppColors.second500;
@@ -240,16 +237,16 @@ class _PlanCard extends StatelessWidget {
         borderRadius: radius,
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.all(16.w), // 📏
+          padding: EdgeInsets.all(16.w),
           child: Row(
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h, // 📏
+                  spacing: 8.h,
                   children: [
                     Row(
-                      spacing: 8.w, // 📏
+                      spacing: 8.w,
                       children: [
                         Text(
                           title,
@@ -261,8 +258,8 @@ class _PlanCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.r),
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, // 📏
-                              vertical: 2.h, // 📏
+                              horizontal: 10.w,
+                              vertical: 2.h,
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.r),
@@ -301,7 +298,7 @@ class _PlanCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: 12.w), // 📏
+              SizedBox(width: 12.w),
               _RadioDot(selected: selected, light: filled),
             ],
           ),
@@ -311,7 +308,7 @@ class _PlanCard extends StatelessWidget {
   }
 }
 
-/// حقل كود بشكل بطاقة: النص في البداية ودائرة الاختيار في النهاية (Figma).
+/// Input field widget for the code.
 class _CodeField extends StatelessWidget {
   const _CodeField({
     required this.controller,
@@ -328,10 +325,10 @@ class _CodeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 52.h, // 📏
-      padding: EdgeInsets.symmetric(horizontal: 16.w), // 📏
+      height: 52.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(11.r), // 📏
+        borderRadius: BorderRadius.circular(11.r),
         border: Border.all(
           color: selected ? AppColors.main600 : AppColors.grey100,
         ),
@@ -355,7 +352,7 @@ class _CodeField extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 12.w), // 📏
+          SizedBox(width: 12.w),
           GestureDetector(
             onTap: onSelect,
             child: _RadioDot(selected: selected),
@@ -366,16 +363,16 @@ class _CodeField extends StatelessWidget {
   }
 }
 
-/// نافذة "المواد المتاحة" (Figma): شبكة بطاقات المواد، الإغلاق في النهاية.
+/// Shows subjects.
 void _showSubjects(BuildContext context, List<SubjectModel> subjects) {
   showDialog<void>(
     context: context,
     builder: (ctx) => Dialog(
       backgroundColor: AppColors.white,
-      insetPadding: EdgeInsets.symmetric(horizontal: 24.w), // 📏
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
       child: Padding(
-        padding: EdgeInsets.all(16.w), // 📏
+        padding: EdgeInsets.all(16.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -392,10 +389,10 @@ void _showSubjects(BuildContext context, List<SubjectModel> subjects) {
                 AppCircleCloseButton(onTap: () => Navigator.pop(ctx)),
               ],
             ),
-            SizedBox(height: 16.h), // 📏
+            SizedBox(height: 16.h),
             if (subjects.isEmpty)
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 24.h), // 📏
+                padding: EdgeInsets.symmetric(vertical: 24.h),
                 child: Center(
                   child: Text(
                     'لا توجد مواد',
@@ -411,19 +408,19 @@ void _showSubjects(BuildContext context, List<SubjectModel> subjects) {
                   itemCount: subjects.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    crossAxisSpacing: 12.w, // 📏
-                    mainAxisSpacing: 12.h, // 📏
-                    mainAxisExtent: 80.h, // 📏
+                    crossAxisSpacing: 12.w,
+                    mainAxisSpacing: 12.h,
+                    mainAxisExtent: 80.h,
                   ),
                   itemBuilder: (_, i) => Container(
                     decoration: BoxDecoration(
                       color: AppColors.second100,
-                      borderRadius: BorderRadius.circular(8.r), // 📏
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
-                    padding: EdgeInsets.all(8.w), // 📏
+                    padding: EdgeInsets.all(8.w),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 4.h, // 📏
+                      spacing: 4.h,
                       children: [
                         Text(
                           subjects[i].name,
@@ -435,8 +432,8 @@ void _showSubjects(BuildContext context, List<SubjectModel> subjects) {
                         ClipOval(
                           child: AppNetworkImage(
                             url: subjects[i].image,
-                            width: 36.w, // 📏
-                            height: 36.w, // 📏
+                            width: 36.w,
+                            height: 36.w,
                           ),
                         ),
                       ],

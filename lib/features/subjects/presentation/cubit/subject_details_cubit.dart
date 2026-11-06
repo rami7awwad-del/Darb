@@ -7,7 +7,7 @@ import 'package:darb/features/subjects/data/models/subject_details_model.dart';
 import 'package:darb/features/subjects/data/repositories/subjects_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// صفحة المادة: طلب واحد يغذّي التبويبات الثلاثة (المحتوى، إختبارات، نشاطات يومية).
+/// Cubit that manages the subject details state.
 class SubjectDetailsCubit extends Cubit<BaseState<SubjectDetailsModel>> {
   SubjectDetailsCubit(this._repository, {required this.subjectId})
       : super(const BaseState<SubjectDetailsModel>(stateValue: StateValue.loading));
@@ -15,6 +15,7 @@ class SubjectDetailsCubit extends Cubit<BaseState<SubjectDetailsModel>> {
   final SubjectsRepository _repository;
   final int subjectId;
 
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent) {
       emit(state.copyWith(stateValue: StateValue.loading, clearErrorMessage: true));
@@ -33,6 +34,7 @@ class SubjectDetailsCubit extends Cubit<BaseState<SubjectDetailsModel>> {
     }
   }
 
+  /// Handles error.
   void _onError(String message) {
     if (isClosed || state.data != null) return;
     emit(state.copyWith(stateValue: StateValue.error, errorMessage: message));

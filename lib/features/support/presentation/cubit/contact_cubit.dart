@@ -6,7 +6,7 @@ import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/features/support/data/repositories/support_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// إرسال رسالة "تواصل معنا". loaded = تم الإرسال.
+/// Cubit that manages the contact state.
 class ContactCubit extends Cubit<BaseState<bool>> {
   ContactCubit(this._repository) : super(const BaseState<bool>());
 

@@ -1,8 +1,7 @@
 import 'package:darb/features/courses/data/models/course_details_model.dart';
 import 'package:darb/features/lessons/data/models/comment_model.dart';
 
-/// رد lessions/details?id= الموحّد: الدرس + فصله بدروسه + تعليقاته.
-/// يغني عن طلب comments/get-by-lession ويضمن اتساق الدرس والفصل والتعليقات.
+/// Model that holds the lesson details data parsed from the API.
 class LessonDetailsModel {
   const LessonDetailsModel({
     required this.lesson,
@@ -11,14 +10,13 @@ class LessonDetailsModel {
     this.comments = const [],
   });
 
-  /// الدرس نفسه؛ رابط الفيديو في `url` والملف في `file` (يقرؤهما readLessonFile).
   final CourseLessonModel lesson;
   final String semesterName;
 
-  /// دروس الفصل مرتبة، لـ "مسار التعلم".
   final List<CourseLessonModel> semesterLessons;
   final List<CommentModel> comments;
 
+  /// Builds the object from the API json.
   factory LessonDetailsModel.fromJson(Map<String, dynamic> json) {
     final semesterJson = json['semester'] is Map<String, dynamic>
         ? json['semester'] as Map<String, dynamic>

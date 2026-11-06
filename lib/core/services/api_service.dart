@@ -1,23 +1,22 @@
 import 'package:darb/core/errors/error_handler.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
+/// Thin wrapper around Dio for all API calls.
 class ApiService {
   final Dio _dio;
 
   ApiService(this._dio);
 
-  Future<Response> _send(Future<Response> Function() call, String tag) async {
+  /// Runs a request and converts any failure into an app error.
+  Future<Response> _send(Future<Response> Function() call) async {
     try {
       return await call();
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint('[$tag] Exception: $e');
-      }
       throw ErrorHandler.handle(e);
     }
   }
 
+  /// Gets request.
   Future<Response> getRequest(
     String endpoint, {
     Map<String, dynamic>? queryParameters,
@@ -31,10 +30,10 @@ class ApiService {
         options: Options(headers: headers),
         cancelToken: cancelToken,
       ),
-      'GET',
     );
   }
 
+  /// Posts request.
   Future<Response> postRequest(
     String endpoint, {
     Map<String, dynamic>? body,
@@ -52,10 +51,10 @@ class ApiService {
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
       ),
-      'POST',
     );
   }
 
+  /// Posts form data.
   Future<Response> postFormData(
     String endpoint,
     Map<String, dynamic> body, {
@@ -75,12 +74,10 @@ class ApiService {
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
       ),
-      'POST FormData',
     );
   }
 
-  /// POST form-data بمفاتيح مكررة (مثل `answers_id[]`) كما يتوقعها Laravel.
-  /// Map لا تسمح بتكرار المفتاح، لذلك تُمرَّر الحقول كقائمة MapEntry.
+  /// Posts form data that can repeat the same key, as the backend expects.
   Future<Response> postFormFields(
     String endpoint,
     List<MapEntry<String, String>> fields, {
@@ -89,7 +86,6 @@ class ApiService {
     final formData = FormData()..fields.addAll(fields);
     return _send(
       () => _dio.post(endpoint, data: formData, cancelToken: cancelToken),
-      'POST FormFields',
     );
   }
 }

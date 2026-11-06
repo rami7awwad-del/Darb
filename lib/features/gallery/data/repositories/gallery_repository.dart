@@ -1,6 +1,7 @@
 import 'package:darb/features/gallery/data/datasources/gallery_remote_data_source.dart';
 import 'package:darb/features/gallery/data/models/gallery_model.dart';
 
+/// Repository that gives the cubits access to the gallery data.
 class GalleryRepository {
   GalleryRepository(this._remote);
 

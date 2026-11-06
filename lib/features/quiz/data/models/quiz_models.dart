@@ -1,4 +1,3 @@
-/// يحوّل نص HTML القادم من الـ API (مثل <p>..&nbsp;</p>) إلى نص عادي.
 String stripHtml(dynamic value) {
   var s = (value ?? '').toString();
   s = s.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
@@ -14,7 +13,7 @@ String stripHtml(dynamic value) {
   return s.trim();
 }
 
-/// جواب واحد داخل سؤال (answers[] في subjects/details).
+/// One answer option of a quiz question.
 class QuizAnswer {
   const QuizAnswer({
     required this.id,
@@ -27,9 +26,9 @@ class QuizAnswer {
   final String title;
   final bool correct;
 
-  /// `current_answer` في exams/result: إجابة الطالب المسجّلة (غائب قبل الحضور).
   final bool selected;
 
+  /// Builds the object from the API json.
   factory QuizAnswer.fromJson(Map<String, dynamic> json) => QuizAnswer(
         id: (json['id'] as num?)?.toInt() ?? 0,
         title: stripHtml(json['title']),
@@ -38,7 +37,7 @@ class QuizAnswer {
       );
 }
 
-/// سؤال (questions[] داخل exam).
+/// One question of a quiz.
 class QuizQuestion {
   const QuizQuestion({
     required this.id,
@@ -57,6 +56,7 @@ class QuizQuestion {
     return null;
   }
 
+  /// Builds the object from the API json.
   factory QuizQuestion.fromJson(Map<String, dynamic> json) => QuizQuestion(
         id: (json['id'] as num?)?.toInt() ?? 0,
         title: stripHtml(json['title']),
@@ -66,7 +66,7 @@ class QuizQuestion {
       );
 }
 
-/// معاملات فتح شاشة الاختبار.
+/// Arguments passed to the quiz screen.
 class QuizArgs {
   const QuizArgs({
     required this.title,
@@ -74,14 +74,12 @@ class QuizArgs {
     required this.examId,
   });
 
-  /// معرّف الاختبار (exam.id): يُستخدم لجلب النتيجة بعد التسليم.
   final int examId;
   final String title;
   final List<QuizQuestion> questions;
 }
 
-/// نتيجة محاولة: تُحسب محليًا من علامة correct في كل جواب.
-/// ⚠️ الأسئلة غير المجابة تُحسب خاطئة.
+/// Result of the quiz.
 class QuizOutcome {
   const QuizOutcome({
     required this.title,
@@ -92,7 +90,6 @@ class QuizOutcome {
   final String title;
   final List<QuizQuestion> questions;
 
-  /// questionId → answerId
   final Map<int, int> selected;
 
   QuizAnswer? selectedAnswer(QuizQuestion q) {
@@ -104,8 +101,7 @@ class QuizOutcome {
     return null;
   }
 
-  /// نتيجة من exams/result: الإجابات المختارة تُقرأ من `current_answer`، فتطابق
-  /// حساب الخادم نفسه.
+  /// Creates the object from from details.
   factory QuizOutcome.fromDetails(QuizDetails details, {String? title}) {
     final selected = <int, int>{};
     for (final q in details.questions) {
@@ -128,8 +124,7 @@ class QuizOutcome {
   int get percent => total == 0 ? 0 : ((correct * 100) / total).round();
 }
 
-
-/// رد exams/result?id= : الاختبار بأسئلته وأجوبته (+ current_answer بعد الحضور).
+/// Quiz title, duration and questions.
 class QuizDetails {
   const QuizDetails({
     required this.id,
@@ -147,14 +142,13 @@ class QuizDetails {
   final int failedAnswers;
   final List<QuizQuestion> questions;
 
-  /// حضر الطالب الاختبار (له إجابة مسجّلة واحدة على الأقل).
   bool get attended =>
       questions.any((q) => q.answers.any((a) => a.selected));
 
   static int _int(dynamic v) => (v as num?)?.toInt() ?? 0;
 
+  /// Builds the object from the API json.
   factory QuizDetails.fromJson(Map<String, dynamic> json) {
-    // قد يأتي الاختبار مغلّفًا بـ exam أو في المستوى الأعلى.
     final inner =
         json['exam'] is Map<String, dynamic> ? json['exam'] as Map<String, dynamic> : json;
     final questions = (inner['questions'] as List? ?? const [])
@@ -173,7 +167,7 @@ class QuizDetails {
   }
 }
 
-/// رد POST exams/attend-exam: ثلاثة أعداد بلا معرّف اختبار.
+/// Score returned after the quiz is submitted.
 class QuizScore {
   const QuizScore({
     required this.questionsCount,
@@ -185,6 +179,7 @@ class QuizScore {
   final int correctAnswers;
   final int failedAnswers;
 
+  /// Builds the object from the API json.
   factory QuizScore.fromJson(Map<String, dynamic> json) => QuizScore(
         questionsCount: (json['questions_count'] as num?)?.toInt() ?? 0,
         correctAnswers: (json['correct_answers'] as num?)?.toInt() ?? 0,
@@ -192,9 +187,7 @@ class QuizScore {
       );
 }
 
-/// عنصر قائمة exams/my أو daily-activities/my.
-/// ⚠️ شكل العنصر لم يُرَ فعليًا (القائمة كانت فارغة عند الزميل)، لذلك يُقرأ
-/// بغلاف `exam` أو من المستوى الأعلى والحقول الغائبة بقيم افتراضية.
+/// Item widget for the quiz list.
 class QuizListItem {
   const QuizListItem({
     required this.id,
@@ -210,6 +203,7 @@ class QuizListItem {
   final int questionsCount;
   final bool isActivity;
 
+  /// Builds the object from the API json.
   factory QuizListItem.fromJson(
     Map<String, dynamic> json, {
     required bool isActivity,

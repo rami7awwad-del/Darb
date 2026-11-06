@@ -11,7 +11,7 @@ import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 import 'package:darb/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:darb/features/notifications/presentation/widgets/notification_tile.dart';
 
-/// شاشة الإشعارات. تتطلب NotificationsCubit في الشجرة (يُنشأ في app_routes).
+/// Screen that shows the notifications.
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
 
@@ -33,7 +33,7 @@ class NotificationsScreen extends StatelessWidget {
   }
 }
 
-/// دائرة بيضاء بعدد غير المقروء (المحمَّل حاليًا). تختفي عند الصفر.
+/// Badge widget for the unread.
 class _UnreadBadge extends StatelessWidget {
   const _UnreadBadge();
 
@@ -61,6 +61,7 @@ class _UnreadBadge extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Body extends StatelessWidget {
   const _Body();
 
@@ -85,7 +86,7 @@ class _Body extends StatelessWidget {
             onRefresh: () => cubit.load(silent: true),
             child: ListView(
               children: [
-                SizedBox(height: 160.h), // 📏
+                SizedBox(height: 160.h),
                 Center(
                   child: Text(
                     'لا توجد إشعارات',
@@ -111,7 +112,7 @@ class _Body extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: data.items.length + (data.loadingMore ? 1 : 0),
               separatorBuilder: (_, __) =>
-                  Container(height: 4.h, color: AppColors.grey50), // 📏
+                  Container(height: 4.h, color: AppColors.grey50),
               itemBuilder: (context, i) {
                 if (i >= data.items.length) {
                   return Padding(

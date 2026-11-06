@@ -6,12 +6,12 @@ import 'package:darb/core/services/api_service.dart';
 import 'package:darb/features/profile/data/models/profile_model.dart';
 import 'package:dio/dio.dart';
 
+/// Remote data source that calls the profile endpoints.
 class ProfileRemoteDataSource {
   ProfileRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// يحوّل رد الخادم (data: بيانات المستخدم) إلى [ProfileModel].
   ProfileModel _parse(Response response) {
     try {
       final body = response.data as Map<String, dynamic>;
@@ -25,14 +25,13 @@ class ProfileRemoteDataSource {
     }
   }
 
-  /// GET profile/get → data: بيانات المستخدم.
+  /// Gets profile.
   Future<ProfileModel> getProfile() async {
     final response = await _api.getRequest(ApiConstants.profile);
     return _parse(response);
   }
 
-  /// POST users/update (form-data) → data: بيانات المستخدم بعد التعديل.
-  /// الجنس: 0 أنثى، 1 ذكر.
+  /// Updates profile.
   Future<ProfileModel> updateProfile({
     required String firstName,
     required String lastName,
@@ -43,7 +42,6 @@ class ProfileRemoteDataSource {
       'f_name': firstName,
       'l_name': lastName,
       'school_id': schoolId,
-      // الجنس اختياري: users/update في Postman تحتوي f_name و l_name و school_id فقط.
       'gender': gender,
     });
     return _parse(response);

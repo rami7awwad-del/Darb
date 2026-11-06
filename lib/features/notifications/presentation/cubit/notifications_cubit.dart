@@ -7,6 +7,7 @@ import 'package:darb/features/notifications/data/models/notification_model.dart'
 import 'package:darb/features/notifications/data/repositories/notifications_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// State data for the notifications.
 class NotificationsData {
   const NotificationsData({
     this.items = const [],
@@ -17,16 +18,14 @@ class NotificationsData {
 
   final List<NotificationModel> items;
 
-  /// آخر صفحة تم تحميلها.
   final int page;
 
-  /// الرد لا يحمل بيانات ترقيم (meta) ولا حجم صفحة ثابتًا،
-  /// فنستمر بالتحميل حتى تعود صفحة فارغة أو بلا عناصر جديدة.
   final bool hasMore;
   final bool loadingMore;
 
   int get unreadCount => items.where((e) => !e.isRead).length;
 
+  /// Returns a copy with the given fields replaced.
   NotificationsData copyWith({
     List<NotificationModel>? items,
     int? page,
@@ -40,7 +39,7 @@ class NotificationsData {
   );
 }
 
-/// شاشة الإشعارات: الصفحة الأولى + تحميل صفحات إضافية عند التمرير.
+/// Cubit that manages the notifications state.
 class NotificationsCubit extends Cubit<BaseState<NotificationsData>> {
   NotificationsCubit(this._repository)
     : super(
@@ -54,7 +53,7 @@ class NotificationsCubit extends Cubit<BaseState<NotificationsData>> {
 
   NotificationsData get _data => state.data!;
 
-  /// [silent] = true للسحب للتحديث (بدون مؤشر التحميل الكامل).
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent) {
       emit(
@@ -82,14 +81,14 @@ class NotificationsCubit extends Cubit<BaseState<NotificationsData>> {
     }
   }
 
+  /// Handles load error.
   void _onLoadError(String message) {
     if (isClosed) return;
-    // فشل تحديث صامت مع وجود بيانات سابقة: نُبقي ما هو معروض.
     if (_data.items.isNotEmpty) return;
     emit(state.copyWith(stateValue: StateValue.error, errorMessage: message));
   }
 
-  /// يحمّل الصفحة التالية. فشله صامت، وتُعاد المحاولة عند التمرير التالي.
+  /// Loads the next page of results.
   Future<void> loadMore() async {
     final data = _data;
     if (state.stateValue != StateValue.loaded ||
@@ -102,7 +101,6 @@ class NotificationsCubit extends Cubit<BaseState<NotificationsData>> {
     try {
       final more = await _repository.getNotifications(page: next);
       if (isClosed) return;
-      // حماية من خادم يتجاهل page فيكرر نفس العناصر.
       final known = _data.items.map((e) => e.id).toSet();
       final fresh = more.where((e) => !known.contains(e.id)).toList();
       emit(

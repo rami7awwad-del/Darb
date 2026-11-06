@@ -4,10 +4,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-/// حوار الاشتراك: "اشترك الآن واحصل عليه/عليها".
-/// "اشترك" يفتح صفحة الاشتراكات، ويعيد true إن تم تفعيل اشتراك (ليحدّث المستدعي
-/// بياناته أو يفتح المادة). "إلغاء" يعيد false.
-/// يُستخدم للمادة/الكورس المدفوع ولدرس مقفل.
+/// Shows subscribe dialog.
 Future<bool> showSubscribeDialog(
   BuildContext context, {
   String title = 'اشترك الآن واحصل عليه',
@@ -41,7 +38,6 @@ Future<bool> showSubscribeDialog(
     ),
   );
   if (subscribe != true) return false;
-  // navigatorKey لا يعتمد على context (قد لا يصلح للتنقل بعد إغلاق الحوار).
   final done = await navigatorKey.currentState
       ?.pushNamed<bool>(AppRoutes.subscription);
   return done ?? false;

@@ -8,10 +8,7 @@ import 'package:darb/core/style/phosphor_icons.dart';
 import 'package:darb/core/widgets/app_outline_button.dart';
 import 'package:darb/core/widgets/app_primary_button.dart';
 
-/// نافذة "أكمل حسابك الان" (أولى خطوتين). تُغلق بـ true عند الضغط على "أكمل"،
-/// وبـ false (أو null) عند "الرجوع" أو زر الإغلاق أو الضغط خارجها.
-/// ⚠️ قياس تقديري: الهامش الجانبي للنافذة (40)، نصف قطر الحواف (24)،
-/// الحشوة (24)، حجم أيقونة الإغلاق (32)، المسافة بين الصف العلوي والأزرار (24).
+/// Dialog for the complete account.
 class CompleteAccountDialog extends StatelessWidget {
   const CompleteAccountDialog({super.key});
 

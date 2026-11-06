@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// تبويبات شريحية: المواد / الفصول / الباقات (الأول في البداية = يمين في RTL).
-/// ⚠️ قياس تقديري: ارتفاع الشريحة (40) والمسافة بينها (12) ولون المحدد (main500).
+/// Tabs widget for the library.
 class LibraryTabs extends StatelessWidget {
   const LibraryTabs({
     super.key,
@@ -36,6 +35,7 @@ class LibraryTabs extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Chip extends StatelessWidget {
   const _Chip({
     required this.label,

@@ -9,12 +9,7 @@ import 'package:darb/core/widgets/app_outline_button.dart';
 import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/library/presentation/widgets/library_progress_row.dart';
 
-/// بطاقة كورس في "موادي": الصورة في البداية، ثم اسم الدورة والمدرس وعدد الفصول
-/// والدروس، ثم اسم المادة وشريطا التقدم وزر "متابعة التعلم".
-/// ⚠️ ربط الحقول (افتراضات):
-///  - اسم الدورة (بجانب الأيقونة) = course_name، والمادة (عنوان عريض) = name.
-///  - "الوحدات المكتملة" = semester_rate، و"الدروس المنجزة" = lession_rate.
-/// ⚠️ قياس تقديري: قطر الصورة (96) وخلفيتها الدائرية (second100) وRadius البطاقة (16).
+/// Card widget for the library course.
 class LibraryCourseCard extends StatelessWidget {
   const LibraryCourseCard({
     super.key,
@@ -27,10 +22,8 @@ class LibraryCourseCard extends StatelessWidget {
   final CourseModel course;
   final VoidCallback? onContinue;
 
-  /// إظهار زر "متابعة التعلم" (يُخفى داخل بطاقة الباقة كما في Figma).
   final bool showAction;
 
-  /// حد رفيع بدل الظل (البطاقة المتداخلة داخل الباقة).
   final bool outlined;
 
   @override

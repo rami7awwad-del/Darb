@@ -1,3 +1,4 @@
+/// Model that holds the subject data parsed from the API.
 class SubjectModel {
   const SubjectModel({
     required this.id,
@@ -13,6 +14,7 @@ class SubjectModel {
   final bool isFree;
   final bool isSubscription;
 
+  /// Builds the object from the API json.
   factory SubjectModel.fromJson(Map<String, dynamic> json) => SubjectModel(
         id: json['id'] as int,
         name: json['name'] as String? ?? '',

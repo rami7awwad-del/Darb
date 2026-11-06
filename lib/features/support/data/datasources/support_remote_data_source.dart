@@ -7,7 +7,7 @@ import 'package:darb/features/support/data/models/contact_info_model.dart';
 import 'package:darb/features/support/data/models/faq_model.dart';
 import 'package:dio/dio.dart';
 
-/// طلبات الدعم والمعلومات: الأسئلة الشائعة، الصفحات النصية، روابط التواصل، تواصل معنا.
+/// Remote data source that calls the support endpoints.
 class SupportRemoteDataSource {
   SupportRemoteDataSource(this._api);
 
@@ -19,7 +19,6 @@ class SupportRemoteDataSource {
         response: response,
       );
 
-  /// يقرأ حقل data من الرد، وأي شكل غير متوقع يتحول إلى APP_ERROR.
   T _parse<T>(Response response, T Function(dynamic data) convert) {
     try {
       final body = response.data as Map<String, dynamic>;
@@ -29,7 +28,6 @@ class SupportRemoteDataSource {
     }
   }
 
-  /// GET faqs/all
   Future<List<FaqModel>> getFaqs() async {
     final response = await _api.getRequest(ApiConstants.faqsAll);
     return _parse(
@@ -40,13 +38,13 @@ class SupportRemoteDataSource {
     );
   }
 
-  /// GET pages/... → data.value (نص HTML).
+  /// Gets page value.
   Future<String> getPageValue(String endpoint) async {
     final response = await _api.getRequest(endpoint);
     return _parse(response, (d) => (d as Map<String, dynamic>)['value'] as String);
   }
 
-  /// GET infos/all
+  /// Gets infos.
   Future<ContactInfoModel> getInfos() async {
     final response = await _api.getRequest(ApiConstants.infosAll);
     return _parse(
@@ -55,7 +53,7 @@ class SupportRemoteDataSource {
     );
   }
 
-  /// POST contact-us/add (form-data)
+  /// Adds contact us.
   Future<void> addContactUs({
     required String firstName,
     required String lastName,

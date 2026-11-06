@@ -12,6 +12,7 @@ import 'package:darb/features/auth/data/repositories/registration_repository.dar
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,8 +34,6 @@ import 'package:darb/features/subjects/data/repositories/subjects_repository.dar
 import 'package:darb/features/notifications/data/datasources/notifications_remote_data_source.dart';
 import 'package:darb/features/notifications/data/repositories/notifications_repository.dart';
 
-
-
 import 'package:darb/features/quiz/data/datasources/quiz_remote_data_source.dart';
 import 'package:darb/features/quiz/data/repositories/quiz_repository.dart';
 import 'package:darb/features/subscription/data/datasources/subscription_remote_data_source.dart';
@@ -42,14 +41,16 @@ import 'package:darb/features/subscription/data/repositories/subscription_reposi
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Allow both portrait and landscape.
+  await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
 
-  // Storage: يجب أن يُهيَّأ قبل إنشاء Dio ليكون التوكن جاهزًا في أول طلب
+  // Storage must be ready before Dio is created so the token is available on the first request.
   final storageService = StorageService();
   await storageService.init();
 
-  // Network
   final dio = DioFactory(
     storageService,
+    // Send the user back to login when the server rejects the token.
     onUnauthorized: () {
       navigatorKey.currentState?.pushNamedAndRemoveUntil(
         AppRoutes.login,
@@ -58,8 +59,6 @@ void main() async {
     },
   ).getDio();
   final apiService = ApiService(dio);
-
-  
 
   final authRemoteDataSource = AuthRemoteDataSource(apiService);
   final authRepository = AuthRepository(
@@ -109,22 +108,66 @@ final subscriptionRepository = SubscriptionRepository(SubscriptionRemoteDataSour
   );
 }
 
-class MyApp extends StatelessWidget {
+/// Root widget of the app.
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+/// Keeps the screen scale in sync with the orientation.
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  // Design sizes taken from the Figma frames.
+  static const Size _portraitDesign = Size(430, 932);
+  static const Size _landscapeDesign = Size(932, 430);
+
+  bool _isLandscape = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _isLandscape = _readLandscape();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  // Rebuild only when the orientation really changes.
+  void didChangeMetrics() {
+    final landscape = _readLandscape();
+    if (landscape != _isLandscape) {
+      setState(() => _isLandscape = landscape);
+    }
+  }
+
+  /// Reads landscape.
+  bool _readLandscape() {
+    final views = WidgetsBinding.instance.platformDispatcher.views;
+    if (views.isEmpty) return false;
+    final size = views.first.physicalSize;
+    return size.width > size.height;
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(430, 932), // أبعاد iPhone Pro Max من Figma
+      // Swap the design size in landscape so width and height scale evenly.
+      designSize: _isLandscape ? _landscapeDesign : _portraitDesign,
       minTextAdapt: true,
-      splitScreenMode: true,
+      // Split screen mode would inflate heights in landscape.
+      splitScreenMode: false,
       builder: (context, child) {
         return MaterialApp(
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'Darb',
-
-          // التطبيق عربي فقط (RTL)
+          // The app is Arabic only, so the layout is right to left.
           locale: const Locale('ar'),
           supportedLocales: const [Locale('ar')],
           initialRoute: AppRoutes.splash,
@@ -134,7 +177,6 @@ class MyApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-
           theme: ThemeData(
             scaffoldBackgroundColor: AppColors.white,
             fontFamily: AppTextStyles.fontFamily,

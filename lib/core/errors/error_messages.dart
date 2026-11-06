@@ -1,7 +1,5 @@
 import 'package:darb/core/errors/errors_code.dart';
 
-/// رسائل الأخطاء المحلية (التطبيق عربي فقط).
-/// تُستخدم عندما لا يرسل السيرفر رسالة خطأ، أو عند أخطاء الشبكة.
 const Map<ErrorCode, String> errorMessages = {
   ErrorCode.UNAUTHENTICATED: 'أنت غير مصرح لك.',
   ErrorCode.FORBIDDEN: 'تم رفض الوصول.',
@@ -22,7 +20,9 @@ const Map<ErrorCode, String> errorMessages = {
   ErrorCode.BAD_CERTIFICATE: 'شهادة SSL غير صالحة.',
 };
 
+/// Arabic messages for the error codes.
 extension ErrorCodeLocalization on ErrorCode {
+  /// Gets localized message.
   String getLocalizedMessage() {
     return errorMessages[this] ?? errorMessages[ErrorCode.UNKNOWN]!;
   }

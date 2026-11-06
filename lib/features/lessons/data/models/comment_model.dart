@@ -1,7 +1,4 @@
-/// تعليق على درس (comments/get-by-lession).
-/// ⚠️ رد القائمة لم يُرَ بعد (data كانت فارغة). رد الإضافة يحمل id و comment
-/// و created_at فقط. اسم الكاتب وصورته مقروءان بشكل متسامح من أكثر من شكل
-/// محتمل (user.name / user_name / name)؛ إن اختلفت الأسماء عدّل fromJson فقط.
+/// Model that holds the comment data parsed from the API.
 class CommentModel {
   const CommentModel({
     required this.id,
@@ -17,9 +14,9 @@ class CommentModel {
   final String userName;
   final String userImage;
 
-  /// التاريخ بدون الوقت وبصيغة 2026/10/31.
   String get dateLabel => createdAt.split(' ').first.replaceAll('-', '/');
 
+  /// Builds the object from the API json.
   factory CommentModel.fromJson(Map<String, dynamic> json) {
     final user = json['user'] is Map<String, dynamic>
         ? json['user'] as Map<String, dynamic>

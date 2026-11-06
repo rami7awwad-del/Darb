@@ -3,16 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:darb/core/style/app_colors.dart';
 
-/// شريط تقدم رفيع. [value] من 0 إلى 1. يمتلئ من اليمين (RTL تلقائيًا).
-/// يستخدم LinearProgressIndicator داخل ClipRRect، وهي نفس طريقة شريط صفحة
-/// الباقات (LibraryProgressRow) الذي يعمل بشكل صحيح.
-/// 📏 السماكة (5) تقديرية.
+/// Simple progress bar.
 class AppProgressBar extends StatelessWidget {
   const AppProgressBar({
     super.key,
     required this.value,
     this.color = AppColors.second500,
-    this.height = 5, // 📏
+    this.height = 5,
   });
 
   final double value;

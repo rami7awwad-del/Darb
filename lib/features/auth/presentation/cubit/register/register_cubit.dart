@@ -9,9 +9,10 @@ import 'package:darb/features/auth/data/models/terms_model.dart';
 import 'package:darb/features/auth/data/repositories/registration_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// ترتيب خطوات المعالج (يطابق Figma): الأخيرة هي الفرع ثم التأكيد.
+/// Possible values for the register step.
 enum RegisterStep { personal, source, gender, age, institution, branch }
 
+/// Possible values for the register status.
 enum RegisterStatus {
   loading,
   ready,
@@ -21,6 +22,7 @@ enum RegisterStatus {
   submitted,
 }
 
+/// State data for the register.
 class RegisterData {
   const RegisterData({
     this.step = RegisterStep.personal,
@@ -52,12 +54,9 @@ class RegisterData {
   final int? gender;
   final int age;
 
-  /// نوع المؤسسة (1 مدرسة، 2 معهد). لا يُرسل إلى users/edit حاليًا.
-  /// TODO: تأكد من استخدامه (لا يوجد له حقل في users/edit).
   final int? institutionType;
   final int? branchId;
 
-  /// مرحلة شريط التقدم: 0 = لا يظهر (الخطوتان الأوليان).
   int get stage => switch (step) {
     RegisterStep.gender || RegisterStep.age => 1,
     RegisterStep.institution => 2,
@@ -65,7 +64,6 @@ class RegisterData {
     _ => 0,
   };
 
-  /// هل يمكن الانتقال من الخطوة الحالية؟ (التحقق من خطوة البيانات في الشاشة)
   bool get canProceed => switch (step) {
     RegisterStep.personal => true,
     RegisterStep.source => knowAboutApp != null,
@@ -75,6 +73,7 @@ class RegisterData {
     RegisterStep.branch => branchId != null,
   };
 
+  /// Returns a copy with the given fields replaced.
   RegisterData copyWith({
     RegisterStep? step,
     RegisterStatus? status,
@@ -108,6 +107,7 @@ class RegisterData {
   );
 }
 
+/// Cubit that manages the register state.
 class RegisterCubit extends Cubit<BaseState<RegisterData>> {
   RegisterCubit(this._repository)
     : super(
@@ -117,7 +117,6 @@ class RegisterCubit extends Cubit<BaseState<RegisterData>> {
         ),
       );
 
-  /// ⚠️ قيم تقديرية: العمر الابتدائي (26 كما في Figma) والحدّان.
   static const int defaultAge = 26;
   static const int minAge = 6;
   static const int maxAge = 99;
@@ -127,6 +126,7 @@ class RegisterCubit extends Cubit<BaseState<RegisterData>> {
 
   RegisterData get _data => state.data!;
 
+  /// Updates data.
   void _updateData(RegisterData data) =>
       emit(state.copyWith(data: data, clearErrorMessage: true));
 
@@ -140,7 +140,7 @@ class RegisterCubit extends Cubit<BaseState<RegisterData>> {
     );
   }
 
-  /// يحمّل المدارس والفروع. الشروط تُحمَّل عند الطلب فقط.
+  /// Loads initial.
   Future<void> loadInitial() async {
     emit(
       state.copyWith(
@@ -178,7 +178,7 @@ class RegisterCubit extends Cubit<BaseState<RegisterData>> {
     }
   }
 
-  /// نص الشروط (يُخزَّن بعد أول تحميل). يعيد null عند الفشل.
+  /// Loads terms.
   Future<TermsModel?> loadTerms() async {
     if (_terms != null) return _terms;
     try {
@@ -189,13 +189,13 @@ class RegisterCubit extends Cubit<BaseState<RegisterData>> {
     }
   }
 
-  // ───────── الخطوة (أ): البيانات الشخصية ─────────
   void setSchool(int? id) => _updateData(_data.copyWith(schoolId: id));
 
+  /// Sets terms accepted.
   void setTermsAccepted(bool value) =>
       _updateData(_data.copyWith(termsAccepted: value));
 
-  /// التحقق من الحقول يتم في الشاشة قبل الاستدعاء.
+  /// Saves personal info.
   void savePersonalInfo({
     required String firstName,
     required String lastName,
@@ -211,24 +211,27 @@ class RegisterCubit extends Cubit<BaseState<RegisterData>> {
     next();
   }
 
-  // ───────── الخطوات (ب إلى و) ─────────
   void selectSource(int id) => _updateData(_data.copyWith(knowAboutApp: id));
 
   void selectGender(int id) => _updateData(_data.copyWith(gender: id));
 
+  /// Increases age.
   void incrementAge() {
     if (_data.age < maxAge) _updateData(_data.copyWith(age: _data.age + 1));
   }
 
+  /// Decreases age.
   void decrementAge() {
     if (_data.age > minAge) _updateData(_data.copyWith(age: _data.age - 1));
   }
 
+  /// Selects institution.
   void selectInstitution(int id) =>
       _updateData(_data.copyWith(institutionType: id));
 
   void selectBranch(int id) => _updateData(_data.copyWith(branchId: id));
 
+  /// Moves to the next step.
   void next() {
     if (!_data.canProceed) return;
     final i = _data.step.index;
@@ -237,12 +240,13 @@ class RegisterCubit extends Cubit<BaseState<RegisterData>> {
     }
   }
 
+  /// Moves back one step.
   void back() {
     final i = _data.step.index;
     if (i > 0) _updateData(_data.copyWith(step: RegisterStep.values[i - 1]));
   }
 
-  /// POST users/edit مرة واحدة في النهاية.
+  /// Sends the collected data to the server.
   Future<void> submit() async {
     if (_data.status == RegisterStatus.submitting) return;
 

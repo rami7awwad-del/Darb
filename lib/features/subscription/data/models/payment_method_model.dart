@@ -1,4 +1,4 @@
-/// عنصر payment-methods/all: وسيلة دفع ومعلومات الوكيل (للتعليمات).
+/// Model that holds the payment method data parsed from the API.
 class PaymentMethodModel {
   const PaymentMethodModel({
     required this.id,
@@ -11,17 +11,15 @@ class PaymentMethodModel {
 
   final int id;
 
-  /// اسم الوسيلة (مثل شام كاش).
   final String method;
 
-  /// اسم الوكيل (حقل name).
   final String agentName;
   final String phone;
   final String governorate;
   final String image;
 
+  /// Builds the object from the API json.
   factory PaymentMethodModel.fromJson(Map<String, dynamic> json) {
-    // governorate قد تكون نصًا أو كائنًا فيه name.
     final gov = json['governorate'];
     return PaymentMethodModel(
       id: (json['id'] as num?)?.toInt() ?? 0,

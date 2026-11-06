@@ -7,6 +7,7 @@ import 'package:darb/features/support/data/models/about_model.dart';
 import 'package:darb/features/support/data/models/faq_model.dart';
 import 'package:darb/features/support/data/models/info_page_type.dart';
 
+/// Repository that gives the cubits access to the support data.
 class SupportRepository {
   SupportRepository(this._remote);
 
@@ -14,11 +15,11 @@ class SupportRepository {
 
   Future<List<FaqModel>> getFaqs() => _remote.getFaqs();
 
-  /// الشروط والخصوصية: نفس تحليل HTML المستخدم في ورقة الشروط عند التسجيل.
-  /// نص بلا وسوم div (مثل سياسة الخصوصية الحالية) يُعرض كبند واحد.
+  /// Gets page.
   Future<TermsModel> getPage(InfoPageType type) async =>
       TermsModel.fromHtml(await _remote.getPageValue(type.endpoint));
 
+  /// Gets about.
   Future<AboutModel> getAbout() async {
     final (raw, links) = await (
       _remote.getPageValue(ApiConstants.pagesAboutApplication),
@@ -32,6 +33,7 @@ class SupportRepository {
     return AboutModel(text: text, links: links);
   }
 
+  /// Sends contact.
   Future<void> sendContact({
     required String firstName,
     required String lastName,

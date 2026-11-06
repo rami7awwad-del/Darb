@@ -11,9 +11,7 @@ import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 import 'package:darb/features/support/data/models/faq_model.dart';
 import 'package:darb/features/support/presentation/cubit/faqs_cubit.dart';
 
-/// شاشة "الأسئلة الشائعة": قائمة أسئلة قابلة للطي، سؤال واحد مفتوح في كل مرة.
-/// ⚠️ تصميم Figma يقسم الأسئلة إلى تصنيفات (محتوى التطبيق، المدرسون، الدعم الفني)،
-/// لكن faqs/all لا يرجع تصنيفًا، فتُعرض كقائمة واحدة. أضف التصنيف لاحقًا إن توفر.
+/// Screen that shows the faqs.
 class FaqsScreen extends StatelessWidget {
   const FaqsScreen({super.key});
 
@@ -62,6 +60,7 @@ class FaqsScreen extends StatelessWidget {
   }
 }
 
+/// List widget for the faq.
 class _FaqList extends StatefulWidget {
   const _FaqList({required this.faqs});
 
@@ -71,6 +70,7 @@ class _FaqList extends StatefulWidget {
   State<_FaqList> createState() => _FaqListState();
 }
 
+/// State for the faq list widget.
 class _FaqListState extends State<_FaqList> {
   int? _openId;
 
@@ -81,7 +81,7 @@ class _FaqListState extends State<_FaqList> {
       onRefresh: context.read<FaqsCubit>().load,
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h), // 📏
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
         itemCount: widget.faqs.length,
         separatorBuilder: (context, _) =>
             const Divider(height: 1, color: AppColors.grey50),
@@ -98,8 +98,7 @@ class _FaqListState extends State<_FaqList> {
   }
 }
 
-/// 📏 ارتفاع سطر السؤال 48، حجم السهم 20، حجم نص السؤال 14 ونص الجواب 12،
-/// حشوة الجواب (8 أعلى، 12 أسفل).
+/// List tile widget for the faq.
 class _FaqTile extends StatelessWidget {
   const _FaqTile({required this.faq, required this.open, required this.onTap});
 
@@ -115,7 +114,7 @@ class _FaqTile extends StatelessWidget {
         InkWell(
           onTap: onTap,
           child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: 48.h), // 📏
+            constraints: BoxConstraints(minHeight: 48.h),
             child: Row(
               children: [
                 Expanded(
@@ -131,7 +130,7 @@ class _FaqTile extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: Icon(
                     Icons.keyboard_arrow_down_rounded,
-                    size: 20.w, // 📏
+                    size: 20.w,
                     color: AppColors.second500,
                   ),
                 ),
@@ -144,7 +143,7 @@ class _FaqTile extends StatelessWidget {
           alignment: Alignment.topCenter,
           child: open
               ? Padding(
-                  padding: EdgeInsets.only(bottom: 12.h, top: 4.h), // 📏
+                  padding: EdgeInsets.only(bottom: 12.h, top: 4.h),
                   child: Text(
                     faq.answer,
                     style: AppTextStyles.font12Regular.copyWith(

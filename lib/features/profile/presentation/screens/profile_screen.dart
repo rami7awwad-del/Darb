@@ -20,8 +20,7 @@ import 'package:darb/features/support/data/models/info_page_type.dart';
 import 'package:darb/features/support/presentation/widgets/about_sheet.dart';
 import 'package:darb/features/support/presentation/widgets/contact_sheet.dart';
 
-/// تبويب الملف الشخصي. يتطلب ProfileCubit أعلاه في الشجرة (يُنشأ مع مسار mainLayout).
-/// 📏 هوامش القائمة ومسافات الأقسام من لقطة Figma (16 جانبيًا، 24 بين البطاقة والقائمة).
+/// Screen that shows the profile.
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -58,13 +57,13 @@ class ProfileScreen extends StatelessWidget {
                 onRefresh: () => cubit.load(silent: true),
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(bottom: 24.h), // 📏
+                  padding: EdgeInsets.only(bottom: 24.h),
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w), // 📏
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: ProfileSummaryCard(profile: profile),
                     ),
-                    SizedBox(height: 8.h), // 📏
+                    SizedBox(height: 8.h),
                     const ProfileMenuTitle('الدعم والمعلومات'),
                     ProfileMenuTile(
                       icon: ProfileIcons.faq,
@@ -119,7 +118,7 @@ class ProfileScreen extends StatelessWidget {
                       label: 'إختباراتي',
                       onTap: () => _open(context, AppRoutes.tests),
                     ),
-                    SizedBox(height: 8.h), // 📏
+                    SizedBox(height: 8.h),
                     const Divider(height: 1, color: AppColors.grey50),
                     const ProfileMenuTitle('الإعدادات'),
                     ProfileMenuTile(

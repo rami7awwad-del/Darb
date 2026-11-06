@@ -5,8 +5,7 @@ import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/auth/data/models/terms_model.dart';
 import 'package:darb/core/style/phosphor_icons.dart';
 
-/// ورقة الشروط والأحكام (Bottom Sheet) بنص قادم من pages/terms-conditions.
-/// ⚠️ قياس تقديري: Radius 24، الحشوات (20 أفقي، 24 رأسي)، أقصى ارتفاع 85% من الشاشة.
+/// Shows terms sheet.
 Future<void> showTermsSheet(BuildContext context, TermsModel terms) {
   return showModalBottomSheet<void>(
     context: context,
@@ -22,6 +21,7 @@ Future<void> showTermsSheet(BuildContext context, TermsModel terms) {
   );
 }
 
+/// Bottom sheet for the terms.
 class _TermsSheet extends StatelessWidget {
   const _TermsSheet({required this.terms});
 

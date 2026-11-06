@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/phosphor_icons.dart';
 
-/// زر إغلاق دائري (X داخل دائرة) كما في Figma. [onTap] = null يعطّله.
-/// ⚠️ قياس تقديري: الحجم (32)، سمك الحد (2)، حجم الأيقونة (55% من الحجم).
+/// Round close button used in sheets and dialogs.
 class AppCircleCloseButton extends StatelessWidget {
   const AppCircleCloseButton({
     super.key,

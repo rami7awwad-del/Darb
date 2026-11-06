@@ -4,10 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// شريط التقدم: 3 مراحل (المعلومات الشخصية، نوع المؤسسة، تفاصيل الحساب).
-/// [stage] من 1 إلى 3. المقاطع المكتملة بلون second، والمؤشر عند طرف التقدم.
-/// ⚠️ قياس تقديري: سماكة الشريط (6)، حجم المؤشر (12)، الفراغ بين المقاطع (4)،
-/// وألوان المقاطع والتسميات (second500 / grey50 / grey500).
+/// Bar widget for the register progress.
 class RegisterProgressBar extends StatelessWidget {
   const RegisterProgressBar({super.key, required this.stage});
 
@@ -43,7 +40,6 @@ class RegisterProgressBar extends StatelessWidget {
                     ),
                 ],
               ),
-              // المؤشر عند طرف التقدم (يبدأ من اليمين في RTL)
               Align(
                 alignment: AlignmentDirectional(-1 + 2 * stage / 3, 0),
                 child: Container(

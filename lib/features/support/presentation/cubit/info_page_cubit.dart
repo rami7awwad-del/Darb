@@ -8,7 +8,7 @@ import 'package:darb/features/support/data/models/info_page_type.dart';
 import 'package:darb/features/support/data/repositories/support_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// شاشة نصية: سياسة الاستخدام أو سياسة الخصوصية (حسب [type]).
+/// Cubit that manages the info page state.
 class InfoPageCubit extends Cubit<BaseState<TermsModel>> {
   InfoPageCubit(this._repository, {required this.type})
       : super(const BaseState<TermsModel>(stateValue: StateValue.loading));
@@ -16,6 +16,7 @@ class InfoPageCubit extends Cubit<BaseState<TermsModel>> {
   final SupportRepository _repository;
   final InfoPageType type;
 
+  /// Loads the data and updates the state.
   Future<void> load() async {
     emit(const BaseState<TermsModel>(stateValue: StateValue.loading));
     try {

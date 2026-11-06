@@ -7,13 +7,14 @@ import 'package:darb/features/support/data/models/about_model.dart';
 import 'package:darb/features/support/data/repositories/support_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// ورقة "حول التطبيق".
+/// Cubit that manages the about state.
 class AboutCubit extends Cubit<BaseState<AboutModel>> {
   AboutCubit(this._repository)
       : super(const BaseState<AboutModel>(stateValue: StateValue.loading));
 
   final SupportRepository _repository;
 
+  /// Loads the data and updates the state.
   Future<void> load() async {
     emit(const BaseState<AboutModel>(stateValue: StateValue.loading));
     try {

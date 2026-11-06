@@ -5,29 +5,27 @@ import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/features/auth/data/models/auth_response_model.dart';
 
-
-/// طلبات API فقط، بدون تخزين ولا منطق.
+/// Remote data source that calls the auth endpoints.
 class AuthRemoteDataSource {
   AuthRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// POST auth/login → يرسل رمز التفعيل عبر واتساب.
+  /// Starts the login request.
   Future<void> login(String phone) async {
     await _api.postFormData(ApiConstants.login, {'phone': phone});
   }
 
-  /// POST auth/resend → إعادة إرسال الرمز.
+  /// Requests a new code.
   Future<void> resend(String phone) async {
     await _api.postFormData(ApiConstants.resend, {'phone': phone});
   }
 
-  /// GET auth/logout → إنهاء الجلسة في الخادم.
+  /// Ends the current session.
   Future<void> logout() async {
     await _api.getRequest(ApiConstants.logout);
   }
 
-  /// POST auth/active → يعيد التوكن وبيانات المستخدم.
   Future<AuthResponseModel> activate({
     required String phone,
     required String code,
@@ -43,7 +41,6 @@ class AuthRemoteDataSource {
       final body = response.data as Map<String, dynamic>;
       return AuthResponseModel.fromJson(body['data'] as Map<String, dynamic>);
     } catch (_) {
-      // أي رد غير متوقع
       throw RemoteExceptions(
         ErrorCode.APP_ERROR,
         ErrorCode.APP_ERROR.getLocalizedMessage(),

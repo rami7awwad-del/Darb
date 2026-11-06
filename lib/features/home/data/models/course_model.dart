@@ -1,5 +1,4 @@
-/// عنصر من courses في home-page/index و courses/paginate.
-/// ملاحظة: اسم الحقل في الـ API lessions_count (بهذا الإملاء).
+/// Model that holds the course data parsed from the API.
 class CourseModel {
   const CourseModel({
     required this.id,
@@ -32,18 +31,17 @@ class CourseModel {
   final int subscriptionsCount;
   final bool isSubscription;
 
-  /// نسب التقدم من 0 إلى 100 (semester_rate / lession_rate / subject_rate).
   final double semesterRate;
   final double lessonRate;
   final double subjectRate;
   final int pointsCount;
 
-  /// نسبة النقاط من 0 إلى 100 (point_rate).
   final double pointRate;
 
   static int _int(dynamic v) => (v as num?)?.toInt() ?? 0;
   static double _double(dynamic v) => (v as num?)?.toDouble() ?? 0;
 
+  /// Builds the object from the API json.
   factory CourseModel.fromJson(Map<String, dynamic> json) => CourseModel(
         id: json['id'] as int,
         name: json['name'] as String? ?? '',

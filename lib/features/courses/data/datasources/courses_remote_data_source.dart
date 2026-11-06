@@ -5,12 +5,13 @@ import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/features/courses/data/models/course_details_model.dart';
 
+/// Remote data source that calls the courses endpoints.
 class CoursesRemoteDataSource {
   CoursesRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// GET courses/details?subject_id= → data: دورة + semesters[].lessions[].
+  /// Gets details.
   Future<CourseDetailsModel> getDetails(int courseId) async {
     final response = await _api.getRequest(
       ApiConstants.coursesDetails,

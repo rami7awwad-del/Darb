@@ -4,6 +4,7 @@ import 'package:darb/features/home/data/models/news_model.dart';
 import 'package:darb/features/home/data/models/search_result_model.dart';
 import 'package:darb/features/home/data/models/subject_model.dart';
 
+/// Repository that gives the cubits access to the home data.
 class HomeRepository {
   HomeRepository(this._remote);
 

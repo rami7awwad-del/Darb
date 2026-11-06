@@ -1,3 +1,4 @@
+import 'package:darb/core/widgets/app_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,9 +9,7 @@ import 'package:darb/features/gallery/data/models/gallery_model.dart';
 import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 import 'package:darb/features/gallery/presentation/widgets/gallery_image_viewer.dart';
 
-/// صور ألبوم واحد في شبكة من عمودين. الصور تأتي مع الألبوم من galleries/paginate،
-/// فلا حاجة لـ Cubit. الضغط على صورة يفتحها في نافذة كبيرة.
-/// ⚠️ قياس تقديري: نسبة الصورة (1.31 من Figma)، المسافات (12)، نصف القطر (12).
+/// Screen that shows the gallery album.
 class GalleryAlbumScreen extends StatelessWidget {
   const GalleryAlbumScreen({super.key, required this.album});
 
@@ -35,7 +34,12 @@ class GalleryAlbumScreen extends StatelessWidget {
                     padding: EdgeInsets.all(16.w),
                     itemCount: album.images.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                      // More columns in landscape.
+                      crossAxisCount: gridColumnsOf(
+                        context,
+                        portrait: 2,
+                        landscape: 4,
+                      ),
                       mainAxisSpacing: 12.h,
                       crossAxisSpacing: 12.w,
                       childAspectRatio: 1.31,

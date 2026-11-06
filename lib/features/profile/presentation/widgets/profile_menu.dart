@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// عنوان قسم في قائمة الملف الشخصي (مثل "الدعم والمعلومات").
-/// 📏 حجم الخط 16، الحشوات.
+/// Widget that shows the profile menu title.
 class ProfileMenuTitle extends StatelessWidget {
   const ProfileMenuTitle(this.text, {super.key});
 
@@ -14,7 +13,7 @@ class ProfileMenuTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 4.h), // 📏
+      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 4.h),
       child: Text(
         text,
         style: AppTextStyles.font16Medium.copyWith(color: AppColors.grey500),
@@ -23,8 +22,7 @@ class ProfileMenuTitle extends StatelessWidget {
   }
 }
 
-/// صف في القائمة: أيقونة زرقاء في البداية، النص، وسهم في النهاية.
-/// 📏 ارتفاع الصف 48، حجم الأيقونة 24، المسافة 12، حجم السهم 20.
+/// List tile widget for the profile menu.
 class ProfileMenuTile extends StatelessWidget {
   const ProfileMenuTile({
     super.key,
@@ -42,27 +40,26 @@ class ProfileMenuTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: SizedBox(
-        height: 48.h, // 📏
+        height: 48.h,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w), // 📏
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Row(
             children: [
-              Icon(icon, size: 24.w, color: AppColors.second500), // 📏
-              SizedBox(width: 12.w), // 📏
+              Icon(icon, size: 24.w, color: AppColors.second500),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Text(
                   label,
                   style: AppTextStyles.font14Regular.copyWith(
-                    color: AppColors.grey500, // 📏 حجم الخط 14
+                    color: AppColors.grey500,
                   ),
                 ),
               ),
-              // LTR إجباري حتى يشير السهم لليسار (اتجاه التقدم في RTL).
               Directionality(
                 textDirection: TextDirection.ltr,
                 child: Icon(
                   Icons.chevron_left_rounded,
-                  size: 20.w, // 📏
+                  size: 20.w,
                   color: AppColors.grey200,
                 ),
               ),

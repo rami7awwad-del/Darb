@@ -5,8 +5,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/quiz/data/models/quiz_models.dart';
 
-/// بطاقة سؤال: رقم السؤال ونصه، ثم الاختيارات (اختيار واحد).
-/// 📏 Radius 16، حشوة 16، Radius الاختيار 11، المسافة بين الاختيارات 12.
+/// Card widget for the quiz question.
 class QuizQuestionCard extends StatelessWidget {
   const QuizQuestionCard({
     super.key,
@@ -24,18 +23,18 @@ class QuizQuestionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.w), // 📏
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r), // 📏
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppColors.main100),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 16.h, // 📏
+        spacing: 16.h,
         children: [
           Row(
-            spacing: 12.w, // 📏
+            spacing: 12.w,
             children: [
               QuizNumberBadge(number: number),
               Expanded(
@@ -60,6 +59,7 @@ class QuizQuestionCard extends StatelessWidget {
   }
 }
 
+/// Badge widget for the quiz number.
 class QuizNumberBadge extends StatelessWidget {
   const QuizNumberBadge({
     super.key,
@@ -75,8 +75,8 @@ class QuizNumberBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 32.w, // 📏
-      height: 32.w, // 📏
+      width: 32.w,
+      height: 32.w,
       alignment: Alignment.center,
       decoration: BoxDecoration(color: background, shape: BoxShape.circle),
       child: Text(
@@ -87,6 +87,7 @@ class QuizNumberBadge extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Option extends StatelessWidget {
   const _Option({
     required this.answer,
@@ -100,7 +101,7 @@ class _Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(11.r); // 📏
+    final radius = BorderRadius.circular(11.r);
     return Material(
       color: selected ? AppColors.main50 : AppColors.white,
       shape: RoundedRectangleBorder(
@@ -113,8 +114,8 @@ class _Option extends StatelessWidget {
         borderRadius: radius,
         onTap: onTap,
         child: Container(
-          constraints: BoxConstraints(minHeight: 48.h), // 📏
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h), // 📏
+          constraints: BoxConstraints(minHeight: 48.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           child: Row(
             children: [
               Expanded(
@@ -132,7 +133,7 @@ class _Option extends StatelessWidget {
               if (selected)
                 Icon(
                   Icons.radio_button_checked,
-                  size: 20.w, // 📏
+                  size: 20.w,
                   color: AppColors.main600,
                 ),
             ],

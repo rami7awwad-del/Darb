@@ -5,10 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// صف مربعات الرمز. الإدخال من اليسار لليمين (كما في Figma) حتى في RTL.
-/// - الانتقال التلقائي للمربع التالي، والرجوع عند الحذف.
-/// - يدعم لصق الرمز كاملًا.
-/// - [OtpInputRowState.clear] لمسح كل المربعات (عبر GlobalKey).
+/// Row of boxes for the verification code.
 class OtpInputRow extends StatefulWidget {
   const OtpInputRow({
     super.key,
@@ -25,13 +22,13 @@ class OtpInputRow extends StatefulWidget {
   State<OtpInputRow> createState() => OtpInputRowState();
 }
 
+/// Controllers and focus nodes for the code boxes.
 class OtpInputRowState extends State<OtpInputRow> {
   late final List<TextEditingController> _controllers =
       List.generate(widget.length, (_) => TextEditingController());
 
   late final List<FocusNode> _focusNodes = List.generate(widget.length, (i) {
     final node = FocusNode(onKeyEvent: (_, event) => _onKey(i, event));
-    // عند التركيز نحدد المحتوى ليُستبدل بما يُكتب.
     node.addListener(() {
       if (node.hasFocus) {
         _controllers[i].selection = TextSelection(
@@ -45,6 +42,7 @@ class OtpInputRowState extends State<OtpInputRow> {
 
   String get code => _controllers.map((c) => c.text).join();
 
+  /// Clears the current value.
   void clear() {
     for (final c in _controllers) {
       c.clear();
@@ -53,6 +51,7 @@ class OtpInputRowState extends State<OtpInputRow> {
     widget.onChanged(code);
   }
 
+  /// Handles key.
   KeyEventResult _onKey(int i, KeyEvent event) {
     if (event is KeyDownEvent &&
         event.logicalKey == LogicalKeyboardKey.backspace &&
@@ -65,13 +64,13 @@ class OtpInputRowState extends State<OtpInputRow> {
     return KeyEventResult.ignored;
   }
 
+  /// Handles changed.
   void _onChanged(int i, String value) {
     final digits = value.replaceAll(RegExp(r'\D'), '');
 
     if (digits.isEmpty) {
       if (i > 0) _focusNodes[i - 1].requestFocus();
     } else {
-      // حرف واحد أو لصق عدة أرقام: نوزعها بدءًا من المربع الحالي.
       var last = i;
       for (var k = 0; k < digits.length && i + k < widget.length; k++) {
         _controllers[i + k].text = digits[k];
@@ -140,7 +139,7 @@ class OtpInputRowState extends State<OtpInputRow> {
                   ),
                 ),
               ),
-            
+
         ],
       ),
     );

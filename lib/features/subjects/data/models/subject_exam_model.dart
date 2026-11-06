@@ -1,9 +1,6 @@
 import 'package:darb/features/quiz/data/models/quiz_models.dart';
 
-/// عنصر اختبار أو نشاط يومي داخل subjects/details (exams / dailyActivities).
-/// شكل الرد: { id, expiry_date, type, is_free, exam: { id, title, professor,
-/// questions[], questions_count, subscriptions_count, ... } }.
-/// الحقول الأساسية داخل `exam`، ونقبل أيضًا الشكل المسطّح احتياطًا.
+/// Model that holds the subject exam data parsed from the API.
 class SubjectExamModel {
   const SubjectExamModel({
     required this.id,
@@ -18,10 +15,8 @@ class SubjectExamModel {
     this.expiryDate,
   });
 
-  /// معرّف الاختبار نفسه (exam.id).
   final int id;
 
-  /// معرّف السجل الخارجي (المغلِّف) في القائمة.
   final int entryId;
   final String title;
   final String professor;
@@ -34,6 +29,7 @@ class SubjectExamModel {
 
   static int _int(dynamic v) => (v as num?)?.toInt() ?? 0;
 
+  /// Builds the object from the API json.
   factory SubjectExamModel.fromJson(Map<String, dynamic> json) {
     final inner = json['exam'] is Map<String, dynamic>
         ? json['exam'] as Map<String, dynamic>

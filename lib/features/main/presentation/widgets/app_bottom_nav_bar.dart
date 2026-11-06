@@ -4,10 +4,7 @@ import 'package:phosphor_icons/phosphor_icons.dart';
 
 import 'package:darb/core/style/app_colors.dart';
 
-/// الشريط السفلي: 4 تبويبات، الفعّال بلون main600 مع خط تحته.
-/// الترتيب (RTL، من اليمين): الرئيسية، الصور، المكتبة، الحساب (كما في Figma).
-/// ⚠️ قياس تقديري: ارتفاع الشريط (64)، ألوان التبويبات غير الفعّالة (second400)،
-/// وعرض الخط تحت الفعّال (20).
+/// Bottom navigation bar with four tabs.
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({
     super.key,

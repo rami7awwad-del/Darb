@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+/// Regular weight icons.
 abstract class PhosphorIconsRegular {
   static const IconData bank = IconData(0xe0b4, fontFamily: 'PhosphorRegular', fontPackage: 'phosphor_icons', matchTextDirection: true);
   static const IconData bookOpen = IconData(0xe0e6, fontFamily: 'PhosphorRegular', fontPackage: 'phosphor_icons', matchTextDirection: true);
@@ -22,6 +23,7 @@ abstract class PhosphorIconsRegular {
   static const IconData x = IconData(0xe4f6, fontFamily: 'PhosphorRegular', fontPackage: 'phosphor_icons', matchTextDirection: true);
 }
 
+/// Filled icons.
 abstract class PhosphorIconsFill {
   static const IconData checkCircle = IconData(0xe184, fontFamily: 'PhosphorFill', fontPackage: 'phosphor_icons', matchTextDirection: true);
   static const IconData sealCheck = IconData(0xe606, fontFamily: 'PhosphorFill', fontPackage: 'phosphor_icons', matchTextDirection: true);

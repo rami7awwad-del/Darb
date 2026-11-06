@@ -13,6 +13,7 @@ import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
 import 'package:darb/features/auth/presentation/widgets/otp_input_row.dart';
 import 'package:darb/features/auth/presentation/widgets/resend_timer.dart';
 
+/// Screen that shows the otp.
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key, required this.phone});
 
@@ -22,6 +23,7 @@ class OtpScreen extends StatefulWidget {
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
+/// State for the otp screen widget.
 class _OtpScreenState extends State<OtpScreen> {
   static const int _codeLength = 4;
 
@@ -32,7 +34,6 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<OtpCubit, BaseState<OtpData>>(
-        // نستمع فقط عند تغيّر الحالة (وليس مع كل ثانية من العدّاد).
         listenWhen: (previous, current) =>
             previous.data?.status != current.data?.status,
         listener: (context, state) {
@@ -56,6 +57,7 @@ class _OtpScreenState extends State<OtpScreen> {
             } else {
               Navigator.pushNamedAndRemoveUntil(
                 context,
+                // Clear the stack so back cannot return to the login screens.
                 AppRoutes.mainLayout,
                 (_) => false,
               );

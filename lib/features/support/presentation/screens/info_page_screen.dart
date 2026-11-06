@@ -12,9 +12,7 @@ import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 import 'package:darb/features/support/data/models/info_page_type.dart';
 import 'package:darb/features/support/presentation/cubit/info_page_cubit.dart';
 
-/// شاشة نصية: سياسة الاستخدام أو سياسة الخصوصية (بنود بعنوان أزرق ونص رمادي).
-/// 📏 حشوة الصفحة (16 جانبيًا، 32 علويًا)، حجم عنوان البند 16 ونص البند 12،
-/// المسافات بين العنوان والنص (8) وحول الفاصل (16).
+/// Screen that shows the info page.
 class InfoPageScreen extends StatelessWidget {
   const InfoPageScreen({super.key, required this.type});
 
@@ -54,6 +52,7 @@ class InfoPageScreen extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Sections extends StatelessWidget {
   const _Sections({required this.page});
 
@@ -63,17 +62,17 @@ class _Sections extends StatelessWidget {
   Widget build(BuildContext context) {
     final sections = page.sections;
     return ListView(
-      padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 24.h), // 📏
+      padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 24.h),
       children: [
         for (var i = 0; i < sections.length; i++) ...[
           if (i > 0)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h), // 📏
+              padding: EdgeInsets.symmetric(vertical: 16.h),
               child: const Divider(height: 1, color: AppColors.grey50),
             ),
           if (sections[i].title != null)
             Padding(
-              padding: EdgeInsets.only(bottom: 8.h), // 📏
+              padding: EdgeInsets.only(bottom: 8.h),
               child: Text(
                 sections[i].title!,
                 style: AppTextStyles.font16Medium.copyWith(

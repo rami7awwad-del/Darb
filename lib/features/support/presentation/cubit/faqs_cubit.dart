@@ -7,13 +7,14 @@ import 'package:darb/features/support/data/models/faq_model.dart';
 import 'package:darb/features/support/data/repositories/support_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// شاشة الأسئلة الشائعة.
+/// Cubit that manages the faqs state.
 class FaqsCubit extends Cubit<BaseState<List<FaqModel>>> {
   FaqsCubit(this._repository)
       : super(const BaseState<List<FaqModel>>(stateValue: StateValue.loading));
 
   final SupportRepository _repository;
 
+  /// Loads the data and updates the state.
   Future<void> load() async {
     emit(const BaseState<List<FaqModel>>(stateValue: StateValue.loading));
     try {

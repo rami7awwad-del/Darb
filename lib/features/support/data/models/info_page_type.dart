@@ -1,8 +1,9 @@
 import 'package:darb/core/services/api_constants.dart';
 
-/// الصفحات النصية التي تُعرض كشاشة كاملة (حول التطبيق تُعرض كورقة سفلية).
+/// Possible values for the info page type.
 enum InfoPageType { terms, privacy }
 
+/// Extra helpers for the info page type x.
 extension InfoPageTypeX on InfoPageType {
   String get title => switch (this) {
         InfoPageType.terms => 'سياسة الاستخدام',

@@ -1,4 +1,5 @@
 import 'package:darb/core/widgets/app_network_image.dart';
+import 'package:darb/core/widgets/app_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,11 +8,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/profile/data/models/profile_model.dart';
 
-/// الشريط التركوازي العلوي: الصورة، الترحيب، النقاط والميداليات والدورات،
-/// وزرّا الإشعارات والإنجازات.
-/// ⚠️ قياس تقديري: ارتفاع الشريط (من الحشوات)، حجم الصورة (48)، حجم الزرين (36)،
-/// نصف قطر الحواف (32)، اللون (main600).
-/// ⚠️ الدورات = package_count (افتراض)، والميداليات مضافة حسب الملاحظة وليست في Figma.
+/// Header widget for the home.
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
     super.key,
@@ -28,11 +25,14 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use a more compact header in landscape.
+    final landscape = isLandscapeOf(context);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 20.h),
+        padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, landscape ? 10.h : 20.h),
         decoration: BoxDecoration(
           color: AppColors.main600,
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(22.r)),
@@ -40,10 +40,10 @@ class HomeHeader extends StatelessWidget {
         child: SafeArea(
           bottom: false,
           child: Padding(
-            padding: EdgeInsets.only(top: 16.h),
+            padding: EdgeInsets.only(top: landscape ? 8.h : 16.h),
             child: Row(
               children: [
-                _Avatar(url: profile.image),
+                _Avatar(url: profile.image, compact: landscape),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
@@ -65,10 +65,6 @@ class HomeHeader extends StatelessWidget {
                             icon: PhosphorIconsRegular.star,
                             text: '${profile.points} نقطة',
                           ),
-                        /*  _Stat(
-                            icon: PhosphorIconsRegular.trophy,
-                            text: '${profile.medals} ميدالية',
-                          ),*/
                           _Stat(
                             icon: PhosphorIconsRegular.books,
                             text: '${profile.packageCount} دورات',
@@ -78,11 +74,16 @@ class HomeHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-                _HeaderButton(icon: PhosphorIconsRegular.medal,onTap: onAchievements,),
-               
+                _HeaderButton(
+                  icon: PhosphorIconsRegular.medal,
+                  onTap: onAchievements,
+                ),
                 SizedBox(width: 8.w),
-                
-                _HeaderButton(icon: PhosphorIconsRegular.bell,showDot: unreadCount > 0,onTap: onNotifications,),
+                _HeaderButton(
+                  icon: PhosphorIconsRegular.bell,
+                  showDot: unreadCount > 0,
+                  onTap: onNotifications,
+                ),
               ],
             ),
           ),
@@ -92,14 +93,16 @@ class HomeHeader extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Avatar extends StatelessWidget {
-  const _Avatar({required this.url});
+  const _Avatar({required this.url, this.compact = false});
 
   final String? url;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    final size = 48.w;
+    final size = compact ? 40.w : 48.w;
     return Container(
       width: size,
       height: size,
@@ -119,6 +122,7 @@ class _Avatar extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Stat extends StatelessWidget {
   const _Stat({required this.icon, required this.text});
 
@@ -141,6 +145,7 @@ class _Stat extends StatelessWidget {
   }
 }
 
+/// Button widget for the header.
 class _HeaderButton extends StatelessWidget {
   const _HeaderButton({required this.icon, this.showDot = false, this.onTap});
 

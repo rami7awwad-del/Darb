@@ -13,8 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// "الاشتراك" في الملف الشخصي: قائمة ما اشترك به المستخدم (subscriptions/my)
-/// بنفس شكل قائمة الكورسات المحملة، وزر "اشتراك جديد" يفتح صفحة الاشتراكات.
+/// Screen that shows the my subscriptions.
 class MySubscriptionsScreen extends StatelessWidget {
   const MySubscriptionsScreen({super.key});
 
@@ -60,7 +59,7 @@ class MySubscriptionsScreen extends StatelessWidget {
                       ? ListView(
                           physics: const AlwaysScrollableScrollPhysics(),
                           children: [
-                            SizedBox(height: 120.h), // 📏
+                            SizedBox(height: 120.h),
                             Center(
                               child: Text(
                                 'لا توجد اشتراكات حاليًا',
@@ -73,11 +72,11 @@ class MySubscriptionsScreen extends StatelessWidget {
                       : ListView.separated(
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, // 📏
-                            vertical: 24.h, // 📏
+                            horizontal: 16.w,
+                            vertical: 24.h,
                           ),
                           itemCount: items.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 24.h), // 📏
+                          separatorBuilder: (_, __) => SizedBox(height: 24.h),
                           itemBuilder: (_, i) =>
                               _SubscriptionTile(index: i + 1, course: items[i]),
                         ),
@@ -88,7 +87,7 @@ class MySubscriptionsScreen extends StatelessWidget {
           SafeArea(
             top: false,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h), // 📏
+              padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
               child: AppPrimaryButton(
                 text: 'اشتراك جديد',
                 onPressed: () => _subscribe(context),
@@ -101,7 +100,7 @@ class MySubscriptionsScreen extends StatelessWidget {
   }
 }
 
-/// صف اشتراك (نفس تصميم DownloadedItemTile): مربع رقم، الاسم والتفاصيل، دائرة في النهاية.
+/// List tile widget for the subscription.
 class _SubscriptionTile extends StatelessWidget {
   const _SubscriptionTile({required this.index, required this.course});
 
@@ -119,19 +118,19 @@ class _SubscriptionTile extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 75.w, // 📏
-            height: 60.h, // 📏
+            width: 75.w,
+            height: 60.h,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.second400,
-              borderRadius: BorderRadius.circular(11.r), // 📏
+              borderRadius: BorderRadius.circular(11.r),
             ),
             child: Text(
               '$index',
               style: AppTextStyles.font20Medium.copyWith(color: AppColors.white),
             ),
           ),
-          SizedBox(width: 12.w), // 📏
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,14 +143,14 @@ class _SubscriptionTile extends StatelessWidget {
                   style: AppTextStyles.font14Regular
                       .copyWith(color: AppColors.main600),
                 ),
-                SizedBox(height: 4.h), // 📏
+                SizedBox(height: 4.h),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  spacing: 4.w, // 📏
+                  spacing: 4.w,
                   children: [
                     Icon(
                       ProfileIcons.videoMeta,
-                      size: 16.w, // 📏
+                      size: 16.w,
                       color: AppColors.second500,
                     ),
                     Text(
@@ -164,10 +163,10 @@ class _SubscriptionTile extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 12.w), // 📏
+          SizedBox(width: 12.w),
           Container(
-            width: 36.w, // 📏
-            height: 36.w, // 📏
+            width: 36.w,
+            height: 36.w,
             decoration: const BoxDecoration(
               color: AppColors.second500,
               shape: BoxShape.circle,

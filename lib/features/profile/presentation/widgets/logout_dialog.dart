@@ -15,8 +15,7 @@ import 'package:darb/core/widgets/app_snack_bar.dart';
 import 'package:darb/features/auth/data/repositories/auth_repository.dart';
 import 'package:darb/features/profile/presentation/cubit/logout_cubit.dart';
 
-/// نافذة "تأكيد تسجيل الخروج": التأكد (أساسي) والرجوع (Outline).
-/// 📏 عرض النافذة (هامش 24 من الشاشة)، Radius 16، الحشوات 16، المسافة 24.
+/// Shows logout dialog.
 Future<void> showLogoutDialog(BuildContext context) {
   final repository = context.read<AuthRepository>();
   return showDialog<void>(
@@ -28,6 +27,7 @@ Future<void> showLogoutDialog(BuildContext context) {
   );
 }
 
+/// Dialog for the logout.
 class _LogoutDialog extends StatelessWidget {
   const _LogoutDialog();
 
@@ -37,7 +37,6 @@ class _LogoutDialog extends StatelessWidget {
       listenWhen: (a, b) => a.stateValue != b.stateValue,
       listener: (context, state) {
         if (state.stateValue == StateValue.loaded) {
-          // نمسح كل المسارات والعودة لشاشة الدخول.
           navigatorKey.currentState?.pushNamedAndRemoveUntil(
             AppRoutes.login,
             (_) => false,
@@ -50,12 +49,12 @@ class _LogoutDialog extends StatelessWidget {
         final loading = state.stateValue == StateValue.loading;
         return Dialog(
           backgroundColor: AppColors.white,
-          insetPadding: EdgeInsets.symmetric(horizontal: 24.w), // 📏
+          insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r), // 📏
+            borderRadius: BorderRadius.circular(16.r),
           ),
           child: Padding(
-            padding: EdgeInsets.all(16.w), // 📏
+            padding: EdgeInsets.all(16.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,9 +74,9 @@ class _LogoutDialog extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 24.h), // 📏
+                SizedBox(height: 24.h),
                 Row(
-                  spacing: 12.w, // 📏
+                  spacing: 12.w,
                   children: [
                     Expanded(
                       child: AppPrimaryButton(

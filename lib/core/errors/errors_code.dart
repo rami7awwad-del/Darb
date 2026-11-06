@@ -1,7 +1,5 @@
-// ignore_for_file: constant_identifier_names
-
+/// Error codes the app can report.
 enum ErrorCode {
-  // HTTP Errors
   BAD_REQUEST,
   UNAUTHENTICATED,
   FORBIDDEN,
@@ -10,18 +8,15 @@ enum ErrorCode {
   TOO_MANY_REQUESTS,
   SERVER_ERROR,
 
-  // Network Errors
   NO_INTERNET_CONNECTION,
   TIMEOUT,
   CANCEL,
   BAD_CERTIFICATE,
 
-  // Business Errors
   PENDING_APPROVAL,
   NOT_EXIST_ACCOUNT,
   EXIST,
 
-  // Application Errors
   APP_ERROR,
   USER_DATA_NOT_FOUND,
   UNKNOWN,

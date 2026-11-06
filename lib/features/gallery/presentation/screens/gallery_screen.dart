@@ -1,3 +1,4 @@
+import 'package:darb/core/widgets/app_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,8 +12,7 @@ import 'package:darb/features/gallery/presentation/cubit/gallery_cubit.dart';
 import 'package:darb/features/gallery/presentation/widgets/gallery_album_card.dart';
 import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 
-/// تبويب المعرض (قائمة الألبومات). يتطلب GalleryCubit أعلاه في الشجرة
-/// (يُنشأ مع مسار mainLayout).
+/// Screen that shows the gallery.
 class GalleryScreen extends StatelessWidget {
   const GalleryScreen({super.key});
 
@@ -46,6 +46,7 @@ class GalleryScreen extends StatelessWidget {
   }
 }
 
+/// Widget that shows the albums grid.
 class _AlbumsGrid extends StatelessWidget {
   const _AlbumsGrid({required this.state});
 
@@ -57,7 +58,6 @@ class _AlbumsGrid extends StatelessWidget {
 
     return NotificationListener<ScrollNotification>(
       onNotification: (n) {
-        // قرب نهاية القائمة: حمّل الصفحة التالية.
         if (n.metrics.extentAfter < 300) cubit.loadMore();
         return false;
       },
@@ -86,9 +86,13 @@ class _AlbumsGrid extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 16.h),
                     sliver: SliverGrid.builder(
                       itemCount: state.albums.length,
-                      // ⚠️ قياس تقديري: ارتفاع البطاقة (195 من Figma) والمسافات (12).
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                        // More columns in landscape.
+                        crossAxisCount: gridColumnsOf(
+                          context,
+                          portrait: 2,
+                          landscape: 4,
+                        ),
                         mainAxisSpacing: 12.h,
                         crossAxisSpacing: 12.w,
                         mainAxisExtent: 195.h,
@@ -124,6 +128,7 @@ class _AlbumsGrid extends StatelessWidget {
   }
 }
 
+/// Error message with a retry button.
 class _LoadError extends StatelessWidget {
   const _LoadError({required this.message, required this.onRetry});
 

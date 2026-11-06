@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// "لم تستلم الرمز؟ 00:55" + رابط "أعد إرسال الكود".
-/// عند انتهاء العدّاد يظهر "الوقت أنتهى" ويُفعَّل الرابط.
+/// Timer widget for the resend.
 class ResendTimer extends StatelessWidget {
   const ResendTimer({
     super.key,
@@ -54,7 +53,6 @@ class ResendTimer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(
               'أعد إرسال الكود',
-              // ⚠️ قياس تقديري: الرابط معطّل بلون رمادي أثناء العدّ
               style: AppTextStyles.font12Medium.copyWith(
                 color: canResend ? AppColors.main600 : AppColors.grey200,
               ),

@@ -13,9 +13,7 @@ import 'package:darb/features/profile/presentation/widgets/profile_icons.dart';
 import 'package:darb/features/support/data/repositories/support_repository.dart';
 import 'package:darb/features/support/presentation/cubit/contact_cubit.dart';
 
-/// ورقة "تواصل معنا": الاسم، الكنية، الرقم، الوصف. [profile] يملأ الحقول مسبقًا.
-/// 📏 القياسات: من [showAppSheet]، المسافة بين الحقول (24 رأسيًا، 12 أفقيًا)،
-/// ارتفاع حقل الوصف (5 أسطر ≈ 128 في Figma).
+/// Shows contact sheet.
 Future<void> showContactSheet(BuildContext context, {ProfileModel? profile}) {
   final repository = context.read<SupportRepository>();
   return showAppSheet<void>(
@@ -29,6 +27,7 @@ Future<void> showContactSheet(BuildContext context, {ProfileModel? profile}) {
   );
 }
 
+/// Widget that shows the contact form.
 class _ContactForm extends StatefulWidget {
   const _ContactForm({this.profile});
 
@@ -38,6 +37,7 @@ class _ContactForm extends StatefulWidget {
   State<_ContactForm> createState() => _ContactFormState();
 }
 
+/// State for the contact form widget.
 class _ContactFormState extends State<_ContactForm> {
   final _formKey = GlobalKey<FormState>();
   late final _firstName =
@@ -90,7 +90,7 @@ class _ContactFormState extends State<_ContactForm> {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 12.w, // 📏
+                spacing: 12.w,
                 children: [
                   Expanded(
                     child: AppTextField(
@@ -114,7 +114,7 @@ class _ContactFormState extends State<_ContactForm> {
                   ),
                 ],
               ),
-              SizedBox(height: 24.h), // 📏
+              SizedBox(height: 24.h),
               AppTextField(
                 controller: _phone,
                 hint: 'الرقم',
@@ -125,18 +125,18 @@ class _ContactFormState extends State<_ContactForm> {
                 validator: _required,
                 enabled: !sending,
               ),
-              SizedBox(height: 24.h), // 📏
+              SizedBox(height: 24.h),
               AppTextField(
                 controller: _text,
                 hint: 'الوصف...',
                 prefixIcon: Icon(ProfileIcons.description),
                 keyboardType: TextInputType.multiline,
-                minLines: 5, // 📏 يعطي ارتفاعًا قريبًا من 128
+                minLines: 5,
                 maxLines: 5,
                 validator: _required,
                 enabled: !sending,
               ),
-              SizedBox(height: 24.h), // 📏
+              SizedBox(height: 24.h),
               AppSheetActions(
                 primaryText: 'التأكد',
                 isLoading: sending,

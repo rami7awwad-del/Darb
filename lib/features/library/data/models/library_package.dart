@@ -1,7 +1,6 @@
 import 'package:darb/features/home/data/models/course_model.dart';
 
-/// باقة من packages/all (قائمة) أو packages/details?id= (مع subjects).
-/// المدة والوصف يُقرآن بتسامح (duration/days و description) ويكونان null إن غابا.
+/// Package shown in the library.
 class LibraryPackage {
   const LibraryPackage({
     required this.id,
@@ -19,10 +18,10 @@ class LibraryPackage {
   final bool isSubscription;
   final List<CourseModel> subjects;
 
-  /// مدة الباقة بالأيام (duration أو days).
   final int? durationDays;
   final String? description;
 
+  /// Builds the object from the API json.
   factory LibraryPackage.fromJson(Map<String, dynamic> json) => LibraryPackage(
         id: json['id'] as int,
         name: json['name'] as String? ?? '',

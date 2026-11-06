@@ -3,8 +3,7 @@ import 'package:darb/features/auth/data/datasources/auth_remote_data_source.dart
 import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:darb/features/auth/data/models/auth_response_model.dart';
 
-
-/// الجلسة: دخول، تفعيل، (لاحقًا: خروج، حذف الحساب).
+/// Repository that gives the cubits access to the auth data.
 class AuthRepository {
   AuthRepository(this._remote, this._storage);
 
@@ -15,7 +14,6 @@ class AuthRepository {
 
   Future<void> resend(String phone) => _remote.resend(phone);
 
-  /// يجلب device_id، يفعّل الحساب، ثم يحفظ التوكن.
   Future<AuthResponseModel> activate(String phone, String code) async {
     final deviceId = await _storage.getOrCreateDeviceId();
 
@@ -29,13 +27,11 @@ class AuthRepository {
     return result;
   }
 
-  /// ينهي الجلسة في الخادم ثم يحذف التوكن محليًا.
-  /// فشل الطلب (مثل انقطاع الإنترنت) لا يمنع الخروج محليًا.
+  /// Ends the current session.
   Future<void> logout() async {
     try {
       await _remote.logout();
     } on RemoteExceptions {
-      // نكمل الخروج المحلي.
     }
     await _storage.deleteToken();
   }

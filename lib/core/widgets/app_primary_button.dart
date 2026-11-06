@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// الزر الأساسي (Figma: 48 ارتفاع، Radius 11، خلفية main600)
-/// إذا كان [onPressed] = null يظهر الزر بحالة معطّل.
+/// Main filled button of the app.
 class AppPrimaryButton extends StatelessWidget {
   const AppPrimaryButton({
     super.key,

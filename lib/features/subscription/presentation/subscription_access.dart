@@ -6,9 +6,7 @@ import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/home/data/models/subject_model.dart';
 import 'package:darb/features/subscription/presentation/widgets/subscribe_dialog.dart';
 
-/// يفتح مادة: المجانية أو المشترك بها تُفتح مباشرة.
-/// غير ذلك ← حوار "اشترك الآن واحصل عليها"، وعند التأكيد صفحة إدخال الكود،
-/// وبعد تفعيل ناجح تُفتح المادة.
+/// Opens subject with access.
 Future<void> openSubjectWithAccess(
   BuildContext context,
   SubjectModel subject,
@@ -26,7 +24,7 @@ Future<void> openSubjectWithAccess(
   );
 }
 
-/// نفس المنطق لكورس (مثل "متابعة التعلم" في موادي).
+/// Opens course with access.
 Future<void> openCourseWithAccess(
   BuildContext context,
   CourseModel course,

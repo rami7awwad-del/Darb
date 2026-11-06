@@ -4,8 +4,7 @@ import 'package:darb/core/widgets/app_primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// نافذة التعريف بالدورة: صورتها ونصها من `story_image` و`story_text`، وزر "ابدأ الآن".
-/// تظهر عندما يرجع courses/details بـ `is_first_story = true`.
+/// Shows course story.
 Future<void> showCourseStory(
   BuildContext context, {
   String? imageUrl,
@@ -17,12 +16,15 @@ Future<void> showCourseStory(
     barrierColor: Colors.black54,
     builder: (dialogContext) => Dialog(
       backgroundColor: AppColors.white,
-      insetPadding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h), // 📏
+      insetPadding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r), // 📏
+        borderRadius: BorderRadius.circular(16.r),
       ),
       clipBehavior: Clip.antiAlias,
-      child: SingleChildScrollView(
+      child: ConstrainedBox(
+        // Limit the dialog width on wide screens.
+        constraints: const BoxConstraints(maxWidth: 440),
+        child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,7 +41,7 @@ Future<void> showCourseStory(
               ),
             if (text != null && text.trim().isNotEmpty)
               Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0), // 📏
+                padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 0),
                 child: Text(
                   text.trim(),
                   style: AppTextStyles.font14Regular.copyWith(
@@ -49,7 +51,7 @@ Future<void> showCourseStory(
                 ),
               ),
             Padding(
-              padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 20.h), // 📏
+              padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 20.h),
               child: AppPrimaryButton(
                 text: 'ابدأ الآن',
                 onPressed: () {
@@ -59,6 +61,7 @@ Future<void> showCourseStory(
               ),
             ),
           ],
+        ),
         ),
       ),
     ),

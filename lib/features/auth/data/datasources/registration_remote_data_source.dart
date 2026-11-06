@@ -8,7 +8,7 @@ import 'package:darb/features/auth/data/models/school_model.dart';
 import 'package:darb/features/auth/data/models/terms_model.dart';
 import 'package:dio/dio.dart';
 
-/// طلبات إكمال البيانات: القوائم، الشروط، وتعديل المستخدم.
+/// Remote data source that calls the registration endpoints.
 class RegistrationRemoteDataSource {
   RegistrationRemoteDataSource(this._api);
 
@@ -33,19 +33,17 @@ class RegistrationRemoteDataSource {
     }
   }
 
-  /// GET schools/all (يعمل بدون معاملات، جُرّب في Postman).
   Future<List<SchoolModel>> getSchools() async {
     final response = await _api.getRequest(ApiConstants.schoolsAll);
     return _parseList(response, SchoolModel.fromJson);
   }
 
-  /// GET branches/all
   Future<List<BranchModel>> getBranches() async {
     final response = await _api.getRequest(ApiConstants.branchesAll);
     return _parseList(response, BranchModel.fromJson);
   }
 
-  /// GET pages/terms-conditions → data.value نص HTML.
+  /// Gets terms.
   Future<TermsModel> getTerms() async {
     final response = await _api.getRequest(ApiConstants.pagesTermsConditions);
     try {
@@ -57,7 +55,6 @@ class RegistrationRemoteDataSource {
     }
   }
 
-  /// POST users/edit (form-data). الجنس: 0 أنثى، 1 ذكر.
   Future<void> completeProfile({
     required String firstName,
     required String lastName,

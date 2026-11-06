@@ -1,4 +1,4 @@
-/// بند واحد من الشروط: عنوان مرقّم (اختياري) + نصه.
+/// Section widget for the terms.
 class TermsSection {
   const TermsSection({this.title, required this.body});
 
@@ -6,9 +6,7 @@ class TermsSection {
   final String body;
 }
 
-/// رد pages/terms-conditions: data.value نص HTML بصيغة:
-/// "الشروط و الأحكام<div>1. عنوان</div><div>نص البند</div><div>2. ...</div>..."
-/// لا توجد حزمة HTML في المشروع، فنحلّله بتعبير نمطي بسيط.
+/// Model that holds the terms data parsed from the API.
 class TermsModel {
   const TermsModel({this.heading, required this.sections});
 
@@ -26,6 +24,7 @@ class TermsModel {
       .replaceAll(RegExp(r'\s+'), ' ')
       .trim();
 
+  /// Creates the object from from html.
   factory TermsModel.fromHtml(String html) {
     final texts = _divPattern
         .allMatches(html)
@@ -33,7 +32,6 @@ class TermsModel {
         .where((t) => t.isNotEmpty)
         .toList();
 
-    // لا توجد وسوم div: نعرض النص كاملًا كبند واحد.
     if (texts.isEmpty) {
       return TermsModel(sections: [TermsSection(body: _clean(html))]);
     }

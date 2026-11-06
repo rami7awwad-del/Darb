@@ -1,5 +1,4 @@
-/// بيانات المستخدم كما تأتي في رد auth/active (الحقول التي تحققنا منها فقط).
-/// TODO: gender و know_about_app و points ... تُضاف عند الحاجة لها.
+/// Model that holds the user data parsed from the API.
 class UserModel {
   const UserModel({
     required this.id,
@@ -19,6 +18,7 @@ class UserModel {
   final int? age;
   final String? image;
 
+  /// Builds the object from the API json.
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         id: json['id'] as int,
         phone: json['phone']?.toString() ?? '',

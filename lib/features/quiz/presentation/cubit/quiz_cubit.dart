@@ -5,20 +5,21 @@ import 'package:darb/features/quiz/data/models/quiz_models.dart';
 import 'package:darb/features/quiz/data/repositories/quiz_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// State of the quiz that is being taken.
 class QuizState {
   const QuizState({this.selected = const {}, this.submitting = false});
 
-  /// questionId → answerId
   final Map<int, int> selected;
   final bool submitting;
 
+  /// Returns a copy with the given fields replaced.
   QuizState copyWith({Map<int, int>? selected, bool? submitting}) => QuizState(
         selected: selected ?? this.selected,
         submitting: submitting ?? this.submitting,
       );
 }
 
-/// اختيارات المستخدم أثناء الاختبار + تسليمها إلى exams/attend-exam.
+/// Cubit that manages the quiz state.
 class QuizCubit extends Cubit<QuizState> {
   QuizCubit(this._repository) : super(const QuizState());
 
@@ -28,9 +29,7 @@ class QuizCubit extends Cubit<QuizState> {
         state.copyWith(selected: {...state.selected, questionId: answerId}),
       );
 
-  /// يسلّم الإجابات ثم يجلب النتيجة من exams/result (فيها current_answer).
-  /// يعيد [QuizOutcome] عند النجاح. إن فشل جلب النتيجة بعد نجاح التسليم نحسبها
-  /// محليًا، وإن فشل التسليم نفسه يُرمى الخطأ ليعرضه المستدعي.
+  /// Sends the collected data to the server.
   Future<QuizOutcome> submit({
     required int examId,
     required String title,

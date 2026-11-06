@@ -7,12 +7,13 @@ import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/subscription/data/repositories/subscription_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// قائمة ما اشترك به المستخدم (subscriptions/my).
+/// Cubit that manages the my subscriptions state.
 class MySubscriptionsCubit extends Cubit<BaseState<List<CourseModel>>> {
   MySubscriptionsCubit(this._repository) : super(const BaseState());
 
   final SubscriptionRepository _repository;
 
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent || state.data == null) {
       emit(const BaseState<List<CourseModel>>(stateValue: StateValue.loading));

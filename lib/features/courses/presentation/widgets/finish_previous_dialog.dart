@@ -2,8 +2,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-/// حوار متابعة الكورس: "أكمل الدرس السابق أولًا" عند الضغط على درس منتظر.
-/// "ابدأ" يستدعي [onStart] (يفتح الدرس السابق)، و"إلغاء" يغلق الحوار فقط.
+/// Shows finish previous dialog.
 Future<void> showFinishPreviousDialog(
   BuildContext context, {
   required VoidCallback onStart,

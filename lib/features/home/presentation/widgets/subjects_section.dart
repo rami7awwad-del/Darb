@@ -1,15 +1,13 @@
-import 'package:darb/core/widgets/app_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_grid.dart';
 import 'package:darb/core/style/app_text_styles.dart';
+import 'package:darb/core/widgets/app_network_image.dart';
 import 'package:darb/features/home/data/models/subject_model.dart';
 import 'package:darb/features/home/presentation/widgets/section_header.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// قسم "المواد": قائمة أفقية، لكل مادة شارة باسمها فوق صورتها.
-/// ⚠️ قياس تقديري: عرض العنصر (94 = عمود الشبكة)، ارتفاع الشارة (32)،
-/// حجم الصورة (60)، لون الشارة (second500).
+/// Section widget for the subjects.
 class SubjectsSection extends StatelessWidget {
   const SubjectsSection({
     super.key,
@@ -26,6 +24,12 @@ class SubjectsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (subjects.isEmpty) return const SizedBox.shrink();
 
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    // Grow the label with the text size so it never overflows.
+    final badgeHeight = 40.h * textScale;
+    final imageSize = 68.w;
+    final gap = 8.h;
+
     return Column(
       children: [
         Padding(
@@ -38,7 +42,7 @@ class SubjectsSection extends StatelessWidget {
         ),
         SizedBox(height: 12.h),
         SizedBox(
-          height: 113.h,
+          height: badgeHeight + gap + imageSize,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -46,6 +50,9 @@ class SubjectsSection extends StatelessWidget {
             separatorBuilder: (_, _) => SizedBox(width: AppGrid.gutter),
             itemBuilder: (context, i) => _SubjectItem(
               subject: subjects[i],
+              badgeHeight: badgeHeight,
+              imageSize: imageSize,
+              gap: gap,
               onTap: () => onSubjectTap?.call(subjects[i]),
             ),
           ),
@@ -55,10 +62,20 @@ class SubjectsSection extends StatelessWidget {
   }
 }
 
+/// Item widget for the subject.
 class _SubjectItem extends StatelessWidget {
-  const _SubjectItem({required this.subject, required this.onTap});
+  const _SubjectItem({
+    required this.subject,
+    required this.badgeHeight,
+    required this.imageSize,
+    required this.gap,
+    required this.onTap,
+  });
 
   final SubjectModel subject;
+  final double badgeHeight;
+  final double imageSize;
+  final double gap;
   final VoidCallback onTap;
 
   @override
@@ -72,7 +89,7 @@ class _SubjectItem extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: 40.h,
+              height: badgeHeight,
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 6.w),
               decoration: BoxDecoration(
@@ -88,13 +105,21 @@ class _SubjectItem extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 8.h),
-            Expanded(
-              child: AppNetworkImage(
-                url: subject.image,
-                width: 65.w,
-                height: 65.h,
-                fit: BoxFit.contain,
+            SizedBox(height: gap),
+            SizedBox(
+              width: imageSize,
+              height: imageSize,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.r),
+                  child: AppNetworkImage(
+                    url: subject.image,
+                    width: imageSize,
+                    height: imageSize,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
             ),
           ],

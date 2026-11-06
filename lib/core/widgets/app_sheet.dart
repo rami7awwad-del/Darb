@@ -7,9 +7,6 @@ import 'package:darb/core/widgets/app_circle_close_button.dart';
 import 'package:darb/core/widgets/app_outline_button.dart';
 import 'package:darb/core/widgets/app_primary_button.dart';
 
-/// ورقة سفلية موحدة: العنوان + أيقونته في البداية، وزر الإغلاق في النهاية (Figma).
-/// تُستخدم في: تواصل معنا، حول التطبيق، تعديل المعلومات الشخصية.
-/// 📏 كل القياسات هنا تقديرية من لقطة Figma (Radius 24، الحشوات 16/32/24، المسافة 24).
 Future<T?> showAppSheet<T>(
   BuildContext context, {
   required String title,
@@ -21,24 +18,23 @@ Future<T?> showAppSheet<T>(
     isScrollControlled: true,
     backgroundColor: AppColors.white,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)), // 📏
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
     ),
     builder: (sheetContext) => Padding(
-      // يرفع الورقة فوق لوحة المفاتيح.
       padding: EdgeInsets.only(
         bottom: MediaQuery.viewInsetsOf(sheetContext).bottom,
       ),
       child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 24.h), // 📏
+          padding: EdgeInsets.fromLTRB(16.w, 32.h, 16.w, 24.h),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
                 children: [
-                  Icon(icon, size: 24.w, color: AppColors.main600), // 📏
-                  SizedBox(width: 8.w), // 📏
+                  Icon(icon, size: 24.w, color: AppColors.main600),
+                  SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
                       title,
@@ -52,7 +48,7 @@ Future<T?> showAppSheet<T>(
                   ),
                 ],
               ),
-              SizedBox(height: 24.h), // 📏
+              SizedBox(height: 24.h),
               Flexible(
                 child: SingleChildScrollView(child: builder(sheetContext)),
               ),
@@ -64,7 +60,7 @@ Future<T?> showAppSheet<T>(
   );
 }
 
-/// صف زرّين متساويين: الأساسي في البداية (يمين) و"الخروج" في النهاية (يسار).
+/// Primary and secondary buttons for the bottom sheets.
 class AppSheetActions extends StatelessWidget {
   const AppSheetActions({
     super.key,
@@ -84,7 +80,7 @@ class AppSheetActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      spacing: 12.w, // 📏
+      spacing: 12.w,
       children: [
         Expanded(
           child: AppPrimaryButton(

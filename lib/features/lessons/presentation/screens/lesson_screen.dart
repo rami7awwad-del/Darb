@@ -16,7 +16,7 @@ import 'package:darb/features/courses/presentation/widgets/lesson_timeline_tile.
 import 'package:darb/features/lessons/presentation/cubit/lesson_cubit.dart';
 import 'package:darb/features/lessons/presentation/widgets/comments_section.dart';
 
-/// وسائط شاشة الدرس: الدرس الحالي + فصله (لعرض "مسار التعلم" أسفل الشاشة).
+/// Arguments passed to the lesson screen.
 class LessonArgs {
   const LessonArgs({
     required this.lesson,
@@ -29,9 +29,7 @@ class LessonArgs {
   final List<CourseLessonModel> lessons;
 }
 
-/// شاشة الدرس حسب الفيغما: مشغّل الفيديو في الأعلى بحواف سفلية دائرية، ثم
-/// النقاشات + حقل التعليق، ثم "مسار التعلم" لدروس الفصل.
-/// ⚠️ إن جاء `file` فارغًا من courses/details نجلبه من lessions/details.
+/// Screen that shows the lesson.
 class LessonScreen extends StatefulWidget {
   const LessonScreen({super.key, required this.args});
 
@@ -41,12 +39,12 @@ class LessonScreen extends StatefulWidget {
   State<LessonScreen> createState() => _LessonScreenState();
 }
 
+/// State for the lesson screen widget.
 class _LessonScreenState extends State<LessonScreen> {
   YoutubePlayerController? _yt;
   String _file = '';
   String? _videoId;
 
-  /// الدرس من التفاصيل الموحّدة إن وصلت، وإلا من وسائط الفتح.
   CourseLessonModel _lessonOf(LessonDetailsModel? d) =>
       d?.lesson ?? widget.args.lesson;
 
@@ -56,7 +54,7 @@ class _LessonScreenState extends State<LessonScreen> {
     context.read<LessonCubit>().attend();
   }
 
-  /// يُستدعى عند وصول lessions/details: يحدد رابط المحتوى ومعرّف الفيديو.
+  /// Applies details.
   void _applyDetails(LessonDetailsModel details) {
     final lesson = details.lesson;
     setState(() {
@@ -67,12 +65,9 @@ class _LessonScreenState extends State<LessonScreen> {
     });
   }
 
-  /// المشغّل داخل التطبيق لا يُنشأ إلا عند الضغط على تشغيل، فلا يعلّق فتح الشاشة.
   void _play() {
     final id = _videoId;
     if (id == null || _yt != null) return;
-    // مثل تنفيذ الزميل: الإطار من youtube.com لا youtube-nocookie.com، لأن
-    // السكربت يأتي من youtube.com أصلًا ولا يُحَلّ النطاق الثاني دائمًا.
     final controller = YoutubePlayerController(
       params: const YoutubePlayerParams(
         showFullscreenButton: true,
@@ -91,7 +86,6 @@ class _LessonScreenState extends State<LessonScreen> {
     setState(() => _yt = controller);
   }
 
-  /// فشل تحميل المشغّل: نرجع للغلاف (وفيه زر الفتح في يوتيوب).
   void _fail() {
     WidgetsBinding.instance
       ..addPostFrameCallback((_) {
@@ -108,6 +102,7 @@ class _LessonScreenState extends State<LessonScreen> {
     super.dispose();
   }
 
+  /// Opens external.
   Future<void> _openExternal() async {
     final uri = Uri.tryParse(_file);
     final ok = uri != null &&
@@ -119,7 +114,7 @@ class _LessonScreenState extends State<LessonScreen> {
     }
   }
 
-  /// الانتقال لدرس آخر من "مسار التعلم" مع قيود الوصول (اشتراك / أكمل السابق).
+  /// Opens lesson.
   void _openLesson(
     CourseLessonModel next,
     List<CourseLessonModel> lessons,
@@ -144,7 +139,6 @@ class _LessonScreenState extends State<LessonScreen> {
     final cubit = context.read<LessonCubit>();
     final details = state.data?.details;
     final lesson = _lessonOf(details);
-    // مسار التعلم من التفاصيل الموحّدة، وإلا من وسائط الفتح.
     final lessons = (details?.semesterLessons.isNotEmpty ?? false)
         ? details!.semesterLessons
         : widget.args.lessons;
@@ -180,7 +174,7 @@ class _LessonScreenState extends State<LessonScreen> {
                     onRefresh: () => cubit.load(silent: true),
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h), // 📏
+                      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
                       children: [
                         Text(
                           lesson.name,
@@ -188,14 +182,14 @@ class _LessonScreenState extends State<LessonScreen> {
                             color: AppColors.main600,
                           ),
                         ),
-                        SizedBox(height: 16.h), // 📏
+                        SizedBox(height: 16.h),
                         const CommentsSection(),
-                        SizedBox(height: 12.h), // 📏
+                        SizedBox(height: 12.h),
                         const CommentInput(),
                         if (lessons.isNotEmpty) ...[
-                          SizedBox(height: 24.h), // 📏
+                          SizedBox(height: 24.h),
                           Row(
-                            spacing: 8.w, // 📏
+                            spacing: 8.w,
                             children: [
                               Text(
                                 'مسار التعلم',
@@ -205,13 +199,13 @@ class _LessonScreenState extends State<LessonScreen> {
                               ),
                               Icon(
                                 Icons.route_outlined,
-                                size: 22.w, // 📏
+                                size: 22.w,
                                 color: AppColors.second500,
                               ),
                             ],
                           ),
                           if (semesterName.isNotEmpty) ...[
-                            SizedBox(height: 8.h), // 📏
+                            SizedBox(height: 8.h),
                             Text(
                               semesterName,
                               style: AppTextStyles.font12Regular.copyWith(
@@ -219,7 +213,7 @@ class _LessonScreenState extends State<LessonScreen> {
                               ),
                             ),
                           ],
-                          SizedBox(height: 12.h), // 📏
+                          SizedBox(height: 12.h),
                           for (var i = 0; i < lessons.length; i++)
                             LessonTimelineTile(
                               lesson: lessons[i],
@@ -260,8 +254,7 @@ class _LessonScreenState extends State<LessonScreen> {
   }
 }
 
-/// منطقة الوسائط أعلى الشاشة: خلفية سوداء بحواف سفلية دائرية، سهم الرجوع،
-/// وشارة مدة الدرس (كما في الفيغما).
+/// Header widget for the media.
 class _MediaHeader extends StatelessWidget {
   const _MediaHeader({
     required this.child,
@@ -277,7 +270,7 @@ class _MediaHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.vertical(bottom: Radius.circular(24.r)); // 📏
+    final radius = BorderRadius.vertical(bottom: Radius.circular(24.r));
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Container(
@@ -290,18 +283,26 @@ class _MediaHeader extends StatelessWidget {
             radius,
             Stack(
               children: [
-                child,
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      // Keep the video inside the screen height in landscape.
+                      maxHeight: MediaQuery.sizeOf(context).height * 0.62,
+                    ),
+                    child: child,
+                  ),
+                ),
                 PositionedDirectional(
-                  top: 8.h, // 📏
-                  start: 8.w, // 📏
+                  top: 8.h,
+                  start: 8.w,
                   child: InkWell(
                     customBorder: const CircleBorder(),
                     onTap: onBack,
                     child: Padding(
-                      padding: EdgeInsets.all(8.w), // 📏
+                      padding: EdgeInsets.all(8.w),
                       child: Icon(
                         Icons.arrow_back_rounded,
-                        size: 24.w, // 📏
+                        size: 24.w,
                         color: AppColors.white,
                       ),
                     ),
@@ -309,16 +310,16 @@ class _MediaHeader extends StatelessWidget {
                 ),
                 if (timeLabel.isNotEmpty)
                   PositionedDirectional(
-                    top: 12.h, // 📏
-                    end: 12.w, // 📏
+                    top: 12.h,
+                    end: 12.w,
                     child: Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.w,
                         vertical: 4.h,
-                      ), // 📏
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black54,
-                        borderRadius: BorderRadius.circular(8.r), // 📏
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Text(
                         timeLabel,
@@ -337,7 +338,7 @@ class _MediaHeader extends StatelessWidget {
   }
 }
 
-/// بديل المشغّل (16:9) عند غياب فيديو يوتيوب: تحميل، أو ملف/رابط خارجي، أو لا محتوى.
+/// Widget that shows the media placeholder.
 class _MediaPlaceholder extends StatelessWidget {
   const _MediaPlaceholder({
     required this.loading,
@@ -372,13 +373,13 @@ class _MediaPlaceholder extends StatelessWidget {
             : hasLink
                 ? Column(
                     mainAxisSize: MainAxisSize.min,
-                    spacing: 8.h, // 📏
+                    spacing: 8.h,
                     children: [
                       Icon(
                         lesson.isFile
                             ? Icons.description_outlined
                             : Icons.play_circle_outline_rounded,
-                        size: 48.w, // 📏
+                        size: 48.w,
                         color: AppColors.white,
                       ),
                       TextButton.icon(
@@ -407,7 +408,7 @@ class _MediaPlaceholder extends StatelessWidget {
   }
 }
 
-/// غلاف الفيديو (صورة يوتيوب المصغّرة) مع زر تشغيل داخل التطبيق وزر فتح في يوتيوب.
+/// Small private widget used only in this file.
 class _Thumbnail extends StatelessWidget {
   const _Thumbnail({
     required this.videoId,
@@ -436,14 +437,14 @@ class _Thumbnail extends StatelessWidget {
             onTap: onPlay,
             child: Icon(
               Icons.play_circle_fill_rounded,
-              size: 64.w, // 📏
+              size: 64.w,
               color: AppColors.white,
             ),
           ),
         ),
         PositionedDirectional(
-          bottom: 8.h, // 📏
-          end: 8.w, // 📏
+          bottom: 8.h,
+          end: 8.w,
           child: TextButton.icon(
             onPressed: onOpen,
             icon: Icon(Icons.open_in_new_rounded,
@@ -461,7 +462,5 @@ class _Thumbnail extends StatelessWidget {
   }
 }
 
-/// قصّ الحواف الدائرية يُتجاوز أثناء تشغيل يوتيوب: قصّ الـ WebView داخل صفحة
-/// قابلة للتمرير يجمّد الصفحة أو يُظهرها سوداء (كما في تنفيذ الزميل).
 Widget _maybeClip(bool clip, BorderRadius radius, Widget child) =>
     clip ? ClipRRect(borderRadius: radius, child: child) : child;

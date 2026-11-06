@@ -9,7 +9,7 @@ import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 import 'package:darb/features/quiz/data/models/quiz_models.dart';
 import 'package:darb/features/quiz/presentation/widgets/quiz_question_card.dart';
 
-/// مراجعة تفصيلية (Quizze Pages 3): لكل سؤال إجابتك، وإن كانت خاطئة الإجابة الصحيحة.
+/// Screen that shows the quiz review.
 class QuizReviewScreen extends StatelessWidget {
   const QuizReviewScreen({super.key, required this.outcome});
 
@@ -27,9 +27,9 @@ class QuizReviewScreen extends StatelessWidget {
           ),
           Expanded(
             child: ListView.separated(
-              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h), // 📏
+              padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
               itemCount: outcome.questions.length + 1,
-              separatorBuilder: (_, __) => SizedBox(height: 16.h), // 📏
+              separatorBuilder: (_, __) => SizedBox(height: 16.h),
               itemBuilder: (_, i) {
                 if (i == 0) {
                   return Text(
@@ -50,7 +50,7 @@ class QuizReviewScreen extends StatelessWidget {
           ),
           Container(
             color: AppColors.white,
-            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h), // 📏
+            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
             child: SafeArea(
               top: false,
               child: AppPrimaryButton(
@@ -68,6 +68,7 @@ class QuizReviewScreen extends StatelessWidget {
   }
 }
 
+/// Card widget for the review.
 class _ReviewCard extends StatelessWidget {
   const _ReviewCard({
     required this.number,
@@ -86,23 +87,23 @@ class _ReviewCard extends StatelessWidget {
     final correct = question.correctAnswer;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16.r), // 📏
+      borderRadius: BorderRadius.circular(16.r),
       child: Container(
         color: AppColors.white,
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(width: 4.w, color: accent), // 📏
+              Container(width: 4.w, color: accent),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(16.w), // 📏
+                  padding: EdgeInsets.all(16.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 12.h, // 📏
+                    spacing: 12.h,
                     children: [
                       Row(
-                        spacing: 12.w, // 📏
+                        spacing: 12.w,
                         children: [
                           QuizNumberBadge(
                             number: number,
@@ -123,7 +124,7 @@ class _ReviewCard extends StatelessWidget {
                             isCorrect
                                 ? Icons.check_circle_rounded
                                 : Icons.cancel_rounded,
-                            size: 20.w, // 📏
+                            size: 20.w,
                             color: accent,
                           ),
                         ],
@@ -166,6 +167,7 @@ class _ReviewCard extends StatelessWidget {
   }
 }
 
+/// Widget that shows the answer box.
 class _AnswerBox extends StatelessWidget {
   const _AnswerBox({
     required this.label,
@@ -187,15 +189,15 @@ class _AnswerBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(12.w), // 📏
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(11.r), // 📏
+        borderRadius: BorderRadius.circular(11.r),
         border: borderColor == null ? null : Border.all(color: borderColor!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 4.h, // 📏
+        spacing: 4.h,
         children: [
           Text(
             label,

@@ -1,6 +1,6 @@
 import 'package:darb/features/support/data/models/contact_info_model.dart';
 
-/// محتوى ورقة "حول التطبيق": النص (pages/about-application) + روابط التواصل (infos/all).
+/// Model that holds the about data parsed from the API.
 class AboutModel {
   const AboutModel({required this.text, required this.links});
 

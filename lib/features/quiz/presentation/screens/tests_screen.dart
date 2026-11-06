@@ -13,9 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// "إختباراتي": تبويب للاختبارات (exams/my) وآخر للنشاطات (daily-activities/my).
-/// الضغط على عنصر يجلب exams/result: إن كان محلولًا سابقًا تُفتح النتيجة، وإلا الحل.
-/// يتطلب TestsCubit في الشجرة.
+/// Screen that shows the tests.
 class TestsScreen extends StatefulWidget {
   const TestsScreen({super.key});
 
@@ -23,6 +21,7 @@ class TestsScreen extends StatefulWidget {
   State<TestsScreen> createState() => _TestsScreenState();
 }
 
+/// State for the tests screen widget.
 class _TestsScreenState extends State<TestsScreen> {
   int _tab = 0;
   bool _opening = false;
@@ -73,9 +72,9 @@ class _TestsScreenState extends State<TestsScreen> {
             onBack: () => Navigator.pop(context),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h), // 📏
+            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
             child: Row(
-              spacing: 8.w, // 📏
+              spacing: 8.w,
               children: [
                 _TabChip(
                   label: 'الاختبارات',
@@ -114,7 +113,7 @@ class _TestsScreenState extends State<TestsScreen> {
                       ? ListView(
                           physics: const AlwaysScrollableScrollPhysics(),
                           children: [
-                            SizedBox(height: 120.h), // 📏
+                            SizedBox(height: 120.h),
                             Center(
                               child: Text(
                                 _tab == 0
@@ -129,9 +128,9 @@ class _TestsScreenState extends State<TestsScreen> {
                         )
                       : ListView.separated(
                           physics: const AlwaysScrollableScrollPhysics(),
-                          padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h), // 📏
+                          padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
                           itemCount: items.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 12.h), // 📏
+                          separatorBuilder: (_, __) => SizedBox(height: 12.h),
                           itemBuilder: (_, i) => _TestCard(
                             item: items[i],
                             onTap: () => _open(items[i]),
@@ -147,6 +146,7 @@ class _TestsScreenState extends State<TestsScreen> {
   }
 }
 
+/// Widget that shows the tab chip.
 class _TabChip extends StatelessWidget {
   const _TabChip({
     required this.label,
@@ -162,12 +162,12 @@ class _TabChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: selected ? AppColors.main600 : AppColors.main50,
-      borderRadius: BorderRadius.circular(20.r), // 📏
+      borderRadius: BorderRadius.circular(20.r),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20.r), // 📏
+        borderRadius: BorderRadius.circular(20.r),
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h), // 📏
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Text(
             label,
             style: AppTextStyles.font14Medium.copyWith(
@@ -180,6 +180,7 @@ class _TabChip extends StatelessWidget {
   }
 }
 
+/// Card widget for the test.
 class _TestCard extends StatelessWidget {
   const _TestCard({required this.item, required this.onTap});
 
@@ -188,7 +189,7 @@ class _TestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(12.r); // 📏
+    final radius = BorderRadius.circular(12.r);
     return Material(
       color: AppColors.white,
       borderRadius: radius,
@@ -196,17 +197,17 @@ class _TestCard extends StatelessWidget {
         borderRadius: radius,
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.all(12.w), // 📏
+          padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
             borderRadius: radius,
             border: Border.all(color: AppColors.grey50),
           ),
           child: Row(
-            spacing: 12.w, // 📏
+            spacing: 12.w,
             children: [
               Container(
-                width: 44.w, // 📏
-                height: 44.w, // 📏
+                width: 44.w,
+                height: 44.w,
                 decoration: const BoxDecoration(
                   color: AppColors.main50,
                   shape: BoxShape.circle,
@@ -216,13 +217,13 @@ class _TestCard extends StatelessWidget {
                       ? Icons.bolt_rounded
                       : Icons.quiz_outlined,
                   color: AppColors.main600,
-                  size: 22.w, // 📏
+                  size: 22.w,
                 ),
               ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 4.h, // 📏
+                  spacing: 4.h,
                   children: [
                     Text(
                       item.title,
@@ -248,7 +249,7 @@ class _TestCard extends StatelessWidget {
               Icon(
                 Icons.chevron_left_rounded,
                 color: AppColors.grey200,
-                size: 22.w, // 📏
+                size: 22.w,
               ),
             ],
           ),

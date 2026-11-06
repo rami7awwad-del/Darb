@@ -7,11 +7,7 @@ import 'package:darb/core/style/app_text_styles.dart';
 
 const Color _borderColor = Color(0xFFDBDBDB);
 
-/// بطاقة اختيار (الجنس، نوع المؤسسة، الفرع).
-/// المحددة: حد main600 وعلامة ✓ في نهاية البطاقة (يسار في RTL).
-/// - [large]: بطاقة نوع المؤسسة (أيقونة أكبر وعنوان أكبر).
-/// - [boxedIcon] = false: أيقونة بلا مربع خلفية (بطاقة الجنس).
-/// ⚠️ قياس تقديري: الحشوات، حجم مربع الأيقونة (40/48)، سماكة الحد المحدد (1.5).
+/// Card widget for the choice.
 class ChoiceCard extends StatelessWidget {
   const ChoiceCard({
     super.key,
@@ -121,9 +117,7 @@ class ChoiceCard extends StatelessWidget {
   }
 }
 
-/// بلاطة صغيرة في شبكة (كيف عرفت التطبيق؟).
-/// المحددة: تمتلئ بلون second وتظهر علامة ✓ بيضاء فقط (كما في Figma).
-/// ⚠️ قياس تقديري: الارتفاع (72)، لون التعبئة (second300)، حجم الأيقونة.
+/// List tile widget for the choice.
 class ChoiceTile extends StatelessWidget {
   const ChoiceTile({
     super.key,

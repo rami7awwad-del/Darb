@@ -6,27 +6,19 @@ import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_network_image.dart';
 import 'package:darb/features/profile/data/models/profile_model.dart';
 
-/// بطاقة الملف الشخصي: صورة كبيرة تتجاوز أعلى البطاقة، الاسم، ثم 5 إحصائيات.
-/// تُستخدم في شاشة الملف الشخصي وشاشة إنجازاتي (نفس التصميم).
-///
-/// الإحصائيات من اليمين (RTL): الفصول، النقاط، الدورات، الدروس، الأوسمة.
-/// ⚠️ ربط الحقول افتراضي: الفصول=semester_count، النقاط=points، الدورات=package_count،
-/// الأوسمة=medals، الدروس=subject_count (لا يوجد حقل دروس في profile/get).
-///
-/// 📏 القياسات (تقديرية من Figma، مقياس اللقطة 0.69 من تصميم 430):
-/// حجم الصورة 160، بروزها فوق البطاقة 40، هامش البطاقة، Radius 16، حشوات الإحصائيات.
+/// Card widget for the profile summary.
 class ProfileSummaryCard extends StatelessWidget {
   const ProfileSummaryCard({
     super.key,
     required this.profile,
-    this.topGap = 28, // 📏 المسافة بين الشريط العلوي وأعلى الصورة
+    this.topGap = 28,
   });
 
   final ProfileModel profile;
   final double topGap;
 
-  static const double _avatar = 160; // 📏
-  static const double _protrude = 40; // 📏
+  static const double _avatar = 160;
+  static const double _protrude = 40;
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +35,14 @@ class ProfileSummaryCard extends StatelessWidget {
             width: double.infinity,
             margin: EdgeInsets.only(top: protrude),
             padding: EdgeInsets.fromLTRB(
-              16.w, // 📏
-              avatar - protrude + 8.h, // 📏 أسفل الصورة + مسافة
-              16.w, // 📏
-              16.h, // 📏
+              16.w,
+              avatar - protrude + 8.h,
+              16.w,
+              16.h,
             ),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(16.r), // 📏
+              borderRadius: BorderRadius.circular(16.r),
               border: Border.all(color: AppColors.grey50),
             ),
             child: Column(
@@ -61,12 +53,12 @@ class ProfileSummaryCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.font20Medium.copyWith(
-                    color: AppColors.grey600, // 📏 حجم الخط 20
+                    color: AppColors.grey600,
                   ),
                 ),
-                SizedBox(height: 16.h), // 📏
+                SizedBox(height: 16.h),
                 const Divider(height: 1, color: AppColors.grey50),
-                SizedBox(height: 12.h), // 📏
+                SizedBox(height: 12.h),
                 _StatsRow(profile: profile),
               ],
             ),
@@ -93,6 +85,7 @@ class ProfileSummaryCard extends StatelessWidget {
   }
 }
 
+/// Row widget for the stats.
 class _StatsRow extends StatelessWidget {
   const _StatsRow({required this.profile});
 
@@ -117,8 +110,8 @@ class _StatsRow extends StatelessWidget {
                 width: 1,
                 thickness: 1,
                 color: AppColors.grey50,
-                indent: 2.h, // 📏
-                endIndent: 2.h, // 📏
+                indent: 2.h,
+                endIndent: 2.h,
               ),
             Expanded(
               child: Column(
@@ -127,13 +120,13 @@ class _StatsRow extends StatelessWidget {
                   Text(
                     '${items[i].$1}',
                     style: AppTextStyles.font16Medium.copyWith(
-                      color: AppColors.main600, // 📏 حجم الخط 16
+                      color: AppColors.main600,
                     ),
                   ),
                   Text(
                     items[i].$2,
                     style: AppTextStyles.font12Regular.copyWith(
-                      color: AppColors.grey300, // 📏 حجم الخط 12
+                      color: AppColors.grey300,
                     ),
                   ),
                 ],

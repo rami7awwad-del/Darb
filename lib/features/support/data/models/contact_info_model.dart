@@ -1,4 +1,4 @@
-/// رد infos/all: روابط التواصل الاجتماعي ومعلومات الاتصال.
+/// Model that holds the contact info data parsed from the API.
 class ContactInfoModel {
   const ContactInfoModel({
     this.email,
@@ -21,6 +21,7 @@ class ContactInfoModel {
     return (text == null || text.isEmpty) ? null : text;
   }
 
+  /// Builds the object from the API json.
   factory ContactInfoModel.fromJson(Map<String, dynamic> json) =>
       ContactInfoModel(
         email: _s(json['email']),

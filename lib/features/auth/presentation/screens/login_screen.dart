@@ -13,6 +13,7 @@ import 'package:darb/features/auth/presentation/cubit/login/login_cubit.dart';
 import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
 import 'package:darb/core/routing/app_routes.dart';
 
+/// Screen that shows the login.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -20,6 +21,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
+/// State for the login screen widget.
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
@@ -30,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  /// TODO: عدّل قواعد التحقق حسب صيغة الأرقام المعتمدة (الكولكشن: 0993571184).
+  /// Validates phone.
   String? _validatePhone(String? value) {
     final phone = (value ?? '').trim();
     if (phone.isEmpty) return 'أدخل رقم هاتفك';
@@ -61,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 const AuthHeader(),
-                SizedBox(height: 31.h), //  258-227
+                SizedBox(height: 31.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.5.w),
                   child: AuthCard(

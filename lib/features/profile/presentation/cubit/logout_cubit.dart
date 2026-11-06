@@ -5,12 +5,13 @@ import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/features/auth/data/repositories/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// تسجيل الخروج. loaded = تم حذف التوكن، والشاشة تنقل المستخدم لشاشة الدخول.
+/// Cubit that manages the logout state.
 class LogoutCubit extends Cubit<BaseState<bool>> {
   LogoutCubit(this._repository) : super(const BaseState<bool>());
 
   final AuthRepository _repository;
 
+  /// Ends the current session.
   Future<void> logout() async {
     if (state.stateValue == StateValue.loading) return;
     emit(const BaseState<bool>(stateValue: StateValue.loading));

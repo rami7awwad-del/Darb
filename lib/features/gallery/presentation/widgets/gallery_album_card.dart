@@ -6,11 +6,7 @@ import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/gallery/data/models/gallery_model.dart';
 import 'package:darb/features/gallery/presentation/widgets/stacked_photos.dart';
 
-/// بطاقة ألبوم: صور متتالية (ستاك) واسم الألبوم وعدد صوره.
-/// ⚠️ قياس تقديري: نصف قطر البطاقة (16)، الحشوة (8)، لون الحد (second100)،
-/// والمسافة بين الصور والنص (8). إزاحة الستاك داخل StackedPhotos.
-/// ⚠️ النص "ألبوم {الاسم} ({العدد})" افتراض من Figma؛ إن كان الاسم القادم من
-/// الـ API يحمل كلمة "ألبوم" أصلًا فاحذفها من هنا.
+/// Card widget for the gallery album.
 class GalleryAlbumCard extends StatelessWidget {
   const GalleryAlbumCard({super.key, required this.album, required this.onTap});
 

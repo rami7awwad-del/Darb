@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// بطاقة "تقدم المنهاج": النص في البداية والدائرة في النهاية.
-/// ⚠️ قياس تقديري: قطر الدائرة (82) وسماكتها (7) وألوانها، Radius البطاقة (16).
+/// Card widget for the curriculum progress.
 class CurriculumProgressCard extends StatelessWidget {
   const CurriculumProgressCard({
     super.key,
@@ -14,7 +13,6 @@ class CurriculumProgressCard extends StatelessWidget {
     this.onDetails,
   });
 
-  /// من 0 إلى 100.
   final double percent;
   final int coursesCount;
   final VoidCallback? onDetails;

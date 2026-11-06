@@ -9,12 +9,12 @@ import 'package:darb/features/home/data/models/search_result_model.dart';
 import 'package:darb/features/home/data/models/subject_model.dart';
 import 'package:dio/dio.dart';
 
+/// Remote data source that calls the home endpoints.
 class HomeRemoteDataSource {
   HomeRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// يقرأ حقل data من الرد، وأي شكل غير متوقع يتحول إلى APP_ERROR.
   T _parse<T>(Response response, T Function(dynamic data) convert) {
     try {
       final body = response.data as Map<String, dynamic>;
@@ -28,7 +28,7 @@ class HomeRemoteDataSource {
     }
   }
 
-  /// GET home-page/index?perPage=10
+  /// Gets home.
   Future<HomeDataModel> getHome({int perPage = 10}) async {
     final response = await _api.getRequest(
       ApiConstants.homePageIndex,
@@ -40,7 +40,6 @@ class HomeRemoteDataSource {
     );
   }
 
-  /// GET home-page/search?perPage=10&text=...
   Future<SearchResultModel> search(String text, {int perPage = 10}) async {
     final response = await _api.getRequest(
       ApiConstants.homePageSearch,
@@ -52,7 +51,6 @@ class HomeRemoteDataSource {
     );
   }
 
-  /// GET news/all (جاهز لزر "أظهر الكل" لاحقًا).
   Future<List<NewsModel>> getAllNews() async {
     final response = await _api.getRequest(ApiConstants.newsAll);
     return _parse(
@@ -63,7 +61,6 @@ class HomeRemoteDataSource {
     );
   }
 
-  /// GET subjects/all (جاهز لزر "أظهر الكل" لاحقًا).
   Future<List<SubjectModel>> getAllSubjects() async {
     final response = await _api.getRequest(ApiConstants.subjectsAll);
     return _parse(

@@ -11,6 +11,7 @@ import 'package:darb/features/profile/data/models/profile_model.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// State data for the achievements.
 class AchievementsData {
   const AchievementsData({
     this.profile,
@@ -25,13 +26,13 @@ class AchievementsData {
   final ProfileModel? profile;
   final List<CourseModel> courses;
 
-  /// تحميل الصفحة الأولى من المواد (مستقل عن تحميل الملف الشخصي).
   final bool coursesLoading;
   final String? coursesError;
   final int page;
   final bool hasMore;
   final bool loadingMore;
 
+  /// Returns a copy with the given fields replaced.
   AchievementsData copyWith({
     ProfileModel? profile,
     List<CourseModel>? courses,
@@ -53,9 +54,7 @@ class AchievementsData {
       );
 }
 
-/// شاشة "إنجازاتي": الملف الشخصي والمواد يُحمَّلان بشكل مستقل، والمواد بصفحات.
-/// stateValue يخص الملف الشخصي فقط؛ حالة المواد داخل [AchievementsData].
-/// (التحميل السابق كان ينتظر كل المواد مع الملف معًا، فيعلق عند الحسابات الكثيرة البيانات.)
+/// Cubit that manages the achievements state.
 class AchievementsCubit extends Cubit<BaseState<AchievementsData>> {
   AchievementsCubit(this._profile, this._library)
       : super(const BaseState<AchievementsData>(
@@ -70,7 +69,7 @@ class AchievementsCubit extends Cubit<BaseState<AchievementsData>> {
 
   AchievementsData get _data => state.data!;
 
-  /// [silent] = true للسحب للتحديث.
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent) {
       emit(const BaseState<AchievementsData>(
@@ -81,6 +80,7 @@ class AchievementsCubit extends Cubit<BaseState<AchievementsData>> {
     await Future.wait([_loadProfile(), loadCourses(silent: silent)]);
   }
 
+  /// Loads profile.
   Future<void> _loadProfile() async {
     try {
       final profile = await _profile.getProfile();
@@ -97,12 +97,13 @@ class AchievementsCubit extends Cubit<BaseState<AchievementsData>> {
     }
   }
 
+  /// Handles profile error.
   void _onProfileError(String message) {
     if (isClosed || _data.profile != null) return;
     emit(state.copyWith(stateValue: StateValue.error, errorMessage: message));
   }
 
-  /// الصفحة الأولى من المواد. تُستدعى أيضًا لإعادة المحاولة عند فشلها.
+  /// Loads courses.
   Future<void> loadCourses({bool silent = false}) async {
     if (!silent) {
       emit(state.copyWith(
@@ -129,9 +130,9 @@ class AchievementsCubit extends Cubit<BaseState<AchievementsData>> {
     }
   }
 
+  /// Handles courses error.
   void _onCoursesError(String message) {
     if (isClosed) return;
-    // فشل تحديث صامت مع وجود مواد: نُبقي ما هو معروض.
     emit(state.copyWith(
       data: _data.copyWith(
         coursesLoading: false,
@@ -140,7 +141,7 @@ class AchievementsCubit extends Cubit<BaseState<AchievementsData>> {
     ));
   }
 
-  /// الصفحة التالية. فشلها صامت وتُعاد المحاولة عند التمرير التالي.
+  /// Loads the next page of results.
   Future<void> loadMore() async {
     final data = _data;
     if (data.coursesLoading || !data.hasMore || data.loadingMore) return;

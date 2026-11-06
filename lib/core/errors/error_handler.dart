@@ -5,6 +5,7 @@ import 'package:darb/core/errors/error_messages.dart';
 import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:dio/dio.dart';
 
+/// Turns raw errors into readable app errors.
 class ErrorHandler {
   const ErrorHandler._();
 
@@ -29,6 +30,7 @@ class ErrorHandler {
     return RemoteExceptions(errorCode, errorCode.getLocalizedMessage());
   }
 
+  /// Handles dio error.
   static RemoteExceptions handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -83,6 +85,7 @@ class ErrorHandler {
     return RemoteExceptions(errorCode, message, response: response);
   }
 
+  /// Maps status code.
   static ErrorCode _mapStatusCode(int statusCode) {
     return switch (statusCode) {
       400 => ErrorCode.BAD_REQUEST,
@@ -90,12 +93,9 @@ class ErrorHandler {
       403 => ErrorCode.FORBIDDEN,
       404 => ErrorCode.NOT_FOUND,
       408 => ErrorCode.TIMEOUT,
-      // TODO: unverified assumptions, confirm real status codes against the backend
       409 => ErrorCode.PENDING_APPROVAL,
       422 => ErrorCode.UNPROCESSABLE_ENTITY,
-      // Laravel throttle (مثل كثرة طلبات auth/resend)
       429 => ErrorCode.TOO_MANY_REQUESTS,
-      // TODO: unverified assumptions, confirm real status codes against the backend
       426 => ErrorCode.NOT_EXIST_ACCOUNT,
       500 || 501 || 502 || 503 || 504 => ErrorCode.SERVER_ERROR,
       _ => ErrorCode.UNKNOWN,
@@ -109,17 +109,14 @@ class ErrorHandler {
       return null;
     }
 
-    // { "message": "..." }
     if (data['message'] is String) {
       return data['message'] as String;
     }
 
-    // { "error": { "message": "..." } }
     if (data['error'] is Map && data['error']['message'] is String) {
       return data['error']['message'] as String;
     }
 
-    // Laravel Validation Errors: { "errors": { "field": ["error message"] } }
     if (data['errors'] is Map) {
       final errors = data['errors'] as Map;
       if (errors.isNotEmpty && errors.values.first is List) {

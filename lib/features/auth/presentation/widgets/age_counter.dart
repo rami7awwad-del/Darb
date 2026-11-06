@@ -5,9 +5,7 @@ import 'package:darb/core/style/phosphor_icons.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// عدّاد العمر: العنوان، الرقم الكبير، وزرّا − و +.
-/// تمرير null لـ [onDecrement] أو [onIncrement] يعطّل الزر (عند الحد).
-/// ⚠️ قياس تقديري: حجم الدائرتين (40)، المسافة بينهما (16)، حجم الرقم (31).
+/// Counter widget for the age.
 class AgeCounter extends StatelessWidget {
   const AgeCounter({
     super.key,
@@ -58,6 +56,7 @@ class AgeCounter extends StatelessWidget {
   }
 }
 
+/// Button widget for the circle.
 class _CircleButton extends StatelessWidget {
   const _CircleButton({required this.icon, required this.onTap});
 

@@ -6,34 +6,26 @@ import 'package:darb/features/lessons/presentation/screens/lesson_screen.dart';
 import 'package:darb/features/subscription/presentation/widgets/subscribe_dialog.dart';
 import 'package:flutter/material.dart';
 
-/// حالة الدرس في "مسار التعلم".
+/// Possible values for the lesson step.
 enum LessonStep {
-  /// يُفتح الآن.
   open,
 
-  /// مدفوع والطالب غير مشترك.
   locked,
 
-  /// مفتوح، لكن قبله في فصله درس مفتوح لم يحضره الطالب بعد.
   waiting,
 
-  /// اختبار: لا صفحة درس له في التطبيق.
   exam,
 }
 
+/// Rules that decide if a lesson can be opened.
 class LessonAccess {
   const LessonAccess(this.step, {this.previous});
 
   final LessonStep step;
 
-  /// للدرس المنتظر: الدرس الذي يكمله الطالب أولًا.
   final CourseLessonModel? previous;
 }
 
-/// يحدد حالة [lesson] ضمن دروس فصله [lessons] (بترتيبها).
-/// الترتيب: الدرس المفتوح ينتظر حتى يحضر الطالب ما قبله من الدروس المفتوحة.
-/// ⚠️ الخادم لا يفرض هذا الترتيب؛ هو قيد واجهة فقط. الاختبار والدرس المقفل لا
-/// يوقفان ما بعدهما لأن الطالب لا يستطيع إنهاءهما من شاشة الدروس.
 LessonAccess lessonAccess(
   List<CourseLessonModel> lessons,
   CourseLessonModel lesson,
@@ -51,9 +43,7 @@ LessonAccess lessonAccess(
       : LessonAccess(LessonStep.waiting, previous: pending);
 }
 
-/// نقطة الدخول الوحيدة لفتح درس مع قيود الوصول:
-/// مقفل → حوار اشتراك، منتظر → حوار إكمال السابق، اختبار → تنبيه، وإلا يُفتح.
-/// يعيد true إن اشترك الطالب أو عاد من الدرس (ليحدّث المستدعي بياناته).
+/// Opens lesson with access.
 Future<bool> openLessonWithAccess(
   BuildContext context, {
   required CourseLessonModel lesson,

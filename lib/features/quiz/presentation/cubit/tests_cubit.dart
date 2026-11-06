@@ -7,6 +7,7 @@ import 'package:darb/features/quiz/data/models/quiz_models.dart';
 import 'package:darb/features/quiz/data/repositories/quiz_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// State data for the tests.
 class TestsData {
   const TestsData({this.exams = const [], this.activities = const []});
 
@@ -14,12 +15,13 @@ class TestsData {
   final List<QuizListItem> activities;
 }
 
-/// شاشة "اختباراتي": exams/my + daily-activities/my.
+/// Cubit that manages the tests state.
 class TestsCubit extends Cubit<BaseState<TestsData>> {
   TestsCubit(this._repository) : super(const BaseState<TestsData>());
 
   final QuizRepository _repository;
 
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent || state.data == null) {
       emit(const BaseState<TestsData>(stateValue: StateValue.loading));

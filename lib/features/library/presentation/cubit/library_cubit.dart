@@ -9,7 +9,7 @@ import 'package:darb/features/library/data/models/library_semester.dart';
 import 'package:darb/features/library/data/repositories/library_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// حالة تحميل قائمة تبويب (الفصول / الباقات): items == null يعني لم تُحمَّل بعد.
+/// Loading, loaded or failed state for a single list.
 class LoadState<T> {
   const LoadState({
     this.items,
@@ -22,10 +22,10 @@ class LoadState<T> {
   final bool loading;
   final String? error;
 
-  /// طُلب التبويب مرة واحدة على الأقل (لإعادة التحميل بعد تحديث الكورسات).
   final bool requested;
 }
 
+/// State data for the library.
 class LibraryData {
   const LibraryData({
     this.courses = const [],
@@ -47,7 +47,6 @@ class LibraryData {
 
   String get _q => query.trim();
 
-  /// ⚠️ البحث محلي على ما تم تحميله في كل تبويب.
   List<CourseModel> get visibleCourses => _q.isEmpty
       ? courses
       : courses
@@ -74,6 +73,7 @@ class LibraryData {
     return _q.isEmpty ? all : all.where((p) => p.name.contains(_q)).toList();
   }
 
+  /// Returns a copy with the given fields replaced.
   LibraryData copyWith({
     List<CourseModel>? courses,
     int? page,
@@ -93,7 +93,7 @@ class LibraryData {
   );
 }
 
-/// صفحة "موادي": الكورسات (مع صفحات إضافية) + الفصول + الباقات + بحث محلي.
+/// Cubit that manages the library state.
 class LibraryCubit extends Cubit<BaseState<LibraryData>> {
   LibraryCubit(this._repository)
     : super(
@@ -113,8 +113,7 @@ class LibraryCubit extends Cubit<BaseState<LibraryData>> {
       ? e.errorMsg
       : ErrorCode.UNKNOWN.getLocalizedMessage();
 
-  // ───────────── الكورسات ─────────────
-
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent) {
       emit(
@@ -136,7 +135,6 @@ class LibraryCubit extends Cubit<BaseState<LibraryData>> {
           clearErrorMessage: true,
         ),
       );
-      // الفصول مبنية على الكورسات: نعيد بناءها إن كان التبويب قد طُلب.
       if (_data.semesters.requested) loadSemesters(force: true);
     } catch (e) {
       if (isClosed || _data.courses.isNotEmpty) return;
@@ -149,6 +147,7 @@ class LibraryCubit extends Cubit<BaseState<LibraryData>> {
     }
   }
 
+  /// Loads the next page of results.
   Future<void> loadMore() async {
     final data = _data;
     if (state.stateValue != StateValue.loaded ||
@@ -177,14 +176,11 @@ class LibraryCubit extends Cubit<BaseState<LibraryData>> {
     }
   }
 
-  // ───────────── الفصول ─────────────
-
-  /// ⚠️ تُبنى من أول صفحة كورسات محمَّلة (10) عبر courses/details لكل كورس.
+  /// Loads semesters.
   Future<void> loadSemesters({bool force = false}) async {
     final current = _data.semesters;
     if (!force && (current.loading || current.items != null)) return;
 
-    // الكورسات لم تُحمَّل بعد: نسجل الطلب وسيُنفَّذ بعد load().
     if (state.stateValue != StateValue.loaded) {
       emit(
         state.copyWith(
@@ -236,8 +232,7 @@ class LibraryCubit extends Cubit<BaseState<LibraryData>> {
     }
   }
 
-  // ───────────── الباقات ─────────────
-
+  /// Loads packages.
   Future<void> loadPackages({bool force = false}) async {
     final current = _data.packages;
     if (!force && (current.loading || current.items != null)) return;

@@ -1,7 +1,6 @@
 import 'package:darb/features/home/data/models/course_model.dart';
 
-/// فصل داخل كورس، من courses/details?subject_id= (semesters[]).
-/// يحمل أيضًا بيانات الكورس الأب لعرضها في البطاقة (المدرس، المادة، النقاط).
+/// Semester shown in the library.
 class LibrarySemester {
   const LibrarySemester({
     required this.id,
@@ -23,22 +22,19 @@ class LibrarySemester {
   final String subjectName;
   final String professor;
 
-  /// ⚠️ النقاط مأخوذة من الكورس (points_count)، فالفصل لا يملك حقل نقاط.
   final int points;
   final int lessonsCount;
 
-  /// عدد الدروس التي is_attended = true داخل الفصل.
   final int attendedCount;
 
-  /// lession_rate (0–100).
   final double lessonRate;
 
-  /// الكورس الأب (لفتحه عند "متابعة التعلم").
   final CourseModel course;
   final bool isFree;
   final num price;
   final bool isSubscription;
 
+  /// Builds the object from the API json.
   factory LibrarySemester.fromJson(
     Map<String, dynamic> json,
     CourseModel course,

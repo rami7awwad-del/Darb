@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// زر Outline (Figma: 48 ارتفاع، Radius 11، حد 1px بلون main600)
-/// إذا كان [onPressed] = null يظهر الزر بحالة معطّل.
+/// Secondary button with an outline.
 class AppOutlineButton extends StatelessWidget {
   const AppOutlineButton({
     super.key,

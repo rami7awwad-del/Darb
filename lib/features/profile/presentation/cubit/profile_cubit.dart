@@ -7,14 +7,14 @@ import 'package:darb/features/profile/data/models/profile_model.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// تبويب الملف الشخصي. يُنشأ مع مسار mainLayout (مثل بقية التبويبات).
+/// Cubit that manages the profile state.
 class ProfileCubit extends Cubit<BaseState<ProfileModel>> {
   ProfileCubit(this._repository)
       : super(const BaseState<ProfileModel>(stateValue: StateValue.loading));
 
   final ProfileRepository _repository;
 
-  /// [silent] = true للسحب للتحديث (بدون مؤشر التحميل الكامل).
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent) {
       emit(state.copyWith(stateValue: StateValue.loading, clearErrorMessage: true));
@@ -30,14 +30,13 @@ class ProfileCubit extends Cubit<BaseState<ProfileModel>> {
     }
   }
 
+  /// Handles error.
   void _onError(String message) {
     if (isClosed) return;
-    // فشل تحديث صامت مع وجود بيانات سابقة: نُبقي ما هو معروض.
     if (state.data != null) return;
     emit(state.copyWith(stateValue: StateValue.error, errorMessage: message));
   }
 
-  /// بعد نجاح تعديل البيانات: نعرض الملف المحدّث مباشرة.
   void replace(ProfileModel profile) {
     if (isClosed) return;
     emit(BaseState<ProfileModel>(stateValue: StateValue.loaded, data: profile));

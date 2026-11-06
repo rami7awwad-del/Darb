@@ -19,8 +19,7 @@ import 'package:darb/features/library/presentation/widgets/library_package_card.
 import 'package:darb/features/library/presentation/widgets/library_semester_card.dart';
 import 'package:darb/features/library/presentation/widgets/library_tabs.dart';
 
-/// صفحة "موادي": المواد (courses/paginate) والفصول (courses/details لكل كورس)
-/// والباقات (packages/all + packages/details). يتطلب LibraryCubit في الشجرة.
+/// Screen that shows the library.
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
 
@@ -28,6 +27,7 @@ class LibraryScreen extends StatefulWidget {
   State<LibraryScreen> createState() => _LibraryScreenState();
 }
 
+/// State for the library screen widget.
 class _LibraryScreenState extends State<LibraryScreen> {
   static const _tabs = ['المواد', 'الفصول', 'الباقات'];
 
@@ -40,6 +40,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
     super.dispose();
   }
 
+  /// Handles tab.
   void _onTab(int i) {
     setState(() => _tab = i);
     final cubit = context.read<LibraryCubit>();
@@ -47,7 +48,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
     if (i == 2) cubit.loadPackages();
   }
 
-  /// "متابعة التعلم" في الباقة: أول مادة متاحة لم تكتمل، وإلا أول مادة متاحة، وإلا الأولى.
   void _continuePackage(BuildContext context, LibraryPackage package) {
     final subjects = package.subjects;
     if (subjects.isEmpty) {
@@ -107,7 +107,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 onRefresh: () => cubit.loadPackages(force: true),
                 itemBuilder: (i) => LibraryPackageCard(
                   package: state.data!.visiblePackages[i],
-                  // TODO: تفاصيل الباقة.
                   onDetails: () {},
                   onContinue: () => _continuePackage(
                     context,
@@ -123,7 +122,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 }
 
-/// قائمة تبويب الكورسات (حالتها من BaseState مع تحميل صفحات إضافية).
+/// Widget that shows the courses tab.
 class _CoursesTab extends StatelessWidget {
   const _CoursesTab({required this.state});
 
@@ -176,7 +175,7 @@ class _CoursesTab extends StatelessWidget {
   }
 }
 
-/// قائمة عامة لتبويبي الفصول والباقات: تحميل / خطأ / فراغ / قائمة مع سحب للتحديث.
+/// List widget for the state.
 class _StateList extends StatelessWidget {
   const _StateList({
     required this.state,
@@ -217,6 +216,7 @@ class _StateList extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Spinner extends StatelessWidget {
   const _Spinner();
 
@@ -226,6 +226,7 @@ class _Spinner extends StatelessWidget {
   );
 }
 
+/// List widget for the empty.
 class _EmptyList extends StatelessWidget {
   const _EmptyList({required this.text});
 
@@ -250,6 +251,7 @@ class _EmptyList extends StatelessWidget {
   }
 }
 
+/// Error message with a retry button.
 class _LoadError extends StatelessWidget {
   const _LoadError({required this.message, required this.onRetry});
 

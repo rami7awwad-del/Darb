@@ -18,10 +18,7 @@ import 'package:darb/features/subjects/presentation/cubit/subject_details_cubit.
 import 'package:darb/features/subjects/presentation/widgets/subject_cards.dart';
 import 'package:darb/features/subjects/presentation/widgets/subject_tabs.dart';
 
-/// صفحة المادة: عنوان المادة وحقل البحث داخل الشريط العلوي، ثم 3 تبويبات ثابتة
-/// (المحتوى، إختبارات، نشاطات يومية) تغذّيها استجابة subjects/details.
-/// البحث يفلتر القائمة المعروضة محليًا (لا يوجد endpoint بحث خاص بالمادة).
-/// 📏 حشوة القائمة (16 جانبيًا)، المسافة فوق التبويبات 24 وتحتها 16، وبين البطاقات 24.
+/// Screen that shows the subject details.
 class SubjectDetailsScreen extends StatefulWidget {
   const SubjectDetailsScreen({super.key, required this.subject});
 
@@ -31,6 +28,7 @@ class SubjectDetailsScreen extends StatefulWidget {
   State<SubjectDetailsScreen> createState() => _SubjectDetailsScreenState();
 }
 
+/// State for the subject details screen widget.
 class _SubjectDetailsScreenState extends State<SubjectDetailsScreen> {
   static const _tabs = ['المحتوى', 'إختبارات', 'نشاطات يومية'];
 
@@ -49,6 +47,7 @@ class _SubjectDetailsScreenState extends State<SubjectDetailsScreen> {
       a.toLowerCase().contains(_query) ||
       b.toLowerCase().contains(_query);
 
+  /// Opens quiz.
   void _openQuiz(SubjectExamModel exam, String prefix) {
     if (exam.questions.isEmpty) {
       ScaffoldMessenger.of(context)
@@ -147,7 +146,7 @@ class _SubjectDetailsScreenState extends State<SubjectDetailsScreen> {
                 return Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 16.h), // 📏
+                      padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 16.h),
                       child: SubjectTabs(
                         labels: _tabs,
                         selected: _tab,
@@ -162,7 +161,7 @@ class _SubjectDetailsScreenState extends State<SubjectDetailsScreen> {
                             ? ListView(
                                 physics: const AlwaysScrollableScrollPhysics(),
                                 children: [
-                                  SizedBox(height: 80.h), // 📏
+                                  SizedBox(height: 80.h),
                                   Center(
                                     child: Text(
                                       _emptyText,
@@ -177,9 +176,9 @@ class _SubjectDetailsScreenState extends State<SubjectDetailsScreen> {
                                 physics: const AlwaysScrollableScrollPhysics(),
                                 keyboardDismissBehavior:
                                     ScrollViewKeyboardDismissBehavior.onDrag,
-                                padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h), // 📏
+                                padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
                                 itemCount: items.length,
-                                separatorBuilder: (_, __) => SizedBox(height: 24.h), // 📏
+                                separatorBuilder: (_, __) => SizedBox(height: 24.h),
                                 itemBuilder: (_, i) => items[i],
                               ),
                       ),

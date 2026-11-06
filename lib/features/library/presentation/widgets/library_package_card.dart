@@ -7,11 +7,7 @@ import 'package:darb/core/widgets/app_outline_button.dart';
 import 'package:darb/features/library/data/models/library_package.dart';
 import 'package:darb/features/library/presentation/widgets/library_course_card.dart';
 
-/// بطاقة باقة: الاسم والسعر في البداية وزر "تفاصيل" في النهاية، ثم قسم قابل للطي
-/// فيه مواد الباقة (بطاقات كورس بحد رفيع)، ثم زر "متابعة التعلم".
-/// ⚠️ لا يوجد حقل مدة ولا وصف في الـ API فلم يُعرضا ("/ 7 أيام" وسطر الوصف).
-/// ⚠️ تسمية القسم "إخفاء/إظهار المواد المنجزة" كما في Figma، وهو يعرض كل مواد الباقة.
-/// ⚠️ قياس تقديري: Radius (16) وحد القسم (#DBDBDB) وارتفاع زر تفاصيل (28).
+/// Card widget for the library package.
 class LibraryPackageCard extends StatefulWidget {
   const LibraryPackageCard({
     super.key,
@@ -28,6 +24,7 @@ class LibraryPackageCard extends StatefulWidget {
   State<LibraryPackageCard> createState() => _LibraryPackageCardState();
 }
 
+/// State for the library package card widget.
 class _LibraryPackageCardState extends State<LibraryPackageCard> {
   bool _open = true;
 
@@ -112,6 +109,7 @@ class _LibraryPackageCardState extends State<LibraryPackageCard> {
   }
 }
 
+/// Widget that shows the details chip.
 class _DetailsChip extends StatelessWidget {
   const _DetailsChip({this.onTap});
 
@@ -142,6 +140,7 @@ class _DetailsChip extends StatelessWidget {
   }
 }
 
+/// Section widget for the subjects.
 class _SubjectsSection extends StatelessWidget {
   const _SubjectsSection({
     required this.package,

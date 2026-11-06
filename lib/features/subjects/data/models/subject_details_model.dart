@@ -1,8 +1,7 @@
 import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/subjects/data/models/subject_exam_model.dart';
 
-/// رد subjects/details?id= : { content, exams, dailyActivities }.
-/// content قد يأتي كائنًا واحدًا (دورة) أو مصفوفة دورات، ونقبل الشكلين.
+/// Model that holds the subject details data parsed from the API.
 class SubjectDetailsModel {
   const SubjectDetailsModel({
     this.courses = const [],
@@ -18,6 +17,7 @@ class SubjectDetailsModel {
       .map((e) => SubjectExamModel.fromJson(e as Map<String, dynamic>))
       .toList();
 
+  /// Builds the object from the API json.
   factory SubjectDetailsModel.fromJson(Map<String, dynamic> json) {
     final content = json['content'];
     final courses = switch (content) {

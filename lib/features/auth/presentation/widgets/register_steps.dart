@@ -18,13 +18,9 @@ import 'package:darb/features/auth/presentation/widgets/register_progress_bar.da
 import 'package:darb/features/auth/presentation/widgets/step_heading.dart';
 import 'package:darb/core/style/phosphor_icons.dart';
 
-// ⚠️ قياس تقديري: هامش الصفحة 16 (البطاقة 397 من 430 في Figma)،
-// والفراغ العلوي 20 والسفلي 24.
 EdgeInsets get _cardPagePadding => EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 24.h);
 
-// ───────────────────────── إطار الخطوات (ج إلى و) ─────────────────────────
-
-/// شريط التقدم + العنوان + المحتوى، والأزرار مثبّتة أسفل الشاشة.
+/// Page widget for the wizard.
 class WizardPage extends StatelessWidget {
   const WizardPage({
     super.key,
@@ -62,7 +58,6 @@ class WizardPage extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
-          // ⚠️ قياس تقديري: المسافة بين الزرين (12)
           child: Row(
             spacing: 12.w,
             children: [for (final a in actions) Expanded(child: a)],
@@ -73,8 +68,7 @@ class WizardPage extends StatelessWidget {
   }
 }
 
-// ───────────────────────── (أ) البيانات الشخصية ─────────────────────────
-
+/// Registration step for the personal info.
 class PersonalInfoStep extends StatelessWidget {
   const PersonalInfoStep({
     super.key,
@@ -160,7 +154,6 @@ class PersonalInfoStep extends StatelessWidget {
                   textInputAction: TextInputAction.next,
                   validator: _email,
                 ),
-                // الهاتف للعرض فقط (من تسجيل الدخول)
                 AppTextField(
                   controller: phoneController,
                   prefixIcon: Icon(PhosphorIconsRegular.phone),
@@ -195,6 +188,7 @@ class PersonalInfoStep extends StatelessWidget {
   }
 }
 
+/// Checkbox widget for the terms.
 class _TermsCheckbox extends StatelessWidget {
   const _TermsCheckbox({
     required this.accepted,
@@ -254,8 +248,7 @@ class _TermsCheckbox extends StatelessWidget {
   }
 }
 
-// ───────────────────────── (ب) كيف عرفت التطبيق؟ ─────────────────────────
-
+/// Registration step for the source.
 class SourceStep extends StatelessWidget {
   const SourceStep({super.key, required this.state});
 
@@ -276,7 +269,6 @@ class SourceStep extends StatelessWidget {
             second: 'معرفتك بالتطبيق؟',
             centered: true,
           ),
-          // شبكة 3 أعمدة (الفراغ بين البلاطات 8 = AppGrid.gutter)
           Column(
             spacing: 8.h,
             children: [
@@ -309,8 +301,7 @@ class SourceStep extends StatelessWidget {
   }
 }
 
-// ───────────────────────── (ج) الجنس ─────────────────────────
-
+/// Registration step for the gender.
 class GenderStep extends StatelessWidget {
   const GenderStep({super.key, required this.state});
 
@@ -329,7 +320,7 @@ class GenderStep extends StatelessWidget {
         ),
       ],
       child: Column(
-        spacing: 11.h, // Figma: Gap 11
+        spacing: 11.h,
         children: [
           for (final o in RegisterOptions.genders)
             ChoiceCard(
@@ -345,8 +336,7 @@ class GenderStep extends StatelessWidget {
   }
 }
 
-// ───────────────────────── (د) العمر ─────────────────────────
-
+/// Registration step for the age.
 class AgeStep extends StatelessWidget {
   const AgeStep({super.key, required this.state});
 
@@ -375,8 +365,7 @@ class AgeStep extends StatelessWidget {
   }
 }
 
-// ───────────────────────── (هـ) نوع المؤسسة ─────────────────────────
-
+/// Registration step for the institution.
 class InstitutionStep extends StatelessWidget {
   const InstitutionStep({super.key, required this.state});
 
@@ -412,8 +401,7 @@ class InstitutionStep extends StatelessWidget {
   }
 }
 
-// ───────────────────────── (و) الفرع ─────────────────────────
-
+/// Registration step for the branch.
 class BranchStep extends StatelessWidget {
   const BranchStep({super.key, required this.state});
 

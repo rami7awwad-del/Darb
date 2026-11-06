@@ -8,13 +8,12 @@ import 'package:darb/features/subscription/data/models/subscribed_courses.dart';
 import 'package:darb/features/library/data/models/library_package.dart';
 import 'package:darb/features/library/data/models/library_semester.dart';
 
+/// Remote data source that calls the library endpoints.
 class LibraryRemoteDataSource {
   LibraryRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// GET subscriptions/my → دورات المستخدم المشترك بها (بدل courses/paginate).
-  /// الرد قائمة كاملة بلا ترقيم، فأي صفحة بعد الأولى فارغة.
   Future<List<CourseModel>> getCourses({
     required int page,
     required int perPage,
@@ -24,7 +23,6 @@ class LibraryRemoteDataSource {
     return _parse(response, () => parseSubscribedCourses(_data(response)));
   }
 
-  /// GET courses/details?subject_id= → data.semesters[].
   Future<List<LibrarySemester>> getCourseSemesters(CourseModel course) async {
     final response = await _api.getRequest(
       ApiConstants.coursesDetails,
@@ -39,7 +37,6 @@ class LibraryRemoteDataSource {
     );
   }
 
-  /// GET packages/all → data: قائمة باقات.
   Future<List<LibraryPackage>> getPackages() async {
     final response = await _api.getRequest(ApiConstants.packagesAll);
     return _parse(
@@ -50,7 +47,7 @@ class LibraryRemoteDataSource {
     );
   }
 
-  /// GET packages/details?id= → data: باقة مع subjects[].
+  /// Gets package details.
   Future<LibraryPackage> getPackageDetails(int id) async {
     final response = await _api.getRequest(
       ApiConstants.packagesDetails,

@@ -3,6 +3,7 @@ import 'package:darb/features/subscription/data/datasources/subscription_remote_
 import 'package:darb/features/subscription/data/models/package_model.dart';
 import 'package:darb/features/subscription/data/models/payment_method_model.dart';
 
+/// Repository that gives the cubits access to the subscription data.
 class SubscriptionRepository {
   SubscriptionRepository(this._remote);
 
@@ -12,6 +13,7 @@ class SubscriptionRepository {
   Future<List<PaymentMethodModel>> getPaymentMethods() =>
       _remote.getPaymentMethods();
   Future<List<PackageModel>> getPackages() => _remote.getPackages();
+  /// Subscribes to with code.
   Future<void> subscribeWithCode(String code) =>
       _remote.subscribeWithCode(code.trim());
 }

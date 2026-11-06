@@ -1,107 +1,86 @@
+/// Base url and endpoint paths of the API.
 class ApiConstants {
   static const String baseUrl =
       'https://training.tamkeen-dev.com/dareb/public/api';
 
-  // Auth
-  static const String login = '/auth/login'; // POST
-  static const String resend = '/auth/resend'; // POST
-  static const String active = '/auth/active'; // POST
-  static const String logout = '/auth/logout'; // GET
-  static const String deleteAccount = '/auth/delete'; // POST
+  static const String login = '/auth/login';
+  static const String resend = '/auth/resend';
+  static const String active = '/auth/active';
+  static const String logout = '/auth/logout';
+  static const String deleteAccount = '/auth/delete';
 
-  // Profile
-  static const String profile = '/profile/get'; // GET
-  static const String profilePoints = '/profile/points'; // GET
-  static const String profileMedals = '/profile/medals'; // GET
-  static const String profileCups = '/profile/cups'; // GET
+  static const String profile = '/profile/get';
+  static const String profilePoints = '/profile/points';
+  static const String profileMedals = '/profile/medals';
+  static const String profileCups = '/profile/cups';
 
-  // Users
-  static const String usersEdit = '/users/edit'; // POST
-  static const String userUpdate = '/users/update'; // POST
-  static const String userUpdateImage = '/users/update-image'; // POST
-  static const String topUsers = '/users/top'; // GET
-  static const String topUserDetails = '/users/top-user-details'; // GET
+  static const String usersEdit = '/users/edit';
+  static const String userUpdate = '/users/update';
+  static const String userUpdateImage = '/users/update-image';
+  static const String topUsers = '/users/top';
+  static const String topUserDetails = '/users/top-user-details';
 
-  // Home
-  static const String homePageIndex = '/home-page/index'; // GET
-  static const String homePageSearch = '/home-page/search'; // GET
+  static const String homePageIndex = '/home-page/index';
+  static const String homePageSearch = '/home-page/search';
 
-  // Sliders
-  static const String slidersAll = '/sliders/all'; // GET
-  static const String slidersPaginate = '/sliders/paginate'; // GET
+  static const String slidersAll = '/sliders/all';
+  static const String slidersPaginate = '/sliders/paginate';
 
-  // News
-  static const String newsAll = '/news/all'; // GET
-  static const String newsPaginate = '/news/paginate'; // GET
+  static const String newsAll = '/news/all';
+  static const String newsPaginate = '/news/paginate';
 
-  // Gallery
-  static const String galleriesAll = '/galleries/all'; // GET
-  static const String galleriesPaginate = '/galleries/paginate'; // GET
+  static const String galleriesAll = '/galleries/all';
+  static const String galleriesPaginate = '/galleries/paginate';
 
-  // Schools
-  static const String governoratesAll = '/governorates/all'; // GET
-  static const String schoolsAll = '/schools/all'; // GET
+  static const String governoratesAll = '/governorates/all';
+  static const String schoolsAll = '/schools/all';
 
-  // Lookups
-  static const String paymentMethodsAll = '/payment-methods/all'; // GET
-  static const String stagesAll = '/stages/all'; // GET
-  static const String branchesAll = '/branches/all'; // GET
+  static const String paymentMethodsAll = '/payment-methods/all';
+  static const String stagesAll = '/stages/all';
+  static const String branchesAll = '/branches/all';
 
-  // Subjects
-  static const String subjectsAll = '/subjects/all'; // GET
-  static const String subjectsPaginate = '/subjects/paginate'; // GET
-  static const String subjectsDetails = '/subjects/details'; // GET
+  static const String subjectsAll = '/subjects/all';
+  static const String subjectsPaginate = '/subjects/paginate';
+  static const String subjectsDetails = '/subjects/details';
 
-  // Courses
-  static const String coursesPaginate = '/courses/paginate'; // GET
-  static const String coursesDetails = '/courses/details'; // GET
+  static const String coursesPaginate = '/courses/paginate';
+  static const String coursesDetails = '/courses/details';
 
-  // Lessons
-  static const String lessonsDetails = '/lessions/details'; // GET
-  static const String ytDlp = '/yt-dlp'; // GET
-  static const String ytDlp720Audio = '/yt-dlp-720-audio'; // GET
-  static const String lessonsAttend = '/lessions/attend-lession'; // POST
+  static const String lessonsDetails = '/lessions/details';
+  static const String ytDlp = '/yt-dlp';
+  static const String ytDlp720Audio = '/yt-dlp-720-audio';
+  static const String lessonsAttend = '/lessions/attend-lession';
   static const String lessonsLastAttend =
-      '/lessions/last-attend-lession'; // POST
+      '/lessions/last-attend-lession';
 
-  // Packages
-  static const String packagesAll = '/packages/all'; // GET
-  static const String packagesDetails = '/packages/details'; // GET
+  static const String packagesAll = '/packages/all';
+  static const String packagesDetails = '/packages/details';
 
-  // Comments
-  static const String commentsGetByLession = '/comments/get-by-lession'; // GET
-  static const String commentsAddComment = '/comments/add-comment'; // POST
+  static const String commentsGetByLession = '/comments/get-by-lession';
+  static const String commentsAddComment = '/comments/add-comment';
 
-  // Exams
-  static const String examsMy = '/exams/my'; // GET
-  static const String examsResult = '/exams/result'; // GET
-  static const String examsAttend = '/exams/attend-exam'; // POST
+  static const String examsMy = '/exams/my';
+  static const String examsResult = '/exams/result';
+  static const String examsAttend = '/exams/attend-exam';
 
-  // Daily activities
-  static const String dailyActivitiesMy = '/daily-activities/my'; // GET
+  static const String dailyActivitiesMy = '/daily-activities/my';
 
-  // Subscriptions
-  static const String subscriptionsMy = '/subscriptions/my'; // GET
+  static const String subscriptionsMy = '/subscriptions/my';
   static const String subscriptionsCheckOutCode =
-      '/subscriptions/check-out-code'; // GET
-  static const String subscriptionsAdd = '/subscriptions/add'; // POST
+      '/subscriptions/check-out-code';
+  static const String subscriptionsAdd = '/subscriptions/add';
 
-  // Notifications
-  static const String notificationsGet = '/notifications/get'; // GET
+  static const String notificationsGet = '/notifications/get';
 
-  // Faqs
-  static const String faqsAll = '/faqs/all'; // GET
+  static const String faqsAll = '/faqs/all';
 
-  // Settings
-  static const String settingsAll = '/settings/all'; // GET
-  static const String infosAll = '/infos/all'; // GET
+  static const String settingsAll = '/settings/all';
+  static const String infosAll = '/infos/all';
 
-  // Contact
-  static const String contactUsAdd = '/contact-us/add'; // POST
+  static const String contactUsAdd = '/contact-us/add';
 
-  // Pages
-  static const String pagesAll = '/pages/all'; // GET
-  static const String pagesPrivacyPolicy = '/pages/privacy-policy'; // GET
-  static const String pagesTermsConditions = '/pages/terms-conditions'; // GET
-  static const String pagesAboutApplication = '/pages/about-application'; // GET
+  static const String pagesAll = '/pages/all';
+  static const String pagesPrivacyPolicy = '/pages/privacy-policy';
+  static const String pagesTermsConditions = '/pages/terms-conditions';
+  static const String pagesAboutApplication = '/pages/about-application';
 }

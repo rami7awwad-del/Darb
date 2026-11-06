@@ -8,8 +8,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/home/presentation/widgets/section_header.dart';
 
-/// نتائج البحث (المواد والاختبارات).
-/// ⚠️ لا يوجد تصميم لنتائج البحث في Figma: هذا تصميم مبدئي بسيط، استبدله عند توفره.
+/// View widget for the search results.
 class SearchResultsView extends StatelessWidget {
   const SearchResultsView({super.key, required this.data});
 
@@ -74,6 +73,7 @@ class SearchResultsView extends StatelessWidget {
   }
 }
 
+/// List tile widget for the result.
 class _ResultTile extends StatelessWidget {
   const _ResultTile({
     required this.leading,
@@ -128,6 +128,7 @@ class _ResultTile extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Message extends StatelessWidget {
   const _Message({required this.text});
 

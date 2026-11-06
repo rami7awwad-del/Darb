@@ -11,8 +11,10 @@ import 'package:darb/features/profile/data/models/profile_model.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Possible values for the search status.
 enum SearchStatus { idle, loading, ready, failure }
 
+/// State data for the home.
 class HomeData {
   const HomeData({
     this.profile,
@@ -32,6 +34,7 @@ class HomeData {
 
   bool get isSearching => query.isNotEmpty;
 
+  /// Returns a copy with the given fields replaced.
   HomeData copyWith({
     ProfileModel? profile,
     HomeDataModel? home,
@@ -52,6 +55,7 @@ class HomeData {
   );
 }
 
+/// Cubit that manages the home state.
 class HomeCubit extends Cubit<BaseState<HomeData>> {
   HomeCubit(this._home, this._profile)
     : super(
@@ -67,8 +71,7 @@ class HomeCubit extends Cubit<BaseState<HomeData>> {
 
   HomeData get _data => state.data!;
 
-  /// يحمّل الملف الشخصي (الشريط العلوي) وبيانات الرئيسية معًا.
-  /// [silent] = true للسحب للتحديث: لا يُظهر مؤشر التحميل الكامل.
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent) {
       emit(
@@ -98,14 +101,14 @@ class HomeCubit extends Cubit<BaseState<HomeData>> {
     }
   }
 
+  /// Handles load error.
   void _onLoadError(String message) {
     if (isClosed) return;
-    // فشل تحديث صامت مع وجود بيانات سابقة: نُبقي ما هو معروض.
     if (_data.home != null && _data.profile != null) return;
     emit(state.copyWith(stateValue: StateValue.error, errorMessage: message));
   }
 
-  /// بحث مع تأخير 400ms لتقليل الطلبات. النص الفارغ يعيد الرئيسية.
+  /// Handles search changed.
   void onSearchChanged(String text) {
     _debounce?.cancel();
     final query = text.trim();
@@ -139,7 +142,6 @@ class HomeCubit extends Cubit<BaseState<HomeData>> {
   Future<void> _search(String query) async {
     try {
       final result = await _home.search(query);
-      // تجاهل رد قديم إن تغيّر النص أثناء الانتظار.
       if (isClosed || query != _data.query) return;
       emit(
         state.copyWith(
@@ -173,13 +175,13 @@ class HomeCubit extends Cubit<BaseState<HomeData>> {
     }
   }
 
-  /// يستبدل الملف الشخصي بعد تعديله من نافذة إكمال الحساب،
-  /// فيتحدّث الشريط العلوي فورًا دون إعادة تحميل الرئيسية.
+  /// Updates profile.
   void updateProfile(ProfileModel profile) {
     if (isClosed) return;
     emit(state.copyWith(data: _data.copyWith(profile: profile)));
   }
 
+  /// Stops background work before the cubit closes.
   @override
   Future<void> close() {
     _debounce?.cancel();

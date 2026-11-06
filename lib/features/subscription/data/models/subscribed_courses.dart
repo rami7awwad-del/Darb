@@ -1,9 +1,6 @@
 import 'package:darb/features/home/data/models/course_model.dart';
 
-/// يحوّل data الخاص بـ subscriptions/my إلى بطاقات دورات.
-/// الشكل: `{subjects: [{id, price, subject: {...بطاقة الدورة}}]}`؛ وبلا اشتراكات
-/// يعيد الخادم `data: []`. المادة المكررة في أكثر من اشتراك تُعرض مرة واحدة.
-/// يقبل أيضًا قائمة عناصر مباشرة احتياطًا.
+/// Parses subscribed courses.
 List<CourseModel> parseSubscribedCourses(dynamic data) {
   final List items;
   if (data is Map<String, dynamic>) {

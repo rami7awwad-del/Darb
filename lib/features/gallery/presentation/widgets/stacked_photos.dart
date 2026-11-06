@@ -3,8 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:darb/core/widgets/app_network_image.dart';
 
-/// صور متتالية فوق بعضها (الأمامية أسفل اليسار، والخلفية تظهر من الأعلى واليمين).
-/// ⚠️ الإزاحة (step) ونصف القطر تقديريان من Figma؛ عدّلهما حسب التصميم.
+/// Photos stacked on top of each other like a pile.
 class StackedPhotos extends StatelessWidget {
   const StackedPhotos({
     super.key,
@@ -24,7 +23,6 @@ class StackedPhotos extends StatelessWidget {
     final offset = step ?? 8.w;
     final r = radius ?? 12.r;
 
-    // بدون صور: طبقة واحدة تعرض المكان البديل.
     final List<String?> urls =
         images.isEmpty ? [null] : images.take(maxLayers).toList();
     final layers = urls.length;
@@ -37,7 +35,6 @@ class StackedPhotos extends StatelessWidget {
 
         return Stack(
           children: [
-            // نرسم من الخلف إلى الأمام؛ الأخيرة (i = 0) هي الأعلى.
             for (var i = layers - 1; i >= 0; i--)
               Positioned(
                 left: offset * i,

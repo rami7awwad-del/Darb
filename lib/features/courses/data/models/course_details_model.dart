@@ -1,6 +1,6 @@
 import 'package:darb/features/home/data/models/course_model.dart';
 
-/// يقرأ رابط المحتوى بتسامح: file كنص، أو كائن فيه url/path، أو مفاتيح بديلة.
+/// Reads lesson file.
 String readLessonFile(Map<String, dynamic> json) {
   String? pick(dynamic v) {
     if (v is String && v.trim().isNotEmpty) return v.trim();
@@ -20,7 +20,7 @@ String readLessonFile(Map<String, dynamic> json) {
   return '';
 }
 
-/// درس داخل فصل (courses/details → semesters[].lessions[]).
+/// Model that holds the course lesson data parsed from the API.
 class CourseLessonModel {
   const CourseLessonModel({
     required this.id,
@@ -40,10 +40,8 @@ class CourseLessonModel {
   final int order;
   final int typeId;
 
-  /// اسم النوع كما يأتي من الخادم (مثل File).
   final String typeName;
 
-  /// نص جاهز للعرض (مثل "3 ايام").
   final String time;
   final String file;
   final bool isFree;
@@ -52,12 +50,11 @@ class CourseLessonModel {
 
   bool get isFile => typeName.toLowerCase() == 'file';
 
-  /// نوع اختبار (type.id = 3 عند الزميل): لا صفحة درس له في التطبيق.
   bool get isExam => typeId == 3 || typeName.toLowerCase() == 'exam';
 
-  /// مقفل إن لم يكن مجانيًا والمستخدم غير مشترك.
   bool get isLocked => !isFree && !isSubscription;
 
+  /// Builds the object from the API json.
   factory CourseLessonModel.fromJson(Map<String, dynamic> json) {
     final type = json['type'] is Map<String, dynamic>
         ? json['type'] as Map<String, dynamic>
@@ -77,7 +74,7 @@ class CourseLessonModel {
   }
 }
 
-/// فصل داخل الدورة مع دروسه.
+/// Model that holds the course semester data parsed from the API.
 class CourseSemesterModel {
   const CourseSemesterModel({
     required this.id,
@@ -99,6 +96,7 @@ class CourseSemesterModel {
   final num price;
   final bool isSubscription;
 
+  /// Builds the object from the API json.
   factory CourseSemesterModel.fromJson(Map<String, dynamic> json) {
     final lessons = (json['lessions'] as List? ?? const [])
         .map((e) => CourseLessonModel.fromJson(e as Map<String, dynamic>))
@@ -117,7 +115,7 @@ class CourseSemesterModel {
   }
 }
 
-/// رد courses/details?subject_id= : بيانات الدورة + semesters[] + قصة التعريف.
+/// Model that holds the course details data parsed from the API.
 class CourseDetailsModel {
   const CourseDetailsModel({
     required this.course,
@@ -131,26 +129,22 @@ class CourseDetailsModel {
 
   final CourseModel course;
 
-  /// حقل text في الرد (وصف الدورة).
   final String description;
   final List<CourseSemesterModel> semesters;
 
-  /// points_count: نقاط الدورة.
   final int pointsCount;
 
-  /// story_image / story_text: محتوى نافذة التعريف بالدورة.
   final String? storyImage;
   final String? storyText;
 
-  /// is_first_story: يطلب الخادم عرض النافذة (أول دخول للدورة).
   final bool isFirstStory;
 
-  /// تظهر النافذة إن طلبها الخادم وكان فيها ما يُعرض.
   bool get hasStory =>
       isFirstStory &&
       ((storyText?.trim().isNotEmpty ?? false) ||
           (storyImage?.isNotEmpty ?? false));
 
+  /// Builds the object from the API json.
   factory CourseDetailsModel.fromJson(Map<String, dynamic> json) =>
       CourseDetailsModel(
         course: CourseModel.fromJson(json),

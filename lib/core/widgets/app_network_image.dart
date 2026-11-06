@@ -3,8 +3,7 @@ import 'package:phosphor_icons/phosphor_icons.dart';
 
 import 'package:darb/core/style/app_colors.dart';
 
-/// صورة من الشبكة مع مكان بديل أثناء التحميل وعند الفشل.
-/// [fallbackAsset] صورة محلية تظهر عند الفشل (مثل الصورة الشخصية الافتراضية).
+/// Network image with a placeholder and a fallback.
 class AppNetworkImage extends StatelessWidget {
   const AppNetworkImage({
     super.key,

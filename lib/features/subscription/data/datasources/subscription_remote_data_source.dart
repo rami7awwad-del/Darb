@@ -9,6 +9,7 @@ import 'package:darb/features/subscription/data/models/payment_method_model.dart
 import 'package:darb/features/subscription/data/models/subscribed_courses.dart';
 import 'package:dio/dio.dart';
 
+/// Remote data source that calls the subscription endpoints.
 class SubscriptionRemoteDataSource {
   SubscriptionRemoteDataSource(this._api);
 
@@ -27,13 +28,11 @@ class SubscriptionRemoteDataSource {
     }
   }
 
-  /// GET subscriptions/my → دورات المستخدم المشترك بها.
   Future<List<CourseModel>> getMyCourses() async {
     final response = await _api.getRequest(ApiConstants.subscriptionsMy);
     return _parse(response, parseSubscribedCourses);
   }
 
-  /// GET payment-methods/all → وسائل الدفع ومعلومات الوكلاء.
   Future<List<PaymentMethodModel>> getPaymentMethods() async {
     final response = await _api.getRequest(ApiConstants.paymentMethodsAll);
     return _parse(
@@ -44,7 +43,6 @@ class SubscriptionRemoteDataSource {
     );
   }
 
-  /// GET packages/all → الباقات المتاحة مع موادها.
   Future<List<PackageModel>> getPackages() async {
     final response = await _api.getRequest(ApiConstants.packagesAll);
     return _parse(
@@ -55,8 +53,7 @@ class SubscriptionRemoteDataSource {
     );
   }
 
-  /// POST subscriptions/add (form-data: code) → الاشتراك بكود.
-  /// ⚠️ المسار في Postman هو subscriptions/add وليس addcode.
+  /// Subscribes to with code.
   Future<void> subscribeWithCode(String code) async {
     await _api.postFormData(ApiConstants.subscriptionsAdd, {'code': code});
   }

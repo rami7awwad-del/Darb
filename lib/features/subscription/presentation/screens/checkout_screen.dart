@@ -8,26 +8,25 @@ import 'package:darb/features/subscription/data/models/payment_method_model.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// Arguments passed to the checkout screen.
 class CheckoutArgs {
   const CheckoutArgs({required this.methods, required this.total});
 
   final List<PaymentMethodModel> methods;
 
-  /// المجموع المعروض (شكلي).
   final String total;
 }
 
-/// خيار دفع معروض: من وسائل الدفع الفعلية، مع "كاش مباشر مع الأدمن" ثابتًا.
+/// One payment option the user can pick.
 class _Choice {
   const _Choice(this.key, this.label, this.image);
 
   final String key;
   final String label;
-  final String image; // فارغ = أيقونة
+  final String image;
 }
 
-/// خيارات الدفع / إتمام الشراء (Figma: Checkout page).
-/// ⚠️ الصفحة شكلية: لا يوجد endpoint للشراء، و"إتمام الشراء" يعرض رسالة فقط.
+/// Screen that shows the checkout.
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key, required this.args});
 
@@ -37,6 +36,7 @@ class CheckoutScreen extends StatefulWidget {
   State<CheckoutScreen> createState() => _CheckoutScreenState();
 }
 
+/// State for the checkout screen widget.
 class _CheckoutScreenState extends State<CheckoutScreen> {
   String? _selected;
 
@@ -77,34 +77,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
           Expanded(
             child: ListView(
-              padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h), // 📏
+              padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h),
               children: [
                 Text(
                   'اختر وسيلة الدفع',
                   style: AppTextStyles.font16Medium
                       .copyWith(color: AppColors.main600),
                 ),
-                SizedBox(height: 12.h), // 📏
+                SizedBox(height: 12.h),
                 for (final c in _choices) ...[
                   _ChoiceTile(
                     choice: c,
                     selected: _selected == c.key,
                     onTap: () => setState(() => _selected = c.key),
                   ),
-                  SizedBox(height: 12.h), // 📏
+                  SizedBox(height: 12.h),
                 ],
-                SizedBox(height: 16.h), // 📏
+                SizedBox(height: 16.h),
                 Text(
                   'الحساب',
                   style: AppTextStyles.font16Medium
                       .copyWith(color: AppColors.main600),
                 ),
-                SizedBox(height: 12.h), // 📏
+                SizedBox(height: 12.h),
                 Row(
-                  spacing: 6.w, // 📏
+                  spacing: 6.w,
                   children: [
                     Icon(Icons.receipt_long_outlined,
-                        size: 18.w, color: AppColors.second500), // 📏
+                        size: 18.w, color: AppColors.second500),
                     Text(
                       'المجموع النهائي :',
                       style: AppTextStyles.font12Regular
@@ -117,7 +117,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 24.h), // 📏
+                SizedBox(height: 24.h),
                 AppPrimaryButton(text: 'إتمام الشراء', onPressed: _complete),
               ],
             ),
@@ -128,7 +128,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 }
 
-/// صف خيار دفع: الشعار والاسم في البداية ودائرة الاختيار في النهاية (Figma).
+/// List tile widget for the choice.
 class _ChoiceTile extends StatelessWidget {
   const _ChoiceTile({
     required this.choice,
@@ -142,7 +142,7 @@ class _ChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(8.r); // 📏
+    final radius = BorderRadius.circular(8.r);
     return Material(
       color: AppColors.white,
       shape: RoundedRectangleBorder(
@@ -155,17 +155,17 @@ class _ChoiceTile extends StatelessWidget {
         borderRadius: radius,
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h), // 📏
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
           child: Row(
             children: [
               SizedBox(
-                width: 40.w, // 📏
-                height: 24.w, // 📏
+                width: 40.w,
+                height: 24.w,
                 child: choice.image.isEmpty
                     ? Icon(Icons.payments_outlined,
                         size: 22.w, color: AppColors.grey300)
                     : ClipRRect(
-                        borderRadius: BorderRadius.circular(4.r), // 📏
+                        borderRadius: BorderRadius.circular(4.r),
                         child: AppNetworkImage(
                           url: choice.image,
                           width: 40.w,
@@ -173,7 +173,7 @@ class _ChoiceTile extends StatelessWidget {
                         ),
                       ),
               ),
-              SizedBox(width: 12.w), // 📏
+              SizedBox(width: 12.w),
               Expanded(
                 child: Text(
                   choice.label,
@@ -182,8 +182,8 @@ class _ChoiceTile extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 20.w, // 📏
-                height: 20.w, // 📏
+                width: 20.w,
+                height: 20.w,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -193,8 +193,8 @@ class _ChoiceTile extends StatelessWidget {
                 ),
                 child: selected
                     ? Container(
-                        width: 10.w, // 📏
-                        height: 10.w, // 📏
+                        width: 10.w,
+                        height: 10.w,
                         decoration: const BoxDecoration(
                           color: AppColors.second500,
                           shape: BoxShape.circle,

@@ -1,5 +1,4 @@
-/// رد profile/get. المقروء من الحقول المتداخلة: school (للتعديل) و gender.
-/// branch و know_about_app غير مقروءتين حاليًا.
+/// Model that holds the profile data parsed from the API.
 class ProfileModel {
   const ProfileModel({
     required this.id,
@@ -28,7 +27,6 @@ class ProfileModel {
   final int? schoolId;
   final String? schoolName;
 
-  /// 0 أنثى، 1 ذكر.
   final int? gender;
   final int points;
   final int medals;
@@ -41,6 +39,7 @@ class ProfileModel {
 
   static int _int(dynamic v) => (v as num?)?.toInt() ?? 0;
 
+  /// Builds the object from the API json.
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
         id: json['id'] as int,
         firstName: json['f_name'] as String? ?? '',

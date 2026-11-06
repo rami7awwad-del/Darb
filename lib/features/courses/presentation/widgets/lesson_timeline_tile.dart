@@ -5,9 +5,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/courses/data/models/course_details_model.dart';
 
-/// درس في مسار التعلم: مؤشر دائري على خط عمودي في البداية، وبطاقة الدرس بجانبه.
-/// المؤشر: قفل (مقفل)، صح (تمت مشاهدته)، تشغيل/ملف (متاح).
-/// 📏 قطر المؤشر 32، عرض الخط 2، Radius البطاقة 16، حشوتها 12.
+/// List tile widget for the lesson timeline.
 class LessonTimelineTile extends StatelessWidget {
   const LessonTimelineTile({
     super.key,
@@ -27,7 +25,7 @@ class LessonTimelineTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            width: 32.w, // 📏
+            width: 32.w,
             child: Column(
               children: [
                 _Indicator(lesson: lesson),
@@ -40,10 +38,10 @@ class LessonTimelineTile extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 8.w), // 📏
+          SizedBox(width: 8.w),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 12.h), // 📏
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 12.h),
               child: _LessonCard(lesson: lesson, onTap: onTap),
             ),
           ),
@@ -53,6 +51,7 @@ class LessonTimelineTile extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Indicator extends StatelessWidget {
   const _Indicator({required this.lesson});
 
@@ -79,14 +78,15 @@ class _Indicator extends StatelessWidget {
       color = AppColors.white;
     }
     return Container(
-      width: 32.w, // 📏
-      height: 32.w, // 📏
+      width: 32.w,
+      height: 32.w,
       decoration: BoxDecoration(color: background, shape: BoxShape.circle),
-      child: Icon(icon, size: 18.w, color: color), // 📏
+      child: Icon(icon, size: 18.w, color: color),
     );
   }
 }
 
+/// Card widget for the lesson.
 class _LessonCard extends StatelessWidget {
   const _LessonCard({required this.lesson, required this.onTap});
 
@@ -95,7 +95,7 @@ class _LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(16.r); // 📏
+    final radius = BorderRadius.circular(16.r);
     final muted = lesson.isLocked;
     return Material(
       color: AppColors.white,
@@ -107,10 +107,10 @@ class _LessonCard extends StatelessWidget {
         borderRadius: radius,
         onTap: onTap,
         child: Padding(
-          padding: EdgeInsets.all(12.w), // 📏
+          padding: EdgeInsets.all(12.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 8.h, // 📏
+            spacing: 8.h,
             children: [
               Text(
                 lesson.name,
@@ -121,8 +121,8 @@ class _LessonCard extends StatelessWidget {
                 ),
               ),
               Wrap(
-                spacing: 8.w, // 📏
-                runSpacing: 4.h, // 📏
+                spacing: 8.w,
+                runSpacing: 4.h,
                 children: [
                   _Chip(
                     icon: lesson.isFile
@@ -149,6 +149,7 @@ class _LessonCard extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Chip extends StatelessWidget {
   const _Chip({
     required this.icon,
@@ -165,16 +166,16 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h), // 📏
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(8.r), // 📏
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        spacing: 4.w, // 📏
+        spacing: 4.w,
         children: [
-          Icon(icon, size: 14.w, color: color), // 📏
+          Icon(icon, size: 14.w, color: color),
           Text(text, style: AppTextStyles.font12Regular.copyWith(color: color)),
         ],
       ),

@@ -14,9 +14,7 @@ import 'package:darb/features/profile/data/repositories/profile_repository.dart'
 import 'package:darb/features/profile/presentation/cubit/edit_profile_cubit.dart';
 import 'package:darb/features/profile/presentation/widgets/profile_icons.dart';
 
-/// ورقة "عدل معلوماتك الشخصية": الاسم، الكنية، المدرسة.
-/// [onUpdated] يستقبل الملف بعد الحفظ (لتحديث شاشة الملف الشخصي).
-/// 📏 القياسات: من [showAppSheet] ومن حقول الإدخال المشتركة، والمسافة بين الحقول (12 / 24).
+/// Shows edit profile sheet.
 Future<void> showEditProfileSheet(
   BuildContext context, {
   required ProfileModel profile,
@@ -38,6 +36,7 @@ Future<void> showEditProfileSheet(
   );
 }
 
+/// Widget that shows the edit profile form.
 class _EditProfileForm extends StatefulWidget {
   const _EditProfileForm({required this.profile, required this.onUpdated});
 
@@ -48,6 +47,7 @@ class _EditProfileForm extends StatefulWidget {
   State<_EditProfileForm> createState() => _EditProfileFormState();
 }
 
+/// State for the edit profile form widget.
 class _EditProfileFormState extends State<_EditProfileForm> {
   final _formKey = GlobalKey<FormState>();
   late final _firstName = TextEditingController(text: widget.profile.firstName);
@@ -102,7 +102,7 @@ class _EditProfileFormState extends State<_EditProfileForm> {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 12.w, // 📏
+                spacing: 12.w,
                 children: [
                   Expanded(
                     child: AppTextField(
@@ -126,9 +126,8 @@ class _EditProfileFormState extends State<_EditProfileForm> {
                   ),
                 ],
               ),
-              SizedBox(height: 24.h), // 📏
+              SizedBox(height: 24.h),
               AppDropdownField<int>(
-                // يُعاد بناؤه عند وصول القائمة حتى تُطبَّق القيمة الابتدائية.
                 key: ValueKey('schools-${data.schools.length}'),
                 hint: data.schoolsLoading ? 'جارٍ تحميل المدارس...' : 'المدرسة',
                 prefixIcon: Icon(ProfileIcons.school),
@@ -143,7 +142,7 @@ class _EditProfileFormState extends State<_EditProfileForm> {
                 onChanged: saving ? null : (v) => setState(() => _schoolId = v),
                 validator: (v) => v == null ? 'اختر المدرسة' : null,
               ),
-              SizedBox(height: 24.h), // 📏
+              SizedBox(height: 24.h),
               AppSheetActions(
                 primaryText: 'عدل',
                 isLoading: saving,

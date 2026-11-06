@@ -5,8 +5,7 @@ import 'package:phosphor_icons/phosphor_icons.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// حقل البحث (أيقونة البحث في النهاية = يسار في RTL، كما في Figma).
-/// ⚠️ قياس تقديري: الارتفاع (≈ 48 من الحشوات) ولون الأيقونة (second500).
+/// Input field widget for the home search.
 class HomeSearchField extends StatelessWidget {
   const HomeSearchField({
     super.key,

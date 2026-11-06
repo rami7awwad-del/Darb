@@ -4,9 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// سطر تقدم: العنوان في البداية، ثم الشريط، ثم النسبة في النهاية.
-/// [percent] من 0 إلى 100. الشريط يمتلئ من اليمين (RTL تلقائيًا).
-/// ⚠️ قياس تقديري: سماكة الشريط (6) وعرض العنوان (90) وألوان الشريط.
+/// Row widget for the library progress.
 class LibraryProgressRow extends StatelessWidget {
   const LibraryProgressRow({
     super.key,

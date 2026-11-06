@@ -3,14 +3,14 @@ import 'package:darb/core/services/storage_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+/// Builds the Dio client with the auth interceptor.
 class DioFactory {
   final StorageService _storageService;
   final VoidCallback? onUnauthorized;
 
   DioFactory(this._storageService, {this.onUnauthorized});
 
-  /// endpoints لا تحتاج توكن حسب الكولكشن (لا يُرسل معها Authorization،
-  /// حتى لا يسبب توكن قديم رد 401 عليها).
+  // Endpoints that must be called without the Authorization header.
   static const Set<String> _publicPaths = {
     ApiConstants.login,
     ApiConstants.resend,
@@ -30,7 +30,7 @@ class DioFactory {
         baseUrl: ApiConstants.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 60), // رفع الصور
+        sendTimeout: const Duration(seconds: 60),
         listFormat: ListFormat.multiCompatible,
         headers: {
           'Accept': 'application/json',
@@ -38,13 +38,13 @@ class DioFactory {
         },
       ),
     );
-//ليش بتحط  انترسيبتر    ؟    لحتى اتحكم بطليبات او الاخطاء  قبل اراسلها  او بعد استلامها 
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
           final token = _storageService.token ?? '';
           final isPublic = _publicPaths.contains(options.path);
 
+          // Attach the token only to protected endpoints.
           if (token.isNotEmpty && !isPublic) {
             options.headers['Authorization'] = 'Bearer $token';
           } else {
@@ -58,6 +58,7 @@ class DioFactory {
               requestPath == ApiConstants.login ||
               requestPath == ApiConstants.active;
 
+          // Clear the token and go to login when the session has expired.
           if (error.response?.statusCode == 401 && !isAuthEndpoint) {
             if (_storageService.hasToken) {
               await _storageService.deleteToken();
@@ -69,24 +70,6 @@ class DioFactory {
         },
       ),
     );
-
-    if (kDebugMode) {
-      dio.interceptors.add(
-        LogInterceptor(
-          request: true,
-          requestBody: true,
-          responseBody: true,
-          error: true,
-          logPrint: (object) {
-            final message = object.toString().replaceAll(
-              RegExp(r'Authorization:\s*Bearer\s*[^\r\n]+'),
-              'Authorization: Bearer [REDACTED]',
-            );
-            debugPrint(message);
-          },
-        ),
-      );
-    }
 
     return dio;
   }

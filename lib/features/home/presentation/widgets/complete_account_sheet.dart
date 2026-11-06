@@ -14,15 +14,10 @@ import 'package:darb/core/widgets/app_primary_button.dart';
 import 'package:darb/core/widgets/app_text_field.dart';
 import 'package:darb/features/home/presentation/cubit/complete_account_cubit.dart';
 
-/// محتوى الـ Bottom Sheet "أكمل حسابك" (الخطوة الثانية).
-/// يتطلب [CompleteAccountCubit] أعلاه في الشجرة (يُنشأ في complete_account_flow).
-/// عند النجاح يُغلق نفسه ويُرجع [ProfileModel] المحدّث عبر Navigator.pop.
-/// ⚠️ قياس تقديري: كل الفراغات والحشوات (16 / 24)، المسافة بين الاسم والكنية (12)،
-/// حجم أيقونة العنوان (24) وأيقونة الإغلاق (32).
+/// Bottom sheet for the complete account.
 class CompleteAccountSheet extends StatelessWidget {
   const CompleteAccountSheet({super.key});
 
-  // TODO: توحيد هذه القيم مع register_options.dart (الجنس: 0 أنثى، 1 ذكر).
   static const List<(int, String)> _genders = [(1, 'ذكر'), (0, 'أنثى')];
 
   @override
@@ -54,7 +49,6 @@ class CompleteAccountSheet extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // ---------- العنوان ----------
                 Row(
                   children: [
                     Icon(
@@ -84,7 +78,6 @@ class CompleteAccountSheet extends StatelessWidget {
                 ),
                 AppGaps.gapH24,
 
-                // ---------- الاسم + الكنية ----------
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -111,7 +104,6 @@ class CompleteAccountSheet extends StatelessWidget {
                 ),
                 AppGaps.gapH24,
 
-                // ---------- المدرسة ----------
                 if (data.schoolsStateValue == StateValue.error)
                   _SchoolsError(
                     message: data.schoolsMessage,
@@ -137,7 +129,6 @@ class CompleteAccountSheet extends StatelessWidget {
                   ),
                 AppGaps.gapH24,
 
-                // ---------- الجنس ----------
                 AppDropdownField<int>(
                   hint: 'الجنس',
                   prefixIcon: Icon(PhosphorIconsRegular.users),
@@ -149,7 +140,6 @@ class CompleteAccountSheet extends StatelessWidget {
                 ),
                 AppGaps.gapH24,
 
-                // ---------- خطأ الإرسال ----------
                 if (data.submitStatus == SubmitStatus.failure &&
                     state.errorMessage != null) ...[
                   Text(
@@ -161,7 +151,6 @@ class CompleteAccountSheet extends StatelessWidget {
                   AppGaps.gapH12,
                 ],
 
-                // ---------- الأزرار ----------
                 Row(
                   children: [
                     Expanded(
@@ -191,7 +180,7 @@ class CompleteAccountSheet extends StatelessWidget {
   }
 }
 
-/// بديل حقل المدرسة عند فشل التحميل: رسالة + إعادة المحاولة.
+/// Error message shown when the schools fail to load.
 class _SchoolsError extends StatelessWidget {
   const _SchoolsError({required this.message, required this.onRetry});
 

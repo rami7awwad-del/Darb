@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// رسالة قصيرة أسفل الشاشة (خطأ افتراضيًا).
+/// Shows app snack bar.
 void showAppSnackBar(
   BuildContext context,
   String message, {

@@ -1,3 +1,4 @@
+import 'package:darb/core/widgets/app_responsive.dart';
 import 'package:darb/features/subscription/presentation/subscription_access.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,9 +15,7 @@ import 'package:darb/features/home/data/models/subject_model.dart';
 import 'package:darb/features/subjects/presentation/cubit/subjects_cubit.dart';
 import 'package:darb/features/subjects/presentation/widgets/subject_tile.dart';
 
-/// صفحة "كل الفئات": شبكة 3 أعمدة من المواد (subjects/all).
-/// الضغط على مادة يفتح صفحتها ويمرّر كائن المادة.
-/// 📏 حشوة الشبكة (16 جانبيًا، 24 علويًا)، المسافة الأفقية 8 والرأسية 24.
+/// Screen that shows the subjects.
 class SubjectsScreen extends StatelessWidget {
   const SubjectsScreen({super.key});
 
@@ -66,12 +65,17 @@ class SubjectsScreen extends StatelessWidget {
                         )
                       : GridView.builder(
                           physics: const AlwaysScrollableScrollPhysics(),
-                          padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h), // 📏
+                          padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h),
                           itemCount: subjects.length,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 8.w, // 📏
-                            mainAxisSpacing: 24.h, // 📏
+                            // More columns in landscape.
+                            crossAxisCount: gridColumnsOf(
+                              context,
+                              portrait: 3,
+                              landscape: 5,
+                            ),
+                            crossAxisSpacing: 8.w,
+                            mainAxisSpacing: 24.h,
                             mainAxisExtent: SubjectTile.height,
                           ),
                           itemBuilder: (context, i) => SubjectTile(

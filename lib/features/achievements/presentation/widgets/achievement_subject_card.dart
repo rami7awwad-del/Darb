@@ -8,12 +8,7 @@ import 'package:darb/core/widgets/app_progress_bar.dart';
 import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/profile/presentation/widgets/profile_icons.dart';
 
-/// بطاقة مادة في "إنجازاتي": رأس (بلاطة المادة + نسبة التقدم) ثم 3 صفوف تقدم
-/// (النقاط، الفصول، الدروس).
-/// ⚠️ الرقم الكلي على يسار كل صف (مثل 600) غير موجود في الرد؛ يُشتق من
-/// العدد والنسبة (العدد × 100 ÷ النسبة) ولا يظهر إن كانت النسبة صفرًا.
-/// 📏 القياسات: بلاطة المادة 104×67، Radius البطاقة 16، حشوة البطاقة 12،
-/// ارتفاع الصف 54، حجم أيقونة الصف 34، حجم الخطوط، ارتفاع الشريط (5).
+/// Card widget for the achievement subject.
 class AchievementSubjectCard extends StatelessWidget {
   const AchievementSubjectCard({super.key, required this.course});
 
@@ -22,10 +17,10 @@ class AchievementSubjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12.w), // 📏
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r), // 📏
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppColors.grey50),
         boxShadow: AppShadows.midLight,
       ),
@@ -33,7 +28,7 @@ class AchievementSubjectCard extends StatelessWidget {
         children: [
           _Header(course: course),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.h), // 📏
+            padding: EdgeInsets.symmetric(vertical: 12.h),
             child: const Divider(height: 1, color: AppColors.grey50),
           ),
           _ProgressRow(
@@ -43,7 +38,7 @@ class AchievementSubjectCard extends StatelessWidget {
             rate: course.pointRate,
             color: AppColors.second500,
           ),
-          SizedBox(height: 12.h), // 📏
+          SizedBox(height: 12.h),
           _ProgressRow(
             icon: ProfileIcons.semesters,
             label: 'الفصول',
@@ -51,7 +46,7 @@ class AchievementSubjectCard extends StatelessWidget {
             rate: course.semesterRate,
             color: AppColors.second500,
           ),
-          SizedBox(height: 12.h), // 📏
+          SizedBox(height: 12.h),
           _ProgressRow(
             icon: ProfileIcons.lessons,
             label: 'الدروس',
@@ -67,6 +62,7 @@ class AchievementSubjectCard extends StatelessWidget {
 
 String _percent(double rate) => '${rate.round()}%';
 
+/// Small private widget used only in this file.
 class _Header extends StatelessWidget {
   const _Header({required this.course});
 
@@ -77,12 +73,12 @@ class _Header extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 104.w, // 📏
-          height: 67.h, // 📏
-          padding: EdgeInsets.all(6.w), // 📏
+          width: 104.w,
+          height: 67.h,
+          padding: EdgeInsets.all(6.w),
           decoration: BoxDecoration(
             color: AppColors.second400,
-            borderRadius: BorderRadius.circular(11.r), // 📏
+            borderRadius: BorderRadius.circular(11.r),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -95,18 +91,18 @@ class _Header extends StatelessWidget {
                   color: AppColors.white,
                 ),
               ),
-              SizedBox(height: 4.h), // 📏
+              SizedBox(height: 4.h),
               Expanded(
                 child: AppNetworkImage(
                   url: course.image,
-                  width: 32.w, // 📏
+                  width: 32.w,
                   fit: BoxFit.contain,
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(width: 12.w), // 📏
+        SizedBox(width: 12.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +113,7 @@ class _Header extends StatelessWidget {
                   color: AppColors.main600,
                 ),
               ),
-              SizedBox(height: 4.h), // 📏
+              SizedBox(height: 4.h),
               AppProgressBar(value: course.subjectRate / 100),
             ],
           ),
@@ -127,6 +123,7 @@ class _Header extends StatelessWidget {
   }
 }
 
+/// Row widget for the progress.
 class _ProgressRow extends StatelessWidget {
   const _ProgressRow({
     required this.icon,
@@ -144,23 +141,22 @@ class _ProgressRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // الرقم الكلي مشتق (انظر ملاحظة الكلاس).
     final total = rate > 0 ? (count * 100 / rate).round() : null;
 
     return Row(
       children: [
         Container(
-          width: 34.w, // 📏
-          height: 34.w, // 📏
+          width: 34.w,
+          height: 34.w,
           decoration: BoxDecoration(
             color: AppColors.second50,
-            borderRadius: BorderRadius.circular(8.r), // 📏
+            borderRadius: BorderRadius.circular(8.r),
           ),
-          child: Icon(icon, size: 20.w, color: AppColors.second500), // 📏
+          child: Icon(icon, size: 20.w, color: AppColors.second500),
         ),
-        SizedBox(width: 8.w), // 📏
+        SizedBox(width: 8.w),
         SizedBox(
-          width: 72.w, // 📏
+          width: 72.w,
           child: Text.rich(
             TextSpan(
               children: [
@@ -201,7 +197,7 @@ class _ProgressRow extends StatelessWidget {
                     ),
                 ],
               ),
-              SizedBox(height: 4.h), // 📏
+              SizedBox(height: 4.h),
               AppProgressBar(value: rate / 100, color: color),
             ],
           ),

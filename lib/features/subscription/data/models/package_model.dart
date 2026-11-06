@@ -1,6 +1,6 @@
 import 'package:darb/features/home/data/models/subject_model.dart';
 
-/// عنصر packages/all و packages/details: باقة بسعر ومواد.
+/// Model that holds the package data parsed from the API.
 class PackageModel {
   const PackageModel({
     required this.id,
@@ -16,6 +16,7 @@ class PackageModel {
   final List<SubjectModel> subjects;
   final bool isSubscription;
 
+  /// Builds the object from the API json.
   factory PackageModel.fromJson(Map<String, dynamic> json) => PackageModel(
         id: (json['id'] as num?)?.toInt() ?? 0,
         name: (json['name'] ?? '').toString(),

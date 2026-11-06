@@ -7,9 +7,7 @@ import 'package:darb/features/downloads/data/models/downloaded_item.dart';
 import 'package:darb/features/downloads/presentation/widgets/downloaded_item_tile.dart';
 import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 
-/// شاشة "الكورسات المحملة".
-/// ⚠️ الواجهة جاهزة، لكن لا يوجد نظام تنزيل (ولا endpoint) بعد.
-/// TODO: مرّر [items] من مخزن التنزيلات المحلي عند بنائه. وهي فارغة الآن فتظهر رسالة "لا توجد تنزيلات".
+/// Screen that shows the downloaded courses.
 class DownloadedCoursesScreen extends StatelessWidget {
   const DownloadedCoursesScreen({super.key, this.items = const []});
 
@@ -37,11 +35,11 @@ class DownloadedCoursesScreen extends StatelessWidget {
                   )
                 : ListView.separated(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 16.w, // 📏
-                      vertical: 24.h, // 📏
+                      horizontal: 16.w,
+                      vertical: 24.h,
                     ),
                     itemCount: items.length,
-                    separatorBuilder: (context, _) => SizedBox(height: 24.h), // 📏
+                    separatorBuilder: (context, _) => SizedBox(height: 24.h),
                     itemBuilder: (_, i) => DownloadedItemTile(item: items[i]),
                   ),
           ),

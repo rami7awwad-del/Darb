@@ -12,10 +12,7 @@ import 'package:darb/features/achievements/presentation/widgets/achievement_subj
 import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
 import 'package:darb/features/profile/presentation/widgets/profile_summary_card.dart';
 
-/// شاشة "إنجازاتي": بطاقة الملف الشخصي تظهر فور وصولها، ثم بطاقات المواد
-/// (لكل جزء حالة تحميل/خطأ مستقلة، والمواد تُحمَّل بصفحات عند التمرير).
-/// 📏 المسافة بين البطاقات (16)، وحشوة الصفحة (16 جانبيًا، 24 أسفل)،
-/// وتداخل الصورة مع الشريط العلوي (topGap = 0 بدل 28 في الملف الشخصي).
+/// Screen that shows the achievements.
 class AchievementsScreen extends StatelessWidget {
   const AchievementsScreen({super.key});
 
@@ -54,6 +51,7 @@ class AchievementsScreen extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Body extends StatelessWidget {
   const _Body({required this.data});
 
@@ -65,7 +63,6 @@ class _Body extends StatelessWidget {
 
     return NotificationListener<ScrollNotification>(
       onNotification: (n) {
-        // قرب نهاية القائمة: حمّل الصفحة التالية.
         if (n.metrics.extentAfter < 300) cubit.loadMore();
         return false;
       },
@@ -76,7 +73,7 @@ class _Body extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h), // 📏
+              padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
               sliver: SliverToBoxAdapter(
                 child: ProfileSummaryCard(profile: data.profile!, topGap: 0),
               ),
@@ -84,7 +81,7 @@ class _Body extends StatelessWidget {
             if (data.coursesLoading)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 32.h), // 📏
+                  padding: EdgeInsets.symmetric(vertical: 32.h),
                   child: const Center(
                     child: CircularProgressIndicator(color: AppColors.main600),
                   ),
@@ -93,7 +90,7 @@ class _Body extends StatelessWidget {
             else if (data.coursesError != null)
               SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 200.h, // 📏
+                  height: 200.h,
                   child: AppLoadError(
                     message: data.coursesError,
                     onRetry: cubit.loadCourses,
@@ -103,7 +100,7 @@ class _Body extends StatelessWidget {
             else if (data.courses.isEmpty)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 32.h), // 📏
+                  padding: EdgeInsets.only(top: 32.h),
                   child: Center(
                     child: Text(
                       'لا توجد مواد بعد',
@@ -116,10 +113,10 @@ class _Body extends StatelessWidget {
               )
             else
               SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w), // 📏
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
                 sliver: SliverList.separated(
                   itemCount: data.courses.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 16.h), // 📏
+                  separatorBuilder: (_, __) => SizedBox(height: 16.h),
                   itemBuilder: (_, i) =>
                       AchievementSubjectCard(course: data.courses[i]),
                 ),
@@ -127,12 +124,12 @@ class _Body extends StatelessWidget {
             SliverToBoxAdapter(
               child: data.loadingMore
                   ? Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24.h), // 📏
+                      padding: EdgeInsets.symmetric(vertical: 24.h),
                       child: const Center(
                         child: CircularProgressIndicator(color: AppColors.main600),
                       ),
                     )
-                  : SizedBox(height: 24.h), // 📏
+                  : SizedBox(height: 24.h),
             ),
           ],
         ),

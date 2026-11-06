@@ -3,6 +3,7 @@ import 'package:darb/features/library/data/datasources/library_remote_data_sourc
 import 'package:darb/features/library/data/models/library_package.dart';
 import 'package:darb/features/library/data/models/library_semester.dart';
 
+/// Repository that gives the cubits access to the library data.
 class LibraryRepository {
   LibraryRepository(this._remote);
 
@@ -14,8 +15,6 @@ class LibraryRepository {
   }) =>
       _remote.getCourses(page: page, perPage: perPage);
 
-  /// لا يوجد endpoint يعيد كل الفصول، لذا نجلب تفاصيل كل كورس بالتوازي
-  /// (courses/details) وندمج فصولها. إن فشلت كل الطلبات نرمي آخر خطأ.
   Future<List<LibrarySemester>> getSemesters(List<CourseModel> courses) async {
     Object? lastError;
     var failed = 0;
@@ -34,7 +33,6 @@ class LibraryRepository {
     return lists.expand((e) => e).toList();
   }
 
-  /// قائمة الباقات ثم تفاصيل كل باقة (للمواد). إن فشلت التفاصيل نبقي الباقة بلا مواد.
   Future<List<LibraryPackage>> getPackages() async {
     final packages = await _remote.getPackages();
     return Future.wait(

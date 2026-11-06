@@ -8,8 +8,7 @@ import 'package:darb/core/widgets/app_outline_button.dart';
 import 'package:darb/core/widgets/app_primary_button.dart';
 import 'package:darb/features/quiz/data/models/quiz_models.dart';
 
-/// شاشة نتيجة الاختبار (Quizze Pages 2): النسبة + عدد الأسئلة/الصح/الخطأ
-/// وزرّان: مراجعة الأجوبة، والرجوع للرئيسية.
+/// Screen that shows the quiz result.
 class QuizResultScreen extends StatelessWidget {
   const QuizResultScreen({super.key, required this.outcome});
 
@@ -28,35 +27,35 @@ class QuizResultScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w), // 📏
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 56.h), // 📏
+                      SizedBox(height: 56.h),
                       Container(
-                        width: 112.w, // 📏
-                        height: 112.w, // 📏
+                        width: 112.w,
+                        height: 112.w,
                         decoration: const BoxDecoration(
                           color: AppColors.main500,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.military_tech_rounded,
-                          size: 60.w, // 📏
+                          size: 60.w,
                           color: AppColors.white,
                         ),
                       ),
-                      SizedBox(height: 32.h), // 📏
+                      SizedBox(height: 32.h),
                       Text(
                         'تم إنهاء الاختبار بنجاح!',
                         style: AppTextStyles.font20Bold.copyWith(
                           color: AppColors.grey700,
                         ),
                       ),
-                      SizedBox(height: 8.h), // 📏
+                      SizedBox(height: 8.h),
                       Text(
                         _message,
                         textAlign: TextAlign.center,
@@ -64,16 +63,16 @@ class QuizResultScreen extends StatelessWidget {
                           color: AppColors.grey300,
                         ),
                       ),
-                      SizedBox(height: 16.h), // 📏
+                      SizedBox(height: 16.h),
                       Text(
                         '${outcome.percent}%',
                         style: AppTextStyles.font49Medium.copyWith(
                           color: AppColors.second500,
                         ),
                       ),
-                      SizedBox(height: 24.h), // 📏
+                      SizedBox(height: 24.h),
                       Row(
-                        spacing: 12.w, // 📏
+                        spacing: 12.w,
                         children: [
                           _StatCard(
                             icon: Icons.help_outline_rounded,
@@ -112,7 +111,7 @@ class QuizResultScreen extends StatelessWidget {
                   arguments: outcome,
                 ),
               ),
-              SizedBox(height: 12.h), // 📏
+              SizedBox(height: 12.h),
               AppOutlineButton(
                 text: 'الرجوع للصفحة الرئيسية',
                 icon: Icon(Icons.home_outlined, size: 18.w),
@@ -121,7 +120,7 @@ class QuizResultScreen extends StatelessWidget {
                   ModalRoute.withName(AppRoutes.mainLayout),
                 ),
               ),
-              SizedBox(height: 16.h), // 📏
+              SizedBox(height: 16.h),
             ],
           ),
         ),
@@ -130,6 +129,7 @@ class QuizResultScreen extends StatelessWidget {
   }
 }
 
+/// Card widget for the stat.
 class _StatCard extends StatelessWidget {
   const _StatCard({
     required this.icon,
@@ -147,16 +147,16 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 4.w), // 📏
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 4.w),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(16.r), // 📏
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(color: AppColors.grey50),
         ),
         child: Column(
-          spacing: 8.h, // 📏
+          spacing: 8.h,
           children: [
-            Icon(icon, size: 28.w, color: color), // 📏
+            Icon(icon, size: 28.w, color: color),
             Text(
               '$value',
               style: AppTextStyles.font16Bold.copyWith(

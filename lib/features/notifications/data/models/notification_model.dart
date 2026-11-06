@@ -1,5 +1,4 @@
-/// إشعار من notifications/get: id و title و text و created_at،
-/// وحالة القراءة في pivot.is_read (0 = غير مقروء، 1 = مقروء).
+/// Model that holds the notification data parsed from the API.
 class NotificationModel {
   const NotificationModel({
     required this.id,
@@ -20,7 +19,6 @@ class NotificationModel {
     'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
   ];
 
-  /// مثل: "4 أكتوبر 2026 / 3:51 مساءً" (يُترك فارغًا إن لم يصل التاريخ).
   String get formattedDate {
     final d = createdAt;
     if (d == null) return '';
@@ -30,9 +28,11 @@ class NotificationModel {
     return '${d.day} ${_months[d.month - 1]} ${d.year} / $hour12:$minute $period';
   }
 
+  /// Reads flag.
   static bool _readFlag(dynamic value) =>
       value == 1 || value == true || value == '1';
 
+  /// Builds the object from the API json.
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     final pivot = json['pivot'];
     final created = json['created_at']?.toString();
@@ -40,7 +40,6 @@ class NotificationModel {
       id: json['id'] as int,
       title: json['title']?.toString() ?? '',
       text: json['text']?.toString() ?? '',
-      // الرد بصيغة "2026-10-04 15:51:00" فنستبدل المسافة بـ T ليقبلها DateTime.
       createdAt: created == null
           ? null
           : DateTime.tryParse(created.replaceFirst(' ', 'T')),

@@ -7,10 +7,7 @@ import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// الشريط التركوازي العلوي للمعرض: العنوان في الوسط، وزر الإشعارات في النهاية،
-/// وفي البداية شعار الكتاب المفتوح، أو سهم رجوع إن مُرّر [onBack] (شاشة الألبوم).
-/// ⚠️ قياس تقديري: حجم عناصر الصف (36)، الحشوات، نصف قطر الحواف (32)،
-/// حجم الشعار (36)، حجم سهم الرجوع (24). الحشوات والحواف مأخوذة من HomeHeader.
+/// Header widget for the gallery.
 class GalleryHeader extends StatelessWidget {
   const GalleryHeader({
     super.key,
@@ -22,20 +19,14 @@ class GalleryHeader extends StatelessWidget {
     this.trailing,
   });
 
-  /// عنوان الشريط (الافتراضي: المعرض). تستخدمه أيضًا صفحة "موادي".
   final String title;
-  /// null = بدون أيقونة بجانب العنوان (شاشات المعلومات الداخلية).
   final IconData? icon;
 
-  /// إن كان null يظهر الشعار بدل سهم الرجوع.
   final VoidCallback? onBack;
   final VoidCallback? onNotifications;
 
-  /// عنصر اختياري تحت صف العنوان داخل الشريط (مثل حقل البحث في صفحة المادة).
   final Widget? bottom;
 
-  /// يستبدل زر الإشعارات (مثل عدّاد غير المقروء في شاشة الإشعارات نفسها).
-  /// يُعرض بحجم 36×36 ليبقى العنوان في الوسط.
   final Widget? trailing;
 
   @override
@@ -85,7 +76,6 @@ class GalleryHeader extends StatelessWidget {
                     SizedBox(width: 36.w, height: 36.w, child: trailing)
                   else
                     _BellButton(
-                      // الافتراضي: فتح شاشة الإشعارات.
                       onTap: onNotifications ??
                           () => Navigator.pushNamed(
                                 context,
@@ -96,7 +86,7 @@ class GalleryHeader extends StatelessWidget {
               ),
             ),
                 if (bottom != null) ...[
-                  SizedBox(height: 16.h), // 📏
+                  SizedBox(height: 16.h),
                   bottom!,
                 ],
               ],
@@ -108,6 +98,7 @@ class GalleryHeader extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Leading extends StatelessWidget {
   const _Leading({required this.onBack});
 
@@ -123,7 +114,6 @@ class _Leading extends StatelessWidget {
           : InkWell(
               customBorder: const CircleBorder(),
               onTap: onBack,
-              // arrow_back ينعكس تلقائيًا في RTL فيشير لليمين (رجوع).
               child: Icon(
                 Icons.arrow_back_rounded,
                 size: 24.w,
@@ -134,6 +124,7 @@ class _Leading extends StatelessWidget {
   }
 }
 
+/// Button widget for the bell.
 class _BellButton extends StatelessWidget {
   const _BellButton({this.onTap});
 

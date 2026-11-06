@@ -5,11 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// حقل الإدخال (Figma: ارتفاع 52، Radius 11، Border 1px)
-/// - الحالة العادية: حد grey100
-/// - حالة التركيز: حد main600
-/// - حالة الخطأ: حد danger
-/// - [isPassword] = true يضيف أيقونة إظهار/إخفاء تلقائيًا
+/// Text field styled for the app.
 class AppTextField extends StatefulWidget {
   const AppTextField({
     super.key,
@@ -31,7 +27,6 @@ class AppTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? hint;
 
-  /// أيقونة بداية الحقل (يمين في RTL) مثل أيقونة البريد
   final Widget? prefixIcon;
   final bool isPassword;
   final TextInputType? keyboardType;
@@ -42,7 +37,6 @@ class AppTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final bool enabled;
 
-  /// للحقول متعددة الأسطر (مثل الوصف). كلمة المرور تبقى سطرًا واحدًا.
   final int? minLines;
   final int? maxLines;
 
@@ -50,6 +44,7 @@ class AppTextField extends StatefulWidget {
   State<AppTextField> createState() => _AppTextFieldState();
 }
 
+/// State for the app text field widget.
 class _AppTextFieldState extends State<AppTextField> {
   late bool _obscure = widget.isPassword;
 
@@ -81,7 +76,6 @@ class _AppTextFieldState extends State<AppTextField> {
         filled: true,
         fillColor: AppColors.white,
         isDense: true,
-        // Figma: top/bottom 16، بداية 28، نهاية 13
         contentPadding: EdgeInsetsDirectional.only(
           top: 16.h,
           bottom: 16.h,

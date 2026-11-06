@@ -11,7 +11,7 @@ import 'package:darb/core/widgets/app_network_image.dart';
 import 'package:darb/features/lessons/data/models/comment_model.dart';
 import 'package:darb/features/lessons/presentation/cubit/lesson_cubit.dart';
 
-/// قسم "النقاشات": قائمة التعليقات وزر "عرض المزيد". حقل الكتابة في CommentInput.
+/// Section widget for the comments.
 class CommentsSection extends StatelessWidget {
   const CommentsSection({super.key});
 
@@ -25,7 +25,7 @@ class CommentsSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              spacing: 8.w, // 📏
+              spacing: 8.w,
               children: [
                 Text(
                   'النقاشات',
@@ -35,15 +35,15 @@ class CommentsSection extends StatelessWidget {
                 ),
                 Icon(
                   Icons.forum_outlined,
-                  size: 22.w, // 📏
+                  size: 22.w,
                   color: AppColors.second500,
                 ),
               ],
             ),
-            SizedBox(height: 16.h), // 📏
+            SizedBox(height: 16.h),
             if (state.stateValue == StateValue.loading)
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 24.h), // 📏
+                padding: EdgeInsets.symmetric(vertical: 24.h),
                 child: const Center(
                   child: CircularProgressIndicator(color: AppColors.main600),
                 ),
@@ -52,7 +52,7 @@ class CommentsSection extends StatelessWidget {
               AppLoadError(message: state.errorMessage, onRetry: cubit.load)
             else if (data.comments.isEmpty)
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 24.h), // 📏
+                padding: EdgeInsets.symmetric(vertical: 24.h),
                 child: Center(
                   child: Text(
                     'لا توجد تعليقات بعد، كن أول من يعلّق',
@@ -65,7 +65,7 @@ class CommentsSection extends StatelessWidget {
             else ...[
               for (final c in data.comments) ...[
                 _CommentTile(comment: c),
-                SizedBox(height: 12.h), // 📏
+                SizedBox(height: 12.h),
               ],
             ],
           ],
@@ -75,6 +75,7 @@ class CommentsSection extends StatelessWidget {
   }
 }
 
+/// List tile widget for the comment.
 class _CommentTile extends StatelessWidget {
   const _CommentTile({required this.comment});
 
@@ -82,17 +83,17 @@ class _CommentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = 36.w; // 📏
+    final size = 36.w;
     return Container(
-      padding: EdgeInsets.all(12.w), // 📏
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(11.r), // 📏
+        borderRadius: BorderRadius.circular(11.r),
         border: Border.all(color: AppColors.grey50),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12.w, // 📏
+        spacing: 12.w,
         children: [
           ClipOval(
             child: AppNetworkImage(
@@ -105,7 +106,7 @@ class _CommentTile extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4.h, // 📏
+              spacing: 4.h,
               children: [
                 Row(
                   children: [
@@ -142,7 +143,7 @@ class _CommentTile extends StatelessWidget {
   }
 }
 
-/// حقل كتابة تعليق مع زر إرسال، ثابت أسفل الشاشة.
+/// Input widget for the comment.
 class CommentInput extends StatefulWidget {
   const CommentInput({super.key});
 
@@ -150,6 +151,7 @@ class CommentInput extends StatefulWidget {
   State<CommentInput> createState() => _CommentInputState();
 }
 
+/// State for the comment input widget.
 class _CommentInputState extends State<CommentInput> {
   final _controller = TextEditingController();
 
@@ -184,7 +186,7 @@ class _CommentInputState extends State<CommentInput> {
       child: SafeArea(
         top: false,
         child: Row(
-          spacing: 8.w, // 📏
+          spacing: 8.w,
           children: [
             Expanded(
               child: TextField(
@@ -203,13 +205,13 @@ class _CommentInputState extends State<CommentInput> {
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16.w,
                     vertical: 12.h,
-                  ), // 📏
+                  ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11.r), // 📏
+                    borderRadius: BorderRadius.circular(11.r),
                     borderSide: const BorderSide(color: AppColors.grey50),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(11.r), // 📏
+                    borderRadius: BorderRadius.circular(11.r),
                     borderSide: const BorderSide(color: AppColors.main600),
                   ),
                 ),
@@ -222,8 +224,8 @@ class _CommentInputState extends State<CommentInput> {
                 customBorder: const CircleBorder(),
                 onTap: sending ? null : _send,
                 child: SizedBox(
-                  width: 44.w, // 📏
-                  height: 44.w, // 📏
+                  width: 44.w,
+                  height: 44.w,
                   child: sending
                       ? Padding(
                           padding: EdgeInsets.all(12.w),

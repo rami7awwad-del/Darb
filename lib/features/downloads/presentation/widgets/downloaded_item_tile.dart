@@ -6,9 +6,7 @@ import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/downloads/data/models/downloaded_item.dart';
 import 'package:darb/features/profile/presentation/widgets/profile_icons.dart';
 
-/// صف عنصر محمّل: مربع أزرق برقم في البداية، العنوان مع النوع والمدة، وزر تشغيل/قراءة في النهاية.
-/// 📏 مربع الرقم 75×60 (من Figma بعد التحويل لمقياس 430)، Radius 11، حجم رقم 20،
-/// حجم العنوان 14 والتفاصيل 12، دائرة التشغيل 36، المسافات 12.
+/// List tile widget for the downloaded item.
 class DownloadedItemTile extends StatelessWidget {
   const DownloadedItemTile({super.key, required this.item, this.onTap});
 
@@ -23,21 +21,21 @@ class DownloadedItemTile extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 75.w, // 📏
-            height: 60.h, // 📏
+            width: 75.w,
+            height: 60.h,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.second400,
-              borderRadius: BorderRadius.circular(11.r), // 📏
+              borderRadius: BorderRadius.circular(11.r),
             ),
             child: Text(
               '${item.order}',
               style: AppTextStyles.font20Medium.copyWith(
-                color: AppColors.white, // 📏 حجم الرقم 20
+                color: AppColors.white,
               ),
             ),
           ),
-          SizedBox(width: 12.w), // 📏
+          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,17 +46,17 @@ class DownloadedItemTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.font14Regular.copyWith(
-                    color: AppColors.main600, // 📏 حجم الخط 14
+                    color: AppColors.main600,
                   ),
                 ),
-                SizedBox(height: 4.h), // 📏
+                SizedBox(height: 4.h),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  spacing: 4.w, // 📏
+                  spacing: 4.w,
                   children: [
                     Icon(
                       isVideo ? ProfileIcons.videoMeta : ProfileIcons.pdfMeta,
-                      size: 16.w, // 📏
+                      size: 16.w,
                       color: AppColors.second500,
                     ),
                     Text(
@@ -72,28 +70,28 @@ class DownloadedItemTile extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 12.w), // 📏
+          SizedBox(width: 12.w),
           if (isVideo)
             Container(
-              width: 36.w, // 📏
-              height: 36.w, // 📏
+              width: 36.w,
+              height: 36.w,
               decoration: const BoxDecoration(
                 color: AppColors.second500,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 ProfileIcons.play,
-                size: 22.w, // 📏
+                size: 22.w,
                 color: AppColors.white,
               ),
             )
           else
             SizedBox(
-              width: 36.w, // 📏
-              height: 36.w, // 📏
+              width: 36.w,
+              height: 36.w,
               child: Icon(
                 ProfileIcons.book,
-                size: 28.w, // 📏
+                size: 28.w,
                 color: AppColors.second500,
               ),
             ),

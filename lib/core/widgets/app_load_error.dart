@@ -5,7 +5,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_outline_button.dart';
 
-/// رسالة فشل التحميل مع زر إعادة المحاولة (تُستخدم في شاشات المعلومات والملف الشخصي).
+/// Error message with a retry button.
 class AppLoadError extends StatelessWidget {
   const AppLoadError({super.key, required this.message, required this.onRetry});
 
@@ -16,10 +16,10 @@ class AppLoadError extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 32.w), // 📏
+        padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          spacing: 16.h, // 📏
+          spacing: 16.h,
           children: [
             Text(
               message ?? 'تعذر تحميل البيانات',

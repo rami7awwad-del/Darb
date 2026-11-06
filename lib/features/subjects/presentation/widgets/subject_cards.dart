@@ -8,8 +8,7 @@ import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/subjects/data/models/subject_exam_model.dart';
 import 'package:darb/features/subjects/presentation/widgets/subject_icons.dart';
 
-/// حاوية البطاقة المشتركة: بيضاء بحد أزرق فاتح.
-/// 📏 Radius 16، حشوة 12، لون الحد (second100).
+/// Widget that shows the card shell.
 class _CardShell extends StatelessWidget {
   const _CardShell({required this.child, this.onTap});
 
@@ -18,7 +17,7 @@ class _CardShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(16.r); // 📏
+    final radius = BorderRadius.circular(16.r);
     return Material(
       color: AppColors.white,
       shape: RoundedRectangleBorder(
@@ -28,16 +27,13 @@ class _CardShell extends StatelessWidget {
       child: InkWell(
         borderRadius: radius,
         onTap: onTap,
-        child: Padding(padding: EdgeInsets.all(12.w), child: child), // 📏
+        child: Padding(padding: EdgeInsets.all(12.w), child: child),
       ),
     );
   }
 }
 
-/// بطاقة دورة (تبويب المحتوى): صورة دائرية في البداية، اسم الدورة مع أيقونة،
-/// المدرّس مع عدد المشتركين في النهاية، ثم "N فصول , M درس".
-/// ⚠️ اسم الدورة = course_name، عدد المشتركين = subscriptions_count (افتراض).
-/// 📏 قطر الصورة 100، المسافات (12 أفقيًا، 4 رأسيًا)، حجم أيقونة الدورة 18.
+/// Card widget for the subject course.
 class SubjectCourseCard extends StatelessWidget {
   const SubjectCourseCard({super.key, required this.course, this.onTap});
 
@@ -46,11 +42,11 @@ class SubjectCourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = 100.w; // 📏
+    final size = 100.w;
     return _CardShell(
       onTap: onTap,
       child: Row(
-        spacing: 12.w, // 📏
+        spacing: 12.w,
         children: [
           Container(
             width: size,
@@ -72,14 +68,14 @@ class SubjectCourseCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              spacing: 4.h, // 📏
+              spacing: 4.h,
               children: [
                 Row(
-                  spacing: 6.w, // 📏
+                  spacing: 6.w,
                   children: [
                     Icon(
                       SubjectIcons.course,
-                      size: 18.w, // 📏
+                      size: 18.w,
                       color: AppColors.second500,
                     ),
                     Expanded(
@@ -113,12 +109,10 @@ class SubjectCourseCard extends StatelessWidget {
   }
 }
 
+/// Possible values for the subject exam kind.
 enum SubjectExamKind { exam, activity }
 
-/// بطاقة اختبار أو نشاط يومي: أيقونة كبيرة في البداية، العنوان، المدرّس مع عدد
-/// المشتركين، ثم "N سؤال". الضغط معطّل الآن (TODO: شاشة الاختبار عبر exams/result
-/// و exams/attend-exam).
-/// 📏 حجم الأيقونة 56 (النشاط داخل دائرة بقطر 64)، المسافات كما في بطاقة الدورة.
+/// Card widget for the subject exam.
 class SubjectExamCard extends StatelessWidget {
   const SubjectExamCard({
     super.key,
@@ -137,18 +131,18 @@ class SubjectExamCard extends StatelessWidget {
     return _CardShell(
       onTap: onTap,
       child: Row(
-        spacing: 12.w, // 📏
+        spacing: 12.w,
         children: [
           Container(
-            width: 64.w, // 📏
-            height: 64.w, // 📏
+            width: 64.w,
+            height: 64.w,
             decoration: BoxDecoration(
               color: isExam ? Colors.transparent : AppColors.second50,
               shape: BoxShape.circle,
             ),
             child: Icon(
               isExam ? SubjectIcons.exam : SubjectIcons.activity,
-              size: 56.w, // 📏
+              size: 56.w,
               color: AppColors.second500,
             ),
           ),
@@ -156,7 +150,7 @@ class SubjectExamCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              spacing: 4.h, // 📏
+              spacing: 4.h,
               children: [
                 Text(
                   exam.title,
@@ -185,7 +179,7 @@ class SubjectExamCard extends StatelessWidget {
   }
 }
 
-/// سطر المدرّس في البداية وعدد المشتركين (مع أيقونة) في النهاية.
+/// Row widget for the professor.
 class _ProfessorRow extends StatelessWidget {
   const _ProfessorRow({required this.professor, required this.subscribers});
 
@@ -208,7 +202,7 @@ class _ProfessorRow extends StatelessWidget {
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
-          spacing: 4.w, // 📏
+          spacing: 4.w,
           children: [
             Text(
               '$subscribers',
@@ -218,7 +212,7 @@ class _ProfessorRow extends StatelessWidget {
             ),
             Icon(
               SubjectIcons.subscribers,
-              size: 14.w, // 📏
+              size: 14.w,
               color: AppColors.second500,
             ),
           ],

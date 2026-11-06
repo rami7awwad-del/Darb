@@ -7,6 +7,7 @@ import 'package:darb/features/home/data/models/subject_model.dart';
 import 'package:darb/features/subjects/data/models/subject_details_model.dart';
 import 'package:dio/dio.dart';
 
+/// Remote data source that calls the subjects endpoints.
 class SubjectsRemoteDataSource {
   SubjectsRemoteDataSource(this._api);
 
@@ -25,7 +26,6 @@ class SubjectsRemoteDataSource {
     }
   }
 
-  /// GET subjects/all
   Future<List<SubjectModel>> getAll() async {
     final response = await _api.getRequest(ApiConstants.subjectsAll);
     return _parse(
@@ -36,7 +36,7 @@ class SubjectsRemoteDataSource {
     );
   }
 
-  /// GET subjects/details?id= → content + exams + dailyActivities.
+  /// Gets details.
   Future<SubjectDetailsModel> getDetails(int id) async {
     final response = await _api.getRequest(
       ApiConstants.subjectsDetails,

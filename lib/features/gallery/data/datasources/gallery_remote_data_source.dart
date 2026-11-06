@@ -5,13 +5,12 @@ import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/features/gallery/data/models/gallery_model.dart';
 
+/// Remote data source that calls the gallery endpoints.
 class GalleryRemoteDataSource {
   GalleryRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// GET galleries/paginate?page=1&perPage=10 → data: قائمة ألبومات.
-  /// الرد لا يحمل بيانات ترقيم (meta)، لذلك الصفحة الأخيرة تُعرف من عدد العناصر.
   Future<List<GalleryModel>> getGalleries({
     required int page,
     required int perPage,

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// عنوان قسم + رابط اختياري في النهاية (مثل "أظهر الكل").
-/// ⚠️ قياس تقديري: لون العنوان (second500) وحجمه (16) وحجم الرابط (12).
+/// Header widget for the section.
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
     super.key,
@@ -18,7 +17,6 @@ class SectionHeader extends StatelessWidget {
   final String? actionLabel;
   final VoidCallback? onAction;
 
-  /// لون العنوان والرابط (الافتراضي second500، وقسم الدورات يستخدم main600).
   final Color color;
 
   @override

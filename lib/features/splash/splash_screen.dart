@@ -5,6 +5,7 @@ import 'package:darb/core/services/storage_service.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/routing/app_routes.dart';
 
+/// Screen that shows the splash.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -12,6 +13,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+/// State for the splash screen widget.
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
@@ -19,13 +21,13 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigateToNext();
   }
 
+  /// Navigates to to next.
   void _navigateToNext() async {
-    // الانتظار لمدة 3 ثوانٍ قبل التوجيه للشاشة القادمة
+    // Short pause so the logo stays visible.
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
 
-    // توكن محفوظ → الرئيسية، وإلا → تسجيل الدخول.
-    // (انتهاء صلاحية التوكن يعالجه onUnauthorized في main.dart: يعيد إلى الدخول)
+    // A saved token means the user can go straight to the home screen.
     final hasToken = context.read<StorageService>().hasToken;
     Navigator.pushReplacementNamed(
       context,
@@ -36,12 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white, // خلفية بيضاء نقية
+      backgroundColor: AppColors.white,
       body: Center(
         child: Image.asset(
           'assets/images/logo.png',
-          width: 224.48.w, // العرض الدقيق من Figma
-          height: 209.h, // الارتفاع الدقيق من Figma
+          width: 224.48.w,
+          height: 209.h,
           fit: BoxFit.contain,
         ),
       ),

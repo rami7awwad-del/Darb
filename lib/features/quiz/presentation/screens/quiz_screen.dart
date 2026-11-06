@@ -11,9 +11,7 @@ import 'package:darb/features/quiz/data/models/quiz_models.dart';
 import 'package:darb/features/quiz/presentation/cubit/quiz_cubit.dart';
 import 'package:darb/features/quiz/presentation/widgets/quiz_question_card.dart';
 
-/// شاشة الاختبار (Quizze Pages 1): كل الأسئلة في قائمة واحدة وزر "النتيجة" ثابت أسفلها.
-/// الأسئلة تأتي من subjects/details أو exams/result، والتسليم إلى exams/attend-exam.
-/// يتطلب QuizCubit في الشجرة.
+/// Screen that shows the quiz.
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key, required this.args});
 
@@ -44,7 +42,6 @@ class QuizScreen extends StatelessWidget {
 
     final cubit = context.read<QuizCubit>();
     try {
-      // POST exams/attend-exam بـ answers_id[] ثم exams/result لنتيجة الخادم.
       final outcome = await cubit.submit(
         examId: args.examId,
         title: args.title,
@@ -76,9 +73,9 @@ class QuizScreen extends StatelessWidget {
           Expanded(
             child: BlocBuilder<QuizCubit, QuizState>(
               builder: (context, quiz) => ListView.separated(
-                padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h), // 📏
+                padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h),
                 itemCount: args.questions.length,
-                separatorBuilder: (_, __) => SizedBox(height: 16.h), // 📏
+                separatorBuilder: (_, __) => SizedBox(height: 16.h),
                 itemBuilder: (_, i) {
                   final q = args.questions[i];
                   return QuizQuestionCard(
@@ -93,7 +90,7 @@ class QuizScreen extends StatelessWidget {
           ),
           Container(
             color: AppColors.white,
-            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h), // 📏
+            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h),
             child: SafeArea(
               top: false,
               child: BlocBuilder<QuizCubit, QuizState>(

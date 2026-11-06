@@ -9,8 +9,10 @@ import 'package:darb/features/profile/data/models/profile_model.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Possible values for the submit status.
 enum SubmitStatus { idle, submitting, success, failure }
 
+/// State data for the complete account.
 class CompleteAccountData {
   const CompleteAccountData({
     this.schoolsStateValue = StateValue.loading,
@@ -34,7 +36,6 @@ class CompleteAccountData {
   final String? schoolsMessage;
   final ProfileModel? result;
 
-  /// كل الحقول إلزامية، ولا يُرسل طلب ثانٍ أثناء الإرسال.
   bool get canSubmit =>
       firstName.trim().isNotEmpty &&
       lastName.trim().isNotEmpty &&
@@ -42,6 +43,7 @@ class CompleteAccountData {
       gender != null &&
       submitStatus != SubmitStatus.submitting;
 
+  /// Returns a copy with the given fields replaced.
   CompleteAccountData copyWith({
     StateValue? schoolsStateValue,
     SubmitStatus? submitStatus,
@@ -65,7 +67,7 @@ class CompleteAccountData {
   );
 }
 
-/// نافذة "أكمل حسابك" في الرئيسية: تحمّل المدارس وترسل التعديل.
+/// Cubit that manages the complete account state.
 class CompleteAccountCubit extends Cubit<BaseState<CompleteAccountData>> {
   CompleteAccountCubit(this._profile, this._registration)
     : super(
@@ -80,6 +82,7 @@ class CompleteAccountCubit extends Cubit<BaseState<CompleteAccountData>> {
 
   CompleteAccountData get _data => state.data!;
 
+  /// Updates form.
   void _updateForm(CompleteAccountData data) {
     emit(
       state.copyWith(
@@ -90,7 +93,7 @@ class CompleteAccountCubit extends Cubit<BaseState<CompleteAccountData>> {
     );
   }
 
-  /// GET schools/all (بدون معاملات).
+  /// Loads schools.
   Future<void> loadSchools() async {
     emit(
       state.copyWith(
@@ -123,6 +126,7 @@ class CompleteAccountCubit extends Cubit<BaseState<CompleteAccountData>> {
     }
   }
 
+  /// Handles schools error.
   void _onSchoolsError(String message) {
     if (isClosed) return;
     emit(
@@ -146,7 +150,7 @@ class CompleteAccountCubit extends Cubit<BaseState<CompleteAccountData>> {
 
   void genderChanged(int? value) => _updateForm(_data.copyWith(gender: value));
 
-  /// POST users/update. عند النجاح تحمل الحالة الملف الشخصي المحدّث في [result].
+  /// Sends the collected data to the server.
   Future<void> submit() async {
     if (!_data.canSubmit) return;
     final data = _data;
@@ -182,6 +186,7 @@ class CompleteAccountCubit extends Cubit<BaseState<CompleteAccountData>> {
     }
   }
 
+  /// Handles submit error.
   void _onSubmitError(String message) {
     if (isClosed) return;
     emit(

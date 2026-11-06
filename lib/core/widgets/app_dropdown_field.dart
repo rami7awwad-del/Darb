@@ -5,8 +5,7 @@ import 'package:darb/core/style/phosphor_icons.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 
-/// قائمة منسدلة بنفس شكل [AppTextField] (ارتفاع 52، Radius 11، Border 1px).
-/// ملاحظة: إن اشتكى المحلّل من `initialValue` في إصدار Flutter عندك فاستبدلها بـ `value`.
+/// Dropdown field styled like the text fields.
 class AppDropdownField<T> extends StatelessWidget {
   const AppDropdownField({
     super.key,

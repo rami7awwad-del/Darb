@@ -5,10 +5,7 @@ import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/widgets/app_circle_close_button.dart';
 import 'package:darb/core/widgets/app_network_image.dart';
 
-/// يعرض صورة كبيرة في نافذة مع زر إغلاق في أعلى الصورة (الطرف الأيسر).
-/// الضغط خارج النافذة يغلقها أيضًا.
-/// ⚠️ قياس تقديري: نسبة الصورة (1.3)، نصف القطر (16)، الهامش الجانبي (16)،
-/// موضع زر الإغلاق (12 من الأعلى والطرف).
+/// Shows gallery image viewer.
 Future<void> showGalleryImageViewer(BuildContext context, String url) {
   return showDialog<void>(
     context: context,
@@ -16,6 +13,7 @@ Future<void> showGalleryImageViewer(BuildContext context, String url) {
   );
 }
 
+/// Viewer widget for the gallery image.
 class _GalleryImageViewer extends StatelessWidget {
   const _GalleryImageViewer({required this.url});
 

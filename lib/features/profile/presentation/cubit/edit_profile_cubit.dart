@@ -9,6 +9,7 @@ import 'package:darb/features/profile/data/models/profile_model.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// State data for the edit profile.
 class EditProfileData {
   const EditProfileData({
     this.schools = const [],
@@ -19,9 +20,9 @@ class EditProfileData {
   final List<SchoolModel> schools;
   final bool schoolsLoading;
 
-  /// الملف بعد التعديل (يُملأ عند النجاح).
   final ProfileModel? updated;
 
+  /// Returns a copy with the given fields replaced.
   EditProfileData copyWith({
     List<SchoolModel>? schools,
     bool? schoolsLoading,
@@ -34,9 +35,7 @@ class EditProfileData {
       );
 }
 
-/// ورقة تعديل المعلومات الشخصية.
-/// stateValue = حالة الحفظ (loading أثناء الحفظ، loaded عند النجاح، error عند الفشل).
-/// تحميل المدارس يتتبعه [EditProfileData.schoolsLoading].
+/// Cubit that manages the edit profile state.
 class EditProfileCubit extends Cubit<BaseState<EditProfileData>> {
   EditProfileCubit(this._profile, this._registration)
       : super(const BaseState<EditProfileData>(data: EditProfileData()));
@@ -46,6 +45,7 @@ class EditProfileCubit extends Cubit<BaseState<EditProfileData>> {
 
   EditProfileData get _data => state.data!;
 
+  /// Loads schools.
   Future<void> loadSchools() async {
     try {
       final schools = await _registration.getSchools();
@@ -55,7 +55,6 @@ class EditProfileCubit extends Cubit<BaseState<EditProfileData>> {
       ));
     } catch (_) {
       if (isClosed) return;
-      // القائمة تبقى فارغة؛ الحقل يظهر معطّلًا ولا يمنع تعديل الاسم.
       emit(state.copyWith(data: _data.copyWith(schoolsLoading: false)));
     }
   }

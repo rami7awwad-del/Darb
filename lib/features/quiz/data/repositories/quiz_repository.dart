@@ -1,6 +1,7 @@
 import 'package:darb/features/quiz/data/datasources/quiz_remote_data_source.dart';
 import 'package:darb/features/quiz/data/models/quiz_models.dart';
 
+/// Repository that gives the cubits access to the quiz data.
 class QuizRepository {
   QuizRepository(this._remote);
 

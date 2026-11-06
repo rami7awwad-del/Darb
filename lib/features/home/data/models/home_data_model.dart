@@ -2,8 +2,7 @@ import 'package:darb/features/home/data/models/course_model.dart';
 import 'package:darb/features/home/data/models/news_model.dart';
 import 'package:darb/features/home/data/models/subject_model.dart';
 
-/// رد home-page/index.
-/// sliders غير مقروءة: البانر في الواجهة UI ثابت حسب الطلب.
+/// Data returned by the home endpoint.
 class HomeDataModel {
   const HomeDataModel({
     required this.subjects,
@@ -19,10 +18,8 @@ class HomeDataModel {
   final List<CourseModel> courses;
   final int notificationUnread;
 
-  /// نسبة تقدم المنهاج. ⚠️ افتراض: قيمة من 0 إلى 100 (تحقق عند وجود بيانات حقيقية).
   final double completionRate;
 
-  /// عدد الكورسات في بطاقة "تقدم المنهاج". ⚠️ افتراض: subject_count من index.
   final int subjectCount;
 
   static List<T> _list<T>(dynamic raw, T Function(Map<String, dynamic>) f) =>
@@ -30,6 +27,7 @@ class HomeDataModel {
           .map((e) => f(e as Map<String, dynamic>))
           .toList();
 
+  /// Builds the object from the API json.
   factory HomeDataModel.fromJson(Map<String, dynamic> json) => HomeDataModel(
         subjects: _list(json['subjects'], SubjectModel.fromJson),
         news: _list(json['news'], NewsModel.fromJson),

@@ -7,12 +7,7 @@ import 'package:darb/core/widgets/app_outline_button.dart';
 import 'package:darb/features/library/data/models/library_semester.dart';
 import 'package:darb/features/library/presentation/widgets/library_progress_row.dart';
 
-/// بطاقة فصل: اسم الفصل والمدرس في البداية، والنقاط في النهاية، ثم خط فاصل
-/// واسم المادة وشريط تقدم الدروس وزر "متابعة التعلم".
-/// ⚠️ في Figma نص الشريط "الفصول : 2 من 9"؛ استخدمت "الدروس" لأن القيمة هي
-/// الدروس المنجزة من دروس الفصل (is_attended / lessions_count). غيّره إن أردت.
-/// ⚠️ "النقاط" مأخوذة من الكورس الأب (points_count).
-/// ⚠️ قياس تقديري: Radius البطاقة (16) والحشوة (16) والفاصل (#E5E5E5).
+/// Card widget for the library semester.
 class LibrarySemesterCard extends StatelessWidget {
   const LibrarySemesterCard({
     super.key,

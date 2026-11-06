@@ -1,5 +1,6 @@
 import 'package:darb/core/models/enums/state_value.dart';
 
+/// Generic state wrapper shared by every cubit.
 class BaseState<T> {
   const BaseState({
     this.stateValue = StateValue.init,
@@ -11,6 +12,7 @@ class BaseState<T> {
   final T? data;
   final String? errorMessage;
 
+  /// Returns a copy with the given fields replaced.
   BaseState<T> copyWith({
     StateValue? stateValue,
     T? data,
@@ -23,17 +25,3 @@ class BaseState<T> {
     errorMessage: clearErrorMessage ? null : errorMessage ?? this.errorMessage,
   );
 }
-
-/**
- * 
- * BaseState تم إنشاؤها لتكون الوعاء الجامع الذي يحمل:
-
-نوع الحالة الحالية (StateValue: init, loading, loaded, error).
-
-البيانات المسترجعة (data من النوع T).
-
-رسالة الخطأ (errorMessage) إن وجدت.
-
-هذا يحافظ على نظافة المشروع، ويقلل عدد الملفات للنصف، ويسرّع عملية التطوير عند إضافة أي ميزة جديدة مستقبلاً.
- * 
- */

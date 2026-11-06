@@ -1,10 +1,9 @@
-
 import 'package:darb/features/auth/data/datasources/registration_remote_data_source.dart';
 import 'package:darb/features/auth/data/models/branch_model.dart';
 import 'package:darb/features/auth/data/models/school_model.dart';
 import 'package:darb/features/auth/data/models/terms_model.dart';
 
-/// إكمال بيانات المستخدم الجديد: القوائم، الشروط، وحفظ البيانات.
+/// Repository that gives the cubits access to the registration data.
 class RegistrationRepository {
   RegistrationRepository(this._remote);
 

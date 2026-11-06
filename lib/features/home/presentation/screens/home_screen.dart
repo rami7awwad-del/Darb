@@ -1,4 +1,5 @@
 import 'package:darb/core/widgets/app_outline_button.dart';
+import 'package:darb/core/widgets/app_responsive.dart';
 import 'package:darb/core/models/base_state.dart';
 import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/features/home/presentation/cubit/home_cubit.dart';
@@ -21,7 +22,7 @@ import 'package:darb/features/home/presentation/widgets/promo_banner.dart';
 import 'package:darb/features/home/presentation/widgets/search_results_view.dart';
 import 'package:darb/features/home/presentation/widgets/subjects_section.dart';
 
-/// تبويب الرئيسية. يتطلب HomeCubit أعلاه في الشجرة (يُنشأ مع مسار mainLayout).
+/// Screen that shows the home.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -29,6 +30,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+/// State for the home screen widget.
 class _HomeScreenState extends State<HomeScreen> {
   final _searchController = TextEditingController();
 
@@ -66,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
               unreadCount: home.notificationUnread,
               onNotifications: () =>
                   Navigator.pushNamed(context, AppRoutes.notifications),
-              // TODO: ربط onAchievements بشاشة الإنجازات.
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 4.h),
@@ -90,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+/// Main content of the home.
 class _HomeContent extends StatelessWidget {
   const _HomeContent({required this.home, required this.onRefresh});
 
@@ -98,7 +100,6 @@ class _HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
     final gap = SizedBox(height: 20.h);
 
     return RefreshIndicator(
@@ -111,16 +112,22 @@ class _HomeContent extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: CurriculumProgressCard(
-              percent: home.completionRate,
-              coursesCount: home.subjectCount,
-              // TODO: شاشة تفاصيل التقدم.
+            child: AppContentWidth(
+              // Keep the cards readable on wide screens.
+              maxWidth: 720,
+              child: CurriculumProgressCard(
+                percent: home.completionRate,
+                coursesCount: home.subjectCount,
+              ),
             ),
           ),
           gap,
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: PromoBanner(onTap: () => showCompleteAccountFlow(context)),
+            child: AppContentWidth(
+              maxWidth: 720,
+              child: PromoBanner(onTap: () => showCompleteAccountFlow(context)),
+            ),
           ),
           gap,
           SubjectsSection(
@@ -131,7 +138,6 @@ class _HomeContent extends StatelessWidget {
           gap,
           NewsSection(
             news: home.news,
-            // TODO: فتح الرابط (url_launcher) أو قائمة الأخبار (news/all جاهز).
           ),
           gap,
           CoursesSection(courses: home.courses),
@@ -141,6 +147,7 @@ class _HomeContent extends StatelessWidget {
   }
 }
 
+/// Error message with a retry button.
 class _LoadError extends StatelessWidget {
   const _LoadError({required this.message, required this.onRetry});
 

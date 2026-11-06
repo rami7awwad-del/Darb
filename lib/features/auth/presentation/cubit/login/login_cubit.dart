@@ -6,11 +6,13 @@ import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:darb/features/auth/data/repositories/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Cubit that manages the login state.
 class LoginCubit extends Cubit<BaseState<String>> {
   LoginCubit(this._repository) : super(const BaseState<String>());
 
   final AuthRepository _repository;
 
+  /// Starts the login request.
   Future<void> login(String phone) async {
     if (state.stateValue == StateValue.loading) return;
 

@@ -1,3 +1,4 @@
+import 'package:darb/core/widgets/app_responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,16 +17,13 @@ import 'package:darb/features/courses/presentation/widgets/course_story_dialog.d
 import 'package:darb/features/courses/presentation/widgets/lesson_timeline_tile.dart';
 import 'package:darb/features/home/data/models/course_model.dart';
 
-/// صفحة تفاصيل الدورة (Detail Page): صورة الدورة في شريط تركوازي، ثم الاسم والمدرّس
-/// والوصف، ثم "مسار التعلم": كل فصل ودروسه. معلومات الرأس تأتي من [course] فورًا،
-/// والوصف والفصول من courses/details. يتطلب CourseDetailsCubit في الشجرة.
+/// Screen that shows the course details.
 class CourseDetailsScreen extends StatelessWidget {
   const CourseDetailsScreen({super.key, required this.course});
 
   final CourseModel course;
 
-  /// يمر بقيود الوصول: مقفل → اشتراك، منتظر → أكمل السابق، اختبار → تنبيه.
-  /// بعد العودة (أو بعد اشتراك) تُحدَّث الدروس ليظهر المشاهَد/المفتوح.
+  /// Opens lesson.
   Future<void> _openLesson(
     BuildContext context,
     CourseLessonModel lesson,
@@ -41,8 +39,7 @@ class CourseDetailsScreen extends StatelessWidget {
     if (changed) cubit.load(silent: true);
   }
 
-  /// نافذة التعريف (story): تظهر مرة عند أول تحميل إن طلبها الخادم.
-  /// "ابدأ الآن" يفتح أول درس متاح في أول فصل فيه دروس.
+  /// Shows story.
   void _showStory(BuildContext context, CourseDetailsModel details) {
     showCourseStory(
       context,
@@ -84,13 +81,13 @@ class CourseDetailsScreen extends StatelessWidget {
                   onRefresh: () => cubit.load(silent: true),
                   child: ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h), // 📏
+                    padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
                     children: [
                       _Info(course: course, description: details?.description),
-                      SizedBox(height: 16.h), // 📏
+                      SizedBox(height: 16.h),
                       if (details == null)
                         Padding(
-                          padding: EdgeInsets.only(top: 48.h), // 📏
+                          padding: EdgeInsets.only(top: 48.h),
                           child: const Center(
                             child: CircularProgressIndicator(
                               color: AppColors.main600,
@@ -115,7 +112,7 @@ class CourseDetailsScreen extends StatelessWidget {
     if (details.semesters.isEmpty) {
       return [
         Padding(
-          padding: EdgeInsets.only(top: 32.h), // 📏
+          padding: EdgeInsets.only(top: 32.h),
           child: Center(
             child: Text(
               'لا توجد دروس حاليًا',
@@ -129,7 +126,7 @@ class CourseDetailsScreen extends StatelessWidget {
     }
     return [
       Row(
-        spacing: 8.w, // 📏
+        spacing: 8.w,
         children: [
           Text(
             'مسار التعلم',
@@ -139,7 +136,7 @@ class CourseDetailsScreen extends StatelessWidget {
         ],
       ),
       for (final s in details.semesters) ...[
-        SizedBox(height: 16.h), // 📏
+        SizedBox(height: 16.h),
         Row(
           children: [
             Expanded(
@@ -158,7 +155,7 @@ class CourseDetailsScreen extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 12.h), // 📏
+        SizedBox(height: 12.h),
         if (s.lessons.isEmpty)
           Text(
             'لا توجد دروس في هذا الفصل',
@@ -178,6 +175,7 @@ class CourseDetailsScreen extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Header extends StatelessWidget {
   const _Header({required this.image, required this.onBack});
 
@@ -190,7 +188,8 @@ class _Header extends StatelessWidget {
       value: SystemUiOverlayStyle.light,
       child: Container(
         width: double.infinity,
-        height: 240.h, // 📏
+        // Shorter header in landscape.
+        height: isLandscapeOf(context) ? 150.h : 240.h,
         decoration: BoxDecoration(
           color: AppColors.main600,
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(32.r)),
@@ -201,19 +200,19 @@ class _Header extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(48.w, 24.h, 48.w, 0), // 📏
+                  padding: EdgeInsets.fromLTRB(48.w, 24.h, 48.w, 0),
                   child: AppNetworkImage(url: image, fit: BoxFit.contain),
                 ),
               ),
               PositionedDirectional(
-                top: 16.h, // 📏
-                start: 16.w, // 📏
+                top: 16.h,
+                start: 16.w,
                 child: InkWell(
                   customBorder: const CircleBorder(),
                   onTap: onBack,
                   child: Icon(
                     Icons.arrow_back_rounded,
-                    size: 24.w, // 📏
+                    size: 24.w,
                     color: AppColors.white,
                   ),
                 ),
@@ -226,6 +225,7 @@ class _Header extends StatelessWidget {
   }
 }
 
+/// Small private widget used only in this file.
 class _Info extends StatelessWidget {
   const _Info({required this.course, required this.description});
 
@@ -237,7 +237,7 @@ class _Info extends StatelessWidget {
     final text = description?.trim() ?? '';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8.h, // 📏
+      spacing: 8.h,
       children: [
         Row(
           children: [
@@ -268,7 +268,7 @@ class _Info extends StatelessWidget {
               ),
             ),
             Row(
-              spacing: 4.w, // 📏
+              spacing: 4.w,
               children: [
                 Text(
                   '${course.subscriptionsCount}',
@@ -278,7 +278,7 @@ class _Info extends StatelessWidget {
                 ),
                 Icon(
                   Icons.visibility_outlined,
-                  size: 14.w, // 📏
+                  size: 14.w,
                   color: AppColors.second500,
                 ),
               ],

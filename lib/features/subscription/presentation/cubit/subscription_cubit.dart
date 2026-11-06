@@ -8,6 +8,7 @@ import 'package:darb/features/subscription/data/models/payment_method_model.dart
 import 'package:darb/features/subscription/data/repositories/subscription_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// State data for the subscription.
 class SubscriptionData {
   const SubscriptionData({
     this.packages = const [],
@@ -19,6 +20,7 @@ class SubscriptionData {
   final List<PaymentMethodModel> methods;
   final bool redeeming;
 
+  /// Returns a copy with the given fields replaced.
   SubscriptionData copyWith({
     List<PackageModel>? packages,
     List<PaymentMethodModel>? methods,
@@ -31,7 +33,7 @@ class SubscriptionData {
       );
 }
 
-/// صفحة الاشتراك: وسائل الدفع (payment-methods/all) + تفعيل كود (subscriptions/add).
+/// Cubit that manages the subscription state.
 class SubscriptionCubit extends Cubit<BaseState<SubscriptionData>> {
   SubscriptionCubit(this._repository) : super(const BaseState());
 
@@ -41,13 +43,12 @@ class SubscriptionCubit extends Cubit<BaseState<SubscriptionData>> {
       ? e.errorMsg
       : ErrorCode.UNKNOWN.getLocalizedMessage();
 
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent || state.data == null) {
       emit(const BaseState<SubscriptionData>(stateValue: StateValue.loading));
     }
     try {
-      // الباقات للنافذة التفصيلية ووسائل الدفع لشاشة الدفع الشكلية:
-      // فشل أحدهما لا يعطّل صفحة الاشتراك (تعتمد على الكود).
       final packages = await _repository
           .getPackages()
           .catchError((_) => <PackageModel>[]);
@@ -68,7 +69,6 @@ class SubscriptionCubit extends Cubit<BaseState<SubscriptionData>> {
     }
   }
 
-  /// يعيد null عند النجاح، وإلا رسالة الخطأ.
   Future<String?> redeem(String code) async {
     final data = state.data;
     if (data == null || data.redeeming) return null;

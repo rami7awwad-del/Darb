@@ -7,7 +7,7 @@ import 'package:darb/features/courses/data/models/course_details_model.dart';
 import 'package:darb/features/courses/data/repositories/courses_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// صفحة تفاصيل الدورة: الفصول ودروسها (مسار التعلم).
+/// Cubit that manages the course details state.
 class CourseDetailsCubit extends Cubit<BaseState<CourseDetailsModel>> {
   CourseDetailsCubit(this._repository, {required this.courseId})
       : super(
@@ -17,6 +17,7 @@ class CourseDetailsCubit extends Cubit<BaseState<CourseDetailsModel>> {
   final CoursesRepository _repository;
   final int courseId;
 
+  /// Loads the data and updates the state.
   Future<void> load({bool silent = false}) async {
     if (!silent) {
       emit(state.copyWith(stateValue: StateValue.loading, clearErrorMessage: true));
@@ -35,6 +36,7 @@ class CourseDetailsCubit extends Cubit<BaseState<CourseDetailsModel>> {
     }
   }
 
+  /// Handles error.
   void _onError(String message) {
     if (isClosed || state.data != null) return;
     emit(state.copyWith(stateValue: StateValue.error, errorMessage: message));

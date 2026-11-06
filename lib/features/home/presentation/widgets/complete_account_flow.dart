@@ -12,14 +12,7 @@ import 'package:darb/features/home/presentation/widgets/complete_account_sheet.d
 import 'package:darb/features/profile/data/models/profile_model.dart';
 import 'package:darb/features/profile/data/repositories/profile_repository.dart';
 
-/// تدفق "أكمل حسابك": Dialog ثم Bottom Sheet، وعند النجاح يحدّث ملف الرئيسية.
-///
-/// يجب استدعاؤه بـ context يقع تحت HomeCubit (شاشة الرئيسية).
-/// الـ Sheet ليس Route مسمّى، فلا يُنشأ Cubit الخاص به في AppRouter؛
-/// يُنشأ هنا عبر BlocProvider ويُتلف مع إغلاق الـ Sheet.
-/// نقرأ HomeCubit والـ Repositories قبل فتح النوافذ لأن النوافذ المنبثقة
-/// لا تقع تحت BlocProvider الخاص بمسار mainLayout.
-/// ⚠️ قياس تقديري: نصف قطر زوايا الـ Sheet العلوية (32).
+/// Shows complete account flow.
 Future<void> showCompleteAccountFlow(BuildContext context) async {
   final homeCubit = context.read<HomeCubit>();
   final profileRepository = context.read<ProfileRepository>();

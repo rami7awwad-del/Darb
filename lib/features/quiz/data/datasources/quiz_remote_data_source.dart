@@ -6,7 +6,7 @@ import 'package:darb/core/services/api_service.dart';
 import 'package:darb/features/quiz/data/models/quiz_models.dart';
 import 'package:dio/dio.dart';
 
-/// طلبات الاختبارات والنشاطات اليومية.
+/// Remote data source that calls the quiz endpoints.
 class QuizRemoteDataSource {
   QuizRemoteDataSource(this._api);
 
@@ -26,7 +26,6 @@ class QuizRemoteDataSource {
   }
 
   List<QuizListItem> _items(dynamic data, {required bool isActivity}) {
-    // بلا بيانات قد يعيد الخادم [] أو null.
     if (data is! List) return const [];
     return data
         .map((e) => QuizListItem.fromJson(
@@ -36,19 +35,17 @@ class QuizRemoteDataSource {
         .toList();
   }
 
-  /// GET exams/my
   Future<List<QuizListItem>> getMyExams() async {
     final response = await _api.getRequest(ApiConstants.examsMy);
     return _parse(response, (d) => _items(d, isActivity: false));
   }
 
-  /// GET daily-activities/my
   Future<List<QuizListItem>> getMyActivities() async {
     final response = await _api.getRequest(ApiConstants.dailyActivitiesMy);
     return _parse(response, (d) => _items(d, isActivity: true));
   }
 
-  /// GET exams/result?id= → الأسئلة والأجوبة (+ current_answer بعد الحضور).
+  /// Gets exam.
   Future<QuizDetails> getExam(int id) async {
     final response = await _api.getRequest(
       ApiConstants.examsResult,
@@ -60,8 +57,6 @@ class QuizRemoteDataSource {
     );
   }
 
-  /// POST exams/attend-exam (form-data): `answers_id[]` مكررًا لكل إجابة.
-  /// الخادم لا يطلب معرّف الاختبار؛ يعرفه من معرّفات الإجابات.
   Future<QuizScore> attend(List<int> answerIds) async {
     final response = await _api.postFormFields(
       ApiConstants.examsAttend,
