@@ -67,22 +67,6 @@ class CommentsSection extends StatelessWidget {
                 _CommentTile(comment: c),
                 SizedBox(height: 12.h), // 📏
               ],
-              if (data.hasMore)
-                Center(
-                  child: data.loadingMore
-                      ? const CircularProgressIndicator(
-                          color: AppColors.main600,
-                        )
-                      : TextButton(
-                          onPressed: cubit.loadMore,
-                          child: Text(
-                            'عرض المزيد',
-                            style: AppTextStyles.font14Medium.copyWith(
-                              color: AppColors.second500,
-                            ),
-                          ),
-                        ),
-                ),
             ],
           ],
         );

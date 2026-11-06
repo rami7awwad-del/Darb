@@ -21,7 +21,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   phosphor_icons: ^3.0.1
-  youtube_player_flutter:
+  youtube_player_iframe:
 
 dev_dependencies:
   flutter_test:

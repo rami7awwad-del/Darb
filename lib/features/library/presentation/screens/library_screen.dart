@@ -1,3 +1,7 @@
+import 'package:darb/features/subscription/presentation/subscription_access.dart';
+import 'package:darb/core/widgets/app_snack_bar.dart';
+import 'package:darb/features/home/data/models/course_model.dart';
+import 'package:darb/features/library/data/models/library_package.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,6 +47,20 @@ class _LibraryScreenState extends State<LibraryScreen> {
     if (i == 2) cubit.loadPackages();
   }
 
+  /// "متابعة التعلم" في الباقة: أول مادة متاحة لم تكتمل، وإلا أول مادة متاحة، وإلا الأولى.
+  void _continuePackage(BuildContext context, LibraryPackage package) {
+    final subjects = package.subjects;
+    if (subjects.isEmpty) {
+      showAppSnackBar(context, 'لا توجد مواد في هذه الباقة');
+      return;
+    }
+    bool open(CourseModel c) => c.isFree || c.isSubscription;
+    final target = subjects.where((c) => open(c) && c.lessonRate < 100).firstOrNull ??
+        subjects.where(open).firstOrNull ??
+        subjects.first;
+    openCourseWithAccess(context, target);
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<LibraryCubit>();
@@ -74,8 +92,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 onRefresh: () => cubit.loadSemesters(force: true),
                 itemBuilder: (i) => LibrarySemesterCard(
                   semester: state.data!.visibleSemesters[i],
-                  // TODO: فتح دروس الفصل.
-                  onContinue: () {},
+                  onContinue: () => openCourseWithAccess(
+                    context,
+                    state.data!.visibleSemesters[i].course,
+                  ),
                 ),
               ),
               _ => _StateList(
@@ -87,9 +107,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 onRefresh: () => cubit.loadPackages(force: true),
                 itemBuilder: (i) => LibraryPackageCard(
                   package: state.data!.visiblePackages[i],
-                  // TODO: تفاصيل الباقة / الاشتراك / المتابعة.
+                  // TODO: تفاصيل الباقة.
                   onDetails: () {},
-                  onContinue: () {},
+                  onContinue: () => _continuePackage(
+                    context,
+                    state.data!.visiblePackages[i],
+                  ),
                 ),
               ),
             },
@@ -143,8 +166,8 @@ class _CoursesTab extends StatelessWidget {
                   if (i >= courses.length) return const _Spinner();
                   return LibraryCourseCard(
                     course: courses[i],
-                    // TODO: فتح تفاصيل الكورس (courses/details?subject_id=).
-                    onContinue: () {},
+                    onContinue: () =>
+                        openCourseWithAccess(context, courses[i]),
                   );
                 },
               ),

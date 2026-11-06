@@ -1,3 +1,12 @@
+import 'package:darb/features/quiz/data/repositories/quiz_repository.dart';
+import 'package:darb/features/quiz/presentation/cubit/tests_cubit.dart';
+import 'package:darb/features/quiz/presentation/screens/tests_screen.dart';
+import 'package:darb/features/subscription/data/repositories/subscription_repository.dart';
+import 'package:darb/features/subscription/presentation/cubit/subscription_cubit.dart';
+import 'package:darb/features/subscription/presentation/cubit/my_subscriptions_cubit.dart';
+import 'package:darb/features/subscription/presentation/screens/checkout_screen.dart';
+import 'package:darb/features/subscription/presentation/screens/my_subscriptions_screen.dart';
+import 'package:darb/features/subscription/presentation/screens/subscription_screen.dart';
 import 'package:darb/features/courses/data/repositories/courses_repository.dart';
 import 'package:darb/features/courses/presentation/cubit/course_details_cubit.dart';
 import 'package:darb/features/courses/presentation/screens/course_details_screen.dart';
@@ -74,6 +83,10 @@ abstract class AppRoutes {
   static const String quiz = '/quiz';
   static const String quizResult = '/quizResult';
   static const String quizReview = '/quizReview';
+  static const String tests = '/tests';
+  static const String subscription = '/subscription';
+  static const String checkout = '/checkout';
+  static const String mySubscriptions = '/mySubscriptions';
 }
 
 /// ربط أسماء المسارات بالشاشات.
@@ -268,7 +281,7 @@ abstract class AppRouter {
         final args = settings.arguments as QuizArgs;
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (_) => QuizCubit(),
+            create: (context) => QuizCubit(context.read<QuizRepository>()),
             child: QuizScreen(args: args),
           ),
           settings: settings,
@@ -285,6 +298,45 @@ abstract class AppRouter {
         final outcome = settings.arguments as QuizOutcome;
         return MaterialPageRoute(
           builder: (_) => QuizReviewScreen(outcome: outcome),
+          settings: settings,
+        );
+
+      case AppRoutes.tests:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                TestsCubit(context.read<QuizRepository>())..load(),
+            child: const TestsScreen(),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.subscription:
+        return MaterialPageRoute<bool?>(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                SubscriptionCubit(context.read<SubscriptionRepository>())
+                  ..load(),
+            child: const SubscriptionScreen(),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.mySubscriptions:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) =>
+                MySubscriptionsCubit(context.read<SubscriptionRepository>())
+                  ..load(),
+            child: const MySubscriptionsScreen(),
+          ),
+          settings: settings,
+        );
+
+      case AppRoutes.checkout:
+        return MaterialPageRoute(
+          builder: (_) =>
+              CheckoutScreen(args: settings.arguments as CheckoutArgs),
           settings: settings,
         );
 

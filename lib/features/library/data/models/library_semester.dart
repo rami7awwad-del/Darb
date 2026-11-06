@@ -12,6 +12,7 @@ class LibrarySemester {
     required this.lessonsCount,
     required this.attendedCount,
     required this.lessonRate,
+    required this.course,
     this.isFree = false,
     this.price = 0,
     this.isSubscription = false,
@@ -31,6 +32,9 @@ class LibrarySemester {
 
   /// lession_rate (0–100).
   final double lessonRate;
+
+  /// الكورس الأب (لفتحه عند "متابعة التعلم").
+  final CourseModel course;
   final bool isFree;
   final num price;
   final bool isSubscription;
@@ -52,6 +56,7 @@ class LibrarySemester {
       lessonsCount: (json['lessions_count'] as num?)?.toInt() ?? lessons.length,
       attendedCount: attended,
       lessonRate: (json['lession_rate'] as num?)?.toDouble() ?? 0,
+      course: course,
       isFree: json['is_free'] as bool? ?? false,
       price: json['price'] as num? ?? 0,
       isSubscription: json['is_subscription'] as bool? ?? false,

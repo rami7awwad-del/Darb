@@ -1,3 +1,4 @@
+import 'package:darb/core/widgets/app_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +12,7 @@ import 'package:darb/features/quiz/presentation/cubit/quiz_cubit.dart';
 import 'package:darb/features/quiz/presentation/widgets/quiz_question_card.dart';
 
 /// شاشة الاختبار (Quizze Pages 1): كل الأسئلة في قائمة واحدة وزر "النتيجة" ثابت أسفلها.
-/// الأسئلة والأجوبة تأتي جاهزة من subjects/details (لا طلب إضافي).
+/// الأسئلة تأتي من subjects/details أو exams/result، والتسليم إلى exams/attend-exam.
 /// يتطلب QuizCubit في الشجرة.
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key, required this.args});
@@ -41,16 +42,24 @@ class QuizScreen extends StatelessWidget {
       if (ok != true || !context.mounted) return;
     }
 
-    // TODO: إرسال المحاولة إلى exams/attend-exam عند معرفة شكل الطلب.
-    Navigator.pushReplacementNamed(
-      context,
-      AppRoutes.quizResult,
-      arguments: QuizOutcome(
+    final cubit = context.read<QuizCubit>();
+    try {
+      // POST exams/attend-exam بـ answers_id[] ثم exams/result لنتيجة الخادم.
+      final outcome = await cubit.submit(
+        examId: args.examId,
         title: args.title,
         questions: args.questions,
-        selected: selected,
-      ),
-    );
+      );
+      if (!context.mounted) return;
+      Navigator.pushReplacementNamed(
+        context,
+        AppRoutes.quizResult,
+        arguments: outcome,
+      );
+    } catch (message) {
+      if (!context.mounted) return;
+      showAppSnackBar(context, message.toString());
+    }
   }
 
   @override
@@ -65,8 +74,8 @@ class QuizScreen extends StatelessWidget {
             onBack: () => Navigator.pop(context),
           ),
           Expanded(
-            child: BlocBuilder<QuizCubit, Map<int, int>>(
-              builder: (context, selected) => ListView.separated(
+            child: BlocBuilder<QuizCubit, QuizState>(
+              builder: (context, quiz) => ListView.separated(
                 padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 24.h), // 📏
                 itemCount: args.questions.length,
                 separatorBuilder: (_, __) => SizedBox(height: 16.h), // 📏
@@ -75,7 +84,7 @@ class QuizScreen extends StatelessWidget {
                   return QuizQuestionCard(
                     number: i + 1,
                     question: q,
-                    selectedId: selected[q.id],
+                    selectedId: quiz.selected[q.id],
                     onSelect: (a) => cubit.select(q.id, a.id),
                   );
                 },
@@ -87,10 +96,11 @@ class QuizScreen extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 12.h), // 📏
             child: SafeArea(
               top: false,
-              child: BlocBuilder<QuizCubit, Map<int, int>>(
-                builder: (context, selected) => AppPrimaryButton(
+              child: BlocBuilder<QuizCubit, QuizState>(
+                builder: (context, quiz) => AppPrimaryButton(
                   text: 'النتيجة',
-                  onPressed: () => _finish(context, selected),
+                  isLoading: quiz.submitting,
+                  onPressed: () => _finish(context, quiz.selected),
                 ),
               ),
             ),

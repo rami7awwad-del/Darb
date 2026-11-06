@@ -78,4 +78,18 @@ class ApiService {
       'POST FormData',
     );
   }
+
+  /// POST form-data بمفاتيح مكررة (مثل `answers_id[]`) كما يتوقعها Laravel.
+  /// Map لا تسمح بتكرار المفتاح، لذلك تُمرَّر الحقول كقائمة MapEntry.
+  Future<Response> postFormFields(
+    String endpoint,
+    List<MapEntry<String, String>> fields, {
+    CancelToken? cancelToken,
+  }) async {
+    final formData = FormData()..fields.addAll(fields);
+    return _send(
+      () => _dio.post(endpoint, data: formData, cancelToken: cancelToken),
+      'POST FormFields',
+    );
+  }
 }

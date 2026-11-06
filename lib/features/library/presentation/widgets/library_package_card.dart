@@ -74,6 +74,22 @@ class _LibraryPackageCardState extends State<LibraryPackageCard> {
                         color: AppColors.grey700,
                       ),
                     ),
+                    if (package.durationDays != null)
+                      Text(
+                        'المدة: ${package.durationDays} يوم',
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.grey300,
+                        ),
+                      ),
+                    if (package.description?.isNotEmpty ?? false)
+                      Text(
+                        package.description!,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.font12Regular.copyWith(
+                          color: AppColors.grey400,
+                        ),
+                      ),
                   ],
                 ),
               ),

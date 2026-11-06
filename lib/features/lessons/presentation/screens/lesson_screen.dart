@@ -3,12 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/features/courses/data/models/course_details_model.dart';
-import 'package:darb/features/lessons/data/repositories/lessons_repository.dart';
-import 'package:darb/core/routing/app_routes.dart';
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
+import 'package:darb/core/widgets/app_load_error.dart';
+import 'package:darb/features/courses/presentation/lesson_access.dart';
+import 'package:darb/features/lessons/data/models/lesson_details_model.dart';
 import 'package:darb/features/courses/presentation/widgets/lesson_timeline_tile.dart';
 import 'package:darb/features/lessons/presentation/cubit/lesson_cubit.dart';
 import 'package:darb/features/lessons/presentation/widgets/comments_section.dart';
@@ -41,32 +44,26 @@ class LessonScreen extends StatefulWidget {
 class _LessonScreenState extends State<LessonScreen> {
   YoutubePlayerController? _yt;
   String _file = '';
-  bool _resolving = true;
   String? _videoId;
 
-  CourseLessonModel get _lesson => widget.args.lesson;
+  /// الدرس من التفاصيل الموحّدة إن وصلت، وإلا من وسائط الفتح.
+  CourseLessonModel _lessonOf(LessonDetailsModel? d) =>
+      d?.lesson ?? widget.args.lesson;
 
   @override
   void initState() {
     super.initState();
     context.read<LessonCubit>().attend();
-    _resolve();
   }
 
-  Future<void> _resolve() async {
-    var file = _lesson.file;
-    if (file.isEmpty) {
-      try {
-        file = await context.read<LessonsRepository>().getLessonFile(_lesson.id);
-      } catch (_) {}
-    }
-    if (!mounted) return;
+  /// يُستدعى عند وصول lessions/details: يحدد رابط المحتوى ومعرّف الفيديو.
+  void _applyDetails(LessonDetailsModel details) {
+    final lesson = details.lesson;
     setState(() {
-      _file = file;
-      _resolving = false;
-      if (!_lesson.isFile && file.isNotEmpty) {
-        _videoId = YoutubePlayerController.convertUrlToId(file);
-      }
+      _file = lesson.file;
+      _videoId = !lesson.isFile && lesson.file.isNotEmpty
+          ? YoutubePlayerController.convertUrlToId(lesson.file)
+          : null;
     });
   }
 
@@ -74,22 +71,35 @@ class _LessonScreenState extends State<LessonScreen> {
   void _play() {
     final id = _videoId;
     if (id == null || _yt != null) return;
-    setState(() {
-      _yt = YoutubePlayerController.fromVideoId(
-        videoId: id,
-        autoPlay: true,
-        params: const YoutubePlayerParams(
-          showControls: true,
-          showFullscreenButton: true,
-        ),
-      );
-    });
+    // مثل تنفيذ الزميل: الإطار من youtube.com لا youtube-nocookie.com، لأن
+    // السكربت يأتي من youtube.com أصلًا ولا يُحَلّ النطاق الثاني دائمًا.
+    final controller = YoutubePlayerController(
+      params: const YoutubePlayerParams(
+        showFullscreenButton: true,
+        interfaceLanguage: 'ar',
+        privacyEnhancedMode: false,
+      ),
+      onWebResourceError: (error) {
+        final path = Uri.tryParse(error.url ?? '')?.path ?? '';
+        final fatal = (error.isForMainFrame ?? false) ||
+            path == '/iframe_api' ||
+            path.startsWith('/embed') ||
+            path.endsWith('/www-widgetapi.js');
+        if (fatal) _fail();
+      },
+    )..loadVideoById(videoId: id);
+    setState(() => _yt = controller);
   }
 
-  @override
-  void deactivate() {
-    _yt?.pauseVideo();
-    super.deactivate();
+  /// فشل تحميل المشغّل: نرجع للغلاف (وفيه زر الفتح في يوتيوب).
+  void _fail() {
+    WidgetsBinding.instance
+      ..addPostFrameCallback((_) {
+        if (!mounted) return;
+        _yt?.close();
+        setState(() => _yt = null);
+      })
+      ..ensureVisualUpdate();
   }
 
   @override
@@ -109,104 +119,122 @@ class _LessonScreenState extends State<LessonScreen> {
     }
   }
 
-  void _openLesson(CourseLessonModel next) {
-    if (next.id == _lesson.id) return;
-    if (next.isLocked) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(content: Text('هذا الدرس مقفل، اشترك في الدورة لفتحه')),
-        );
-      return;
-    }
-    Navigator.pushReplacementNamed(
+  /// الانتقال لدرس آخر من "مسار التعلم" مع قيود الوصول (اشتراك / أكمل السابق).
+  void _openLesson(
+    CourseLessonModel next,
+    List<CourseLessonModel> lessons,
+    String semesterName,
+    CourseLessonModel current,
+  ) {
+    if (next.id == current.id) return;
+    openLessonWithAccess(
       context,
-      AppRoutes.lesson,
-      arguments: LessonArgs(
-        lesson: next,
-        semesterName: widget.args.semesterName,
-        lessons: widget.args.lessons,
-      ),
+      lesson: next,
+      lessons: lessons,
+      semesterName: semesterName,
+      replace: true,
     );
   }
 
-  Widget _scaffold(BuildContext context, Widget? player) {
+  Widget _scaffold(
+    BuildContext context,
+    BaseState<CommentsData> state,
+    Widget? player,
+  ) {
     final cubit = context.read<LessonCubit>();
-    final lessons = widget.args.lessons;
+    final details = state.data?.details;
+    final lesson = _lessonOf(details);
+    // مسار التعلم من التفاصيل الموحّدة، وإلا من وسائط الفتح.
+    final lessons = (details?.semesterLessons.isNotEmpty ?? false)
+        ? details!.semesterLessons
+        : widget.args.lessons;
+    final semesterName = (details?.semesterName.isNotEmpty ?? false)
+        ? details!.semesterName
+        : widget.args.semesterName;
+    final loading = details == null && state.stateValue != StateValue.error;
+    final failed = details == null && state.stateValue == StateValue.error;
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Column(
         children: [
           _MediaHeader(
+            clip: _yt == null,
             onBack: () => Navigator.pop(context),
-            timeLabel: _lesson.time,
+            timeLabel: lesson.time,
             child: player != null
                 ? AspectRatio(aspectRatio: 16 / 9, child: player)
                 : _MediaPlaceholder(
-                  loading: _resolving,
-                  lesson: _lesson,
-                  hasLink: _file.isNotEmpty,
-                  videoId: _videoId,
-                  onPlay: _play,
-                  onOpen: _openExternal,
-                ),
+                    loading: loading,
+                    lesson: lesson,
+                    hasLink: _file.isNotEmpty,
+                    videoId: _videoId,
+                    onPlay: _play,
+                    onOpen: _openExternal,
+                  ),
           ),
           Expanded(
-            child: RefreshIndicator(
-              color: AppColors.main600,
-              onRefresh: () => cubit.load(silent: true),
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h), // 📏
-                children: [
-                  Text(
-                    _lesson.name,
-                    style: AppTextStyles.font16Medium.copyWith(
-                      color: AppColors.main600,
-                    ),
-                  ),
-                  SizedBox(height: 16.h), // 📏
-                  const CommentsSection(),
-                  SizedBox(height: 12.h), // 📏
-                  const CommentInput(),
-                  if (lessons.isNotEmpty) ...[
-                    SizedBox(height: 24.h), // 📏
-                    Row(
-                      spacing: 8.w, // 📏
+            child: failed
+                ? AppLoadError(message: state.errorMessage, onRetry: cubit.load)
+                : RefreshIndicator(
+                    color: AppColors.main600,
+                    onRefresh: () => cubit.load(silent: true),
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h), // 📏
                       children: [
                         Text(
-                          'مسار التعلم',
-                          style: AppTextStyles.font20Bold.copyWith(
-                            color: AppColors.grey700,
+                          lesson.name,
+                          style: AppTextStyles.font16Medium.copyWith(
+                            color: AppColors.main600,
                           ),
                         ),
-                        Icon(
-                          Icons.route_outlined,
-                          size: 22.w, // 📏
-                          color: AppColors.second500,
-                        ),
+                        SizedBox(height: 16.h), // 📏
+                        const CommentsSection(),
+                        SizedBox(height: 12.h), // 📏
+                        const CommentInput(),
+                        if (lessons.isNotEmpty) ...[
+                          SizedBox(height: 24.h), // 📏
+                          Row(
+                            spacing: 8.w, // 📏
+                            children: [
+                              Text(
+                                'مسار التعلم',
+                                style: AppTextStyles.font20Bold.copyWith(
+                                  color: AppColors.grey700,
+                                ),
+                              ),
+                              Icon(
+                                Icons.route_outlined,
+                                size: 22.w, // 📏
+                                color: AppColors.second500,
+                              ),
+                            ],
+                          ),
+                          if (semesterName.isNotEmpty) ...[
+                            SizedBox(height: 8.h), // 📏
+                            Text(
+                              semesterName,
+                              style: AppTextStyles.font12Regular.copyWith(
+                                color: AppColors.second500,
+                              ),
+                            ),
+                          ],
+                          SizedBox(height: 12.h), // 📏
+                          for (var i = 0; i < lessons.length; i++)
+                            LessonTimelineTile(
+                              lesson: lessons[i],
+                              isLast: i == lessons.length - 1,
+                              onTap: () => _openLesson(
+                                lessons[i],
+                                lessons,
+                                semesterName,
+                                lesson,
+                              ),
+                            ),
+                        ],
                       ],
                     ),
-                    if (widget.args.semesterName.isNotEmpty) ...[
-                      SizedBox(height: 8.h), // 📏
-                      Text(
-                        widget.args.semesterName,
-                        style: AppTextStyles.font12Regular.copyWith(
-                          color: AppColors.second500,
-                        ),
-                      ),
-                    ],
-                    SizedBox(height: 12.h), // 📏
-                    for (var i = 0; i < lessons.length; i++)
-                      LessonTimelineTile(
-                        lesson: lessons[i],
-                        isLast: i == lessons.length - 1,
-                        onTap: () => _openLesson(lessons[i]),
-                      ),
-                  ],
-                ],
-              ),
-            ),
+                  ),
           ),
         ],
       ),
@@ -215,11 +243,19 @@ class _LessonScreenState extends State<LessonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final yt = _yt;
-    if (yt == null) return _scaffold(context, null);
-    return YoutubePlayer(
-      controller: yt,
-      builder: (context, player, controller) => _scaffold(context, player),
+    return BlocConsumer<LessonCubit, BaseState<CommentsData>>(
+      listenWhen: (prev, curr) =>
+          curr.data?.details != null &&
+          !identical(prev.data?.details, curr.data?.details),
+      listener: (context, state) => _applyDetails(state.data!.details!),
+      builder: (context, state) {
+        final yt = _yt;
+        return _scaffold(
+          context,
+          state,
+          yt == null ? null : YoutubePlayer(controller: yt),
+        );
+      },
     );
   }
 }
@@ -231,8 +267,10 @@ class _MediaHeader extends StatelessWidget {
     required this.child,
     required this.onBack,
     required this.timeLabel,
+    this.clip = true,
   });
 
+  final bool clip;
   final Widget child;
   final VoidCallback onBack;
   final String timeLabel;
@@ -247,9 +285,10 @@ class _MediaHeader extends StatelessWidget {
         decoration: BoxDecoration(color: Colors.black, borderRadius: radius),
         child: SafeArea(
           bottom: false,
-          child: ClipRRect(
-            borderRadius: radius,
-            child: Stack(
+          child: _maybeClip(
+            clip,
+            radius,
+            Stack(
               children: [
                 child,
                 PositionedDirectional(
@@ -421,3 +460,8 @@ class _Thumbnail extends StatelessWidget {
     );
   }
 }
+
+/// قصّ الحواف الدائرية يُتجاوز أثناء تشغيل يوتيوب: قصّ الـ WebView داخل صفحة
+/// قابلة للتمرير يجمّد الصفحة أو يُظهرها سوداء (كما في تنفيذ الزميل).
+Widget _maybeClip(bool clip, BorderRadius radius, Widget child) =>
+    clip ? ClipRRect(borderRadius: radius, child: child) : child;

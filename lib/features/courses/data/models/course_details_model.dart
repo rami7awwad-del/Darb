@@ -52,6 +52,9 @@ class CourseLessonModel {
 
   bool get isFile => typeName.toLowerCase() == 'file';
 
+  /// نوع اختبار (type.id = 3 عند الزميل): لا صفحة درس له في التطبيق.
+  bool get isExam => typeId == 3 || typeName.toLowerCase() == 'exam';
+
   /// مقفل إن لم يكن مجانيًا والمستخدم غير مشترك.
   bool get isLocked => !isFree && !isSubscription;
 
@@ -114,12 +117,16 @@ class CourseSemesterModel {
   }
 }
 
-/// رد courses/details?subject_id= : بيانات الدورة + semesters[].
+/// رد courses/details?subject_id= : بيانات الدورة + semesters[] + قصة التعريف.
 class CourseDetailsModel {
   const CourseDetailsModel({
     required this.course,
     this.description = '',
     this.semesters = const [],
+    this.pointsCount = 0,
+    this.storyImage,
+    this.storyText,
+    this.isFirstStory = false,
   });
 
   final CourseModel course;
@@ -128,6 +135,22 @@ class CourseDetailsModel {
   final String description;
   final List<CourseSemesterModel> semesters;
 
+  /// points_count: نقاط الدورة.
+  final int pointsCount;
+
+  /// story_image / story_text: محتوى نافذة التعريف بالدورة.
+  final String? storyImage;
+  final String? storyText;
+
+  /// is_first_story: يطلب الخادم عرض النافذة (أول دخول للدورة).
+  final bool isFirstStory;
+
+  /// تظهر النافذة إن طلبها الخادم وكان فيها ما يُعرض.
+  bool get hasStory =>
+      isFirstStory &&
+      ((storyText?.trim().isNotEmpty ?? false) ||
+          (storyImage?.isNotEmpty ?? false));
+
   factory CourseDetailsModel.fromJson(Map<String, dynamic> json) =>
       CourseDetailsModel(
         course: CourseModel.fromJson(json),
@@ -135,5 +158,9 @@ class CourseDetailsModel {
         semesters: (json['semesters'] as List? ?? const [])
             .map((e) => CourseSemesterModel.fromJson(e as Map<String, dynamic>))
             .toList(),
+        pointsCount: (json['points_count'] as num?)?.toInt() ?? 0,
+        storyImage: json['story_image'] as String?,
+        storyText: json['story_text'] as String?,
+        isFirstStory: json['is_first_story'] == true || json['is_first_story'] == 1,
       );
 }

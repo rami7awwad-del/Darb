@@ -15,7 +15,6 @@ class DioFactory {
     ApiConstants.login,
     ApiConstants.resend,
     ApiConstants.active,
-    ApiConstants.paymentMethodsAll,
     ApiConstants.settingsAll,
     ApiConstants.infosAll,
     ApiConstants.contactUsAdd,

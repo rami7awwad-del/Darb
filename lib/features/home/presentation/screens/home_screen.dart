@@ -2,6 +2,7 @@ import 'package:darb/core/widgets/app_outline_button.dart';
 import 'package:darb/core/models/base_state.dart';
 import 'package:darb/core/models/enums/state_value.dart';
 import 'package:darb/features/home/presentation/cubit/home_cubit.dart';
+import 'package:darb/features/subscription/presentation/subscription_access.dart';
 import 'package:flutter/material.dart';
 import 'package:darb/core/routing/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,11 +126,7 @@ class _HomeContent extends StatelessWidget {
           SubjectsSection(
             subjects: home.subjects,
             onShowAll: () => Navigator.pushNamed(context, AppRoutes.subjects),
-            onSubjectTap: (subject) => Navigator.pushNamed(
-              context,
-              AppRoutes.subjectDetails,
-              arguments: subject,
-            ),
+            onSubjectTap: (subject) => openSubjectWithAccess(context, subject),
           ),
           gap,
           NewsSection(

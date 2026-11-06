@@ -3,28 +3,24 @@ import 'package:darb/core/errors/errors_code.dart';
 import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
-import 'package:darb/features/courses/data/models/course_details_model.dart';
-import 'package:darb/features/lessons/data/models/comment_model.dart';
+import 'package:darb/features/lessons/data/models/lesson_details_model.dart';
 
 class LessonsRemoteDataSource {
   LessonsRemoteDataSource(this._api);
 
   final ApiService _api;
 
-  /// GET comments/get-by-lession?lession_id=&page= → data: قائمة تعليقات.
-  Future<List<CommentModel>> getComments({
-    required int lessonId,
-    required int page,
-  }) async {
+  /// GET lessions/details?id= → الدرس + فصله + تعليقاته في طلب واحد.
+  /// يقبل data ككائن أو داخل قائمة.
+  Future<LessonDetailsModel> getDetails(int lessonId) async {
     final response = await _api.getRequest(
-      ApiConstants.commentsGetByLession,
-      queryParameters: {'lession_id': lessonId, 'page': page},
+      ApiConstants.lessonsDetails,
+      queryParameters: {'id': lessonId},
     );
     try {
-      final body = response.data as Map<String, dynamic>;
-      return (body['data'] as List)
-          .map((e) => CommentModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+      var data = (response.data as Map<String, dynamic>)['data'];
+      if (data is List && data.isNotEmpty) data = data.first;
+      return LessonDetailsModel.fromJson(data as Map<String, dynamic>);
     } catch (_) {
       throw RemoteExceptions(
         ErrorCode.APP_ERROR,
@@ -51,21 +47,5 @@ class LessonsRemoteDataSource {
     await _api.postFormData(ApiConstants.lessonsAttend, {
       'lession_id': lessonId,
     });
-  }
-
-  /// GET lessions/details?id= → رابط المحتوى (احتياط إن جاء file فارغًا
-  /// في courses/details). يقبل data ككائن أو داخل قائمة.
-  Future<String> getLessonFile(int lessonId) async {
-    final response = await _api.getRequest(
-      ApiConstants.lessonsDetails,
-      queryParameters: {'id': lessonId},
-    );
-    try {
-      var data = (response.data as Map<String, dynamic>)['data'];
-      if (data is List && data.isNotEmpty) data = data.first;
-      return data is Map<String, dynamic> ? readLessonFile(data) : '';
-    } catch (_) {
-      return '';
-    }
   }
 }

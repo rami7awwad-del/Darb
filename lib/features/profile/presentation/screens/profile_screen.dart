@@ -25,9 +25,6 @@ import 'package:darb/features/support/presentation/widgets/contact_sheet.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  void _soon(BuildContext context) =>
-      showAppSnackBar(context, 'قريبًا', isError: false);
-
   void _open(BuildContext context, String route, {Object? arguments}) =>
       Navigator.pushNamed(context, route, arguments: arguments);
 
@@ -82,7 +79,7 @@ class ProfileScreen extends StatelessWidget {
                     ProfileMenuTile(
                       icon: ProfileIcons.subscription,
                       label: 'الاشتراك',
-                      onTap: () => _soon(context), // TODO: لا يوجد تصميم بعد
+                      onTap: () => _open(context, AppRoutes.mySubscriptions),
                     ),
                     ProfileMenuTile(
                       icon: ProfileIcons.achievements,
@@ -120,7 +117,7 @@ class ProfileScreen extends StatelessWidget {
                     ProfileMenuTile(
                       icon: ProfileIcons.exams,
                       label: 'إختباراتي',
-                      onTap: () => _soon(context), // TODO: لا يوجد تصميم بعد
+                      onTap: () => _open(context, AppRoutes.tests),
                     ),
                     SizedBox(height: 8.h), // 📏
                     const Divider(height: 1, color: AppColors.grey50),

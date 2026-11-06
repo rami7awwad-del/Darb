@@ -5,16 +5,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:darb/core/models/base_state.dart';
 import 'package:darb/core/models/enums/state_value.dart';
-import 'package:darb/core/routing/app_routes.dart';
 import 'package:darb/core/style/app_colors.dart';
 import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_load_error.dart';
 import 'package:darb/core/widgets/app_network_image.dart';
 import 'package:darb/features/courses/data/models/course_details_model.dart';
 import 'package:darb/features/courses/presentation/cubit/course_details_cubit.dart';
+import 'package:darb/features/courses/presentation/lesson_access.dart';
+import 'package:darb/features/courses/presentation/widgets/course_story_dialog.dart';
 import 'package:darb/features/courses/presentation/widgets/lesson_timeline_tile.dart';
 import 'package:darb/features/home/data/models/course_model.dart';
-import 'package:darb/features/lessons/presentation/screens/lesson_screen.dart';
 
 /// صفحة تفاصيل الدورة (Detail Page): صورة الدورة في شريط تركوازي، ثم الاسم والمدرّس
 /// والوصف، ثم "مسار التعلم": كل فصل ودروسه. معلومات الرأس تأتي من [course] فورًا،
@@ -24,33 +24,47 @@ class CourseDetailsScreen extends StatelessWidget {
 
   final CourseModel course;
 
+  /// يمر بقيود الوصول: مقفل → اشتراك، منتظر → أكمل السابق، اختبار → تنبيه.
+  /// بعد العودة (أو بعد اشتراك) تُحدَّث الدروس ليظهر المشاهَد/المفتوح.
   Future<void> _openLesson(
     BuildContext context,
     CourseLessonModel lesson,
     CourseSemesterModel semester,
   ) async {
-    if (lesson.isLocked) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(content: Text('هذا الدرس مقفل، اشترك في الدورة لفتحه')),
-        );
-      return;
-    }
     final cubit = context.read<CourseDetailsCubit>();
-    await Navigator.pushNamed(context, AppRoutes.lesson, arguments: LessonArgs(
-        lesson: lesson,
-        semesterName: semester.name,
-        lessons: semester.lessons,
-      ),
+    final changed = await openLessonWithAccess(
+      context,
+      lesson: lesson,
+      lessons: semester.lessons,
+      semesterName: semester.name,
     );
-    // بعد العودة: تحديث الدروس ليظهر الدرس كمشاهَد.
-    if (context.mounted) cubit.load(silent: true);
+    if (changed) cubit.load(silent: true);
+  }
+
+  /// نافذة التعريف (story): تظهر مرة عند أول تحميل إن طلبها الخادم.
+  /// "ابدأ الآن" يفتح أول درس متاح في أول فصل فيه دروس.
+  void _showStory(BuildContext context, CourseDetailsModel details) {
+    showCourseStory(
+      context,
+      imageUrl: details.storyImage,
+      text: details.storyText,
+      onStart: () {
+        for (final semester in details.semesters) {
+          if (semester.lessons.isEmpty) continue;
+          _openLesson(context, semester.lessons.first, semester);
+          return;
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<CourseDetailsCubit, BaseState<CourseDetailsModel>>(
+      listenWhen: (prev, curr) =>
+          prev.data == null && (curr.data?.hasStory ?? false),
+      listener: (context, state) => _showStory(context, state.data!),
+      child: Scaffold(
       body: Column(
         children: [
           _Header(image: course.image, onBack: () => Navigator.pop(context)),
@@ -93,6 +107,7 @@ class CourseDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:darb/core/errors/remote_exceptions.dart';
 import 'package:darb/core/services/api_constants.dart';
 import 'package:darb/core/services/api_service.dart';
 import 'package:darb/features/home/data/models/course_model.dart';
+import 'package:darb/features/subscription/data/models/subscribed_courses.dart';
 import 'package:darb/features/library/data/models/library_package.dart';
 import 'package:darb/features/library/data/models/library_semester.dart';
 
@@ -12,22 +13,15 @@ class LibraryRemoteDataSource {
 
   final ApiService _api;
 
-  /// GET courses/paginate?page=1&perPage=10 → data: قائمة كورسات (CourseModel).
-  /// الرد لا يحمل meta، فالصفحة الأخيرة تُعرف من عدد العناصر.
+  /// GET subscriptions/my → دورات المستخدم المشترك بها (بدل courses/paginate).
+  /// الرد قائمة كاملة بلا ترقيم، فأي صفحة بعد الأولى فارغة.
   Future<List<CourseModel>> getCourses({
     required int page,
     required int perPage,
   }) async {
-    final response = await _api.getRequest(
-      ApiConstants.coursesPaginate,
-      queryParameters: {'page': page, 'perPage': perPage},
-    );
-    return _parse(
-      response,
-      () => (_data(response) as List)
-          .map((e) => CourseModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+    if (page > 1) return const [];
+    final response = await _api.getRequest(ApiConstants.subscriptionsMy);
+    return _parse(response, () => parseSubscribedCourses(_data(response)));
   }
 
   /// GET courses/details?subject_id= → data.semesters[].

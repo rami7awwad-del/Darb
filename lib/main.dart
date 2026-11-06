@@ -35,6 +35,11 @@ import 'package:darb/features/notifications/data/repositories/notifications_repo
 
 
 
+import 'package:darb/features/quiz/data/datasources/quiz_remote_data_source.dart';
+import 'package:darb/features/quiz/data/repositories/quiz_repository.dart';
+import 'package:darb/features/subscription/data/datasources/subscription_remote_data_source.dart';
+import 'package:darb/features/subscription/data/repositories/subscription_repository.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -76,6 +81,9 @@ final notificationsRepository = NotificationsRepository(NotificationsRemoteDataS
 final coursesRepository = CoursesRepository(CoursesRemoteDataSource(apiService));
 final lessonsRepository = LessonsRepository(LessonsRemoteDataSource(apiService));
 
+final quizRepository = QuizRepository(QuizRemoteDataSource(apiService));
+final subscriptionRepository = SubscriptionRepository(SubscriptionRemoteDataSource(apiService));
+
   runApp(
     MultiRepositoryProvider(
       providers: [
@@ -88,6 +96,8 @@ final lessonsRepository = LessonsRepository(LessonsRemoteDataSource(apiService))
         RepositoryProvider<NotificationsRepository>.value(value: notificationsRepository),
         RepositoryProvider<CoursesRepository>.value(value: coursesRepository),
         RepositoryProvider<LessonsRepository>.value(value: lessonsRepository),
+        RepositoryProvider<QuizRepository>.value(value: quizRepository),
+        RepositoryProvider<SubscriptionRepository>.value(value: subscriptionRepository),
         RepositoryProvider<StorageService>.value(value: storageService),
         RepositoryProvider<ApiService>.value(value: apiService),
         RepositoryProvider<AuthRemoteDataSource>.value(value: authRemoteDataSource,),

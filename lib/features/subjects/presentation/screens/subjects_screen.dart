@@ -1,3 +1,4 @@
+import 'package:darb/features/subscription/presentation/subscription_access.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,11 +76,7 @@ class SubjectsScreen extends StatelessWidget {
                           ),
                           itemBuilder: (context, i) => SubjectTile(
                             subject: subjects[i],
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              AppRoutes.subjectDetails,
-                              arguments: subjects[i],
-                            ),
+                            onTap: () => openSubjectWithAccess(context, subjects[i]),
                           ),
                         ),
                 );

@@ -62,6 +62,7 @@ class _SubjectDetailsScreenState extends State<SubjectDetailsScreen> {
       arguments: QuizArgs(
         title: '$prefix ${widget.subject.name}',
         questions: exam.questions,
+        examId: exam.id,
       ),
     );
   }
