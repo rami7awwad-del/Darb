@@ -1,0 +1,122 @@
+import 'package:darb/core/routing/app_routes.dart';
+import 'package:darb/core/widgets/app_primary_button.dart';
+import 'package:darb/core/widgets/app_snack_bar.dart';
+import 'package:darb/core/models/base_state.dart';
+import 'package:darb/core/models/enums/state_value.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darb/core/style/app_colors.dart';
+import 'package:darb/core/style/app_text_styles.dart';
+import 'package:darb/features/auth/presentation/cubit/otp/otp_cubit.dart';
+import 'package:darb/features/auth/presentation/widgets/auth_header.dart';
+import 'package:darb/features/auth/presentation/widgets/otp_input_row.dart';
+import 'package:darb/features/auth/presentation/widgets/resend_timer.dart';
+
+/// Screen that shows the otp.
+class OtpScreen extends StatefulWidget {
+  const OtpScreen({super.key, required this.phone});
+
+  final String phone;
+
+  @override
+  State<OtpScreen> createState() => _OtpScreenState();
+}
+
+/// State for the otp screen widget.
+class _OtpScreenState extends State<OtpScreen> {
+  static const int _codeLength = 4;
+
+  final _otpKey = GlobalKey<OtpInputRowState>();
+  String _code = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocConsumer<OtpCubit, BaseState<OtpData>>(
+        listenWhen: (previous, current) =>
+            previous.data?.status != current.data?.status,
+        listener: (context, state) {
+          final data = state.data!;
+          if (state.stateValue == StateValue.error &&
+              data.status == OtpStatus.failure) {
+            showAppSnackBar(context, state.errorMessage ?? '');
+          } else if (state.stateValue == StateValue.loaded &&
+              data.status == OtpStatus.resent) {
+            _otpKey.currentState?.clear();
+            showAppSnackBar(context, 'تم إرسال الرمز مجددًا', isError: false);
+          } else if (state.stateValue == StateValue.loaded &&
+              data.status == OtpStatus.verified) {
+            if (data.isNewUser) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.register,
+                (_) => false,
+                arguments: widget.phone,
+              );
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                // Clear the stack so back cannot return to the login screens.
+                AppRoutes.mainLayout,
+                (_) => false,
+              );
+            }
+          }
+        },
+        builder: (context, state) {
+          final data = state.data!;
+          final isVerifying =
+              state.stateValue == StateValue.loading &&
+              data.status == OtpStatus.verifying;
+
+          return SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              children: [
+                const AuthHeader(showBack: true),
+                SizedBox(height: 16.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.5.w),
+                  child: AuthCard(
+                    children: [
+                      const AuthTitle(first: 'أدخل', second: 'رمز التحقق'),
+                      Text(
+                        'أدخل الرمز الذي أُرسل إلى الرقم : ${widget.phone}',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.font14Regular.copyWith(
+                          color: AppColors.grey400,
+                        ),
+                      ),
+                      OtpInputRow(
+                        key: _otpKey,
+                        length: _codeLength,
+                        enabled: !isVerifying,
+                        onChanged: (code) => setState(() => _code = code),
+                      ),
+                      ResendTimer(
+                        secondsLeft: data.secondsLeft,
+                        isResending:
+                            state.stateValue == StateValue.loading &&
+                            data.status == OtpStatus.resending,
+                        onResend: () => context.read<OtpCubit>().resend(),
+                      ),
+                      AppPrimaryButton(
+                        text: 'التأكيد',
+                        isLoading: isVerifying,
+                        onPressed: _code.length == _codeLength
+                            ? () => context.read<OtpCubit>().verify(_code)
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24.h),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

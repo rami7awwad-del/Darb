@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Color palette of the app.
 abstract class AppColors {
-  // Main Palette
   static const Color main50 = Color(0xFFEBFAFA);
   static const Color main100 = Color(0xFFC2F0F0);
   static const Color main200 = Color(0xFFA4E8E9);
@@ -13,7 +13,6 @@ abstract class AppColors {
   static const Color main800 = Color(0xFF1F7172);
   static const Color main900 = Color(0xFF185757);
 
-  // Second Palette
   static const Color second50 = Color(0xFFEFF4FD);
   static const Color second100 = Color(0xFFCCDCFA);
   static const Color second200 = Color(0xFFB4CBF8);
@@ -25,7 +24,6 @@ abstract class AppColors {
   static const Color second800 = Color(0xFF324E83);
   static const Color second900 = Color(0xFF263B64);
 
-  // Grey Palette
   static const Color grey50 = Color(0xFFEBEBEB);
   static const Color grey100 = Color(0xFFC0C0C0);
   static const Color grey200 = Color(0xFFA1A1A1);
@@ -37,20 +35,18 @@ abstract class AppColors {
   static const Color grey800 = Color(0xFF1C1C1C);
   static const Color grey900 = Color(0xFF151515);
 
-  // Status Colors
   static const Color danger = Color(0xFFD85A5A);
   static const Color dangerLight = Color(0xFFFCE1E2);
   static const Color success = Color(0xFF52C480);
   static const Color successLight = Color(0xFFD6FCE2);
 
-  // Shortcuts
   static const Color primary = main500;
   static const Color secondary = second500;
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
 }
 
-/// ==================== Shadows Class ====================
+/// Shared box shadows.
 abstract class AppShadows {
   static final List<BoxShadow> midGrey = [
     const BoxShadow(
@@ -69,4 +65,14 @@ abstract class AppShadows {
       spreadRadius: 0,
     ),
   ];
+
+static final List<BoxShadow> midPurple = [
+  const BoxShadow(
+    color: Color(0xFFA55DBB),
+    offset: Offset(1, 1),
+    blurRadius: 7,
+    spreadRadius: 0,
+  ),
+];
+
 }

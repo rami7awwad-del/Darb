@@ -1,6 +1,7 @@
 import 'package:darb/core/errors/errors_code.dart';
 import 'package:dio/dio.dart';
 
+/// Exception thrown when an API call fails.
 class RemoteExceptions implements Exception {
   final ErrorCode errorCode;
   final String errorMsg;

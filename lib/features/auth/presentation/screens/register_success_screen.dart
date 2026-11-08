@@ -1,0 +1,75 @@
+import 'package:darb/core/routing/app_routes.dart';
+import 'package:flutter/material.dart';
+import 'package:darb/core/widgets/app_responsive.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:darb/core/style/phosphor_icons.dart';
+import 'package:darb/core/style/app_colors.dart';
+import 'package:darb/core/style/app_text_styles.dart';
+import 'package:darb/core/widgets/app_primary_button.dart';
+
+/// Screen that shows the register success.
+class RegisterSuccessScreen extends StatelessWidget {
+  const RegisterSuccessScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      // There is no way back from the success screen.
+      canPop: false,
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Column(
+              children: [
+                Expanded(
+                  child: AppScrollableCenter(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 32.h,
+                      children: [
+                        Icon(
+                          PhosphorIconsFill.sealCheck,
+                          size: 100.w,
+                          color: AppColors.second400,
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 8.h,
+                          children: [
+                            Text(
+                              'مبروك!',
+                              style: AppTextStyles.font31Medium.copyWith(
+                                fontSize: 32.sp,
+                                color: AppColors.second500,
+                              ),
+                            ),
+                            Text(
+                              'تم تسجيل حسابك بنجاح. نحن سعداء بانضمامك إلينا!',
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.font14Regular
+                                  .copyWith(color: AppColors.grey300),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                AppPrimaryButton(
+                  text: 'الصفحة الرئيسية',
+                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRoutes.mainLayout,
+                    (_) => false,
+                  ),
+                ),
+                SizedBox(height: 24.h),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

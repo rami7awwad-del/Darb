@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/style/app_colors.dart';
+import 'package:darb/core/services/storage_service.dart';
+import 'package:darb/core/style/app_colors.dart';
+import 'package:darb/core/routing/app_routes.dart';
 
+/// Screen that shows the splash.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -10,6 +13,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+/// State for the splash screen widget.
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
@@ -17,24 +21,29 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigateToNext();
   }
 
+  /// Navigates to to next.
   void _navigateToNext() async {
-    // الانتظار لمدة 3 ثوانٍ قبل التوجيه للشاشة القادمة
+    // Short pause so the logo stays visible.
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
 
-    // TODO: التوجيه للواجهة القادمة (مثل OnboardingView أو LoginView)
-    // Navigator.pushReplacementNamed(context, Routes.onboardingView);
+    // A saved token means the user can go straight to the home screen.
+    final hasToken = context.read<StorageService>().hasToken;
+    Navigator.pushReplacementNamed(
+      context,
+      hasToken ? AppRoutes.mainLayout : AppRoutes.login,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white, // خلفية بيضاء نقية
+      backgroundColor: AppColors.white,
       body: Center(
-        child: SvgPicture.asset(
-          'assets/images/logo.svg',
-          width: 224.48.w,          // العرض الدقيق من Figma
-          height: 209.h,             // الارتفاع الدقيق من Figma
+        child: Image.asset(
+          'assets/images/logo.png',
+          width: 224.48.w,
+          height: 209.h,
           fit: BoxFit.contain,
         ),
       ),
