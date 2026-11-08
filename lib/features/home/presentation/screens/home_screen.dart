@@ -68,6 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
               unreadCount: home.notificationUnread,
               onNotifications: () =>
                   Navigator.pushNamed(context, AppRoutes.notifications),
+              // Medal icon opens the achievements page.
+              onAchievements: () =>
+                  Navigator.pushNamed(context, AppRoutes.achievements),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 4.h),
@@ -118,6 +121,9 @@ class _HomeContent extends StatelessWidget {
               child: CurriculumProgressCard(
                 percent: home.completionRate,
                 coursesCount: home.subjectCount,
+                // "التفاصيل" inside the card opens the achievements page.
+                onDetails: () =>
+                    Navigator.pushNamed(context, AppRoutes.achievements),
               ),
             ),
           ),
@@ -140,7 +146,16 @@ class _HomeContent extends StatelessWidget {
             news: home.news,
           ),
           gap,
-          CoursesSection(courses: home.courses),
+          CoursesSection(
+            courses: home.courses,
+            // Subscribed/free -> course details, otherwise -> subscription page.
+            // Refresh silently after subscribing so the flags are up to date.
+            onCourseTap: (course) => openCourseOrSubscription(
+              context,
+              course,
+              onSubscribed: onRefresh,
+            ),
+          ),
         ],
       ),
     );

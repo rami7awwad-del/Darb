@@ -106,24 +106,16 @@ void main() async {
         RepositoryProvider<LibraryRepository>.value(value: libraryRepository),
         RepositoryProvider<SupportRepository>.value(value: supportRepository),
         RepositoryProvider<SubjectsRepository>.value(value: subjectsRepository),
-        RepositoryProvider<NotificationsRepository>.value(
-          value: notificationsRepository,
-        ),
+        RepositoryProvider<NotificationsRepository>.value( value: notificationsRepository,),
         RepositoryProvider<CoursesRepository>.value(value: coursesRepository),
         RepositoryProvider<LessonsRepository>.value(value: lessonsRepository),
         RepositoryProvider<QuizRepository>.value(value: quizRepository),
-        RepositoryProvider<SubscriptionRepository>.value(
-          value: subscriptionRepository,
-        ),
+        RepositoryProvider<SubscriptionRepository>.value( value: subscriptionRepository,),
         RepositoryProvider<StorageService>.value(value: storageService),
         RepositoryProvider<ApiService>.value(value: apiService),
-        RepositoryProvider<AuthRemoteDataSource>.value(
-          value: authRemoteDataSource,
-        ),
+        RepositoryProvider<AuthRemoteDataSource>.value( value: authRemoteDataSource,),
         RepositoryProvider<AuthRepository>.value(value: authRepository),
-        RepositoryProvider<RegistrationRepository>.value(
-          value: registrationRepository,
-        ),
+        RepositoryProvider<RegistrationRepository>.value( value: registrationRepository,),
       ],
       child: const MyApp(),
     ),

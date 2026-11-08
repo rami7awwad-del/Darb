@@ -6,6 +6,7 @@ import 'package:darb/core/style/app_text_styles.dart';
 import 'package:darb/core/widgets/app_load_error.dart';
 import 'package:darb/core/widgets/app_snack_bar.dart';
 import 'package:darb/features/gallery/presentation/widgets/gallery_header.dart';
+import 'package:darb/features/home/presentation/widgets/home_search_field.dart';
 import 'package:darb/features/quiz/data/models/quiz_models.dart';
 import 'package:darb/features/quiz/data/repositories/quiz_repository.dart';
 import 'package:darb/features/quiz/presentation/cubit/tests_cubit.dart';
@@ -25,6 +26,27 @@ class TestsScreen extends StatefulWidget {
 class _TestsScreenState extends State<TestsScreen> {
   int _tab = 0;
   bool _opening = false;
+  final _searchController = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  /// Filters the list by title or professor name.
+  List<QuizListItem> _filter(List<QuizListItem> items) {
+    final q = _query.trim().toLowerCase();
+    if (q.isEmpty) return items;
+    return items
+        .where(
+          (e) =>
+              e.title.toLowerCase().contains(q) ||
+              e.professor.toLowerCase().contains(q),
+        )
+        .toList();
+  }
 
   Future<void> _open(QuizListItem item) async {
     if (_opening) return;
@@ -70,23 +92,18 @@ class _TestsScreenState extends State<TestsScreen> {
             title: 'إختباراتي',
             icon: null,
             onBack: () => Navigator.pop(context),
+            // Search bar sits inside the teal header, as in the design.
+            bottom: HomeSearchField(
+              controller: _searchController,
+              onChanged: (v) => setState(() => _query = v),
+            ),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
-            child: Row(
-              spacing: 8.w,
-              children: [
-                _TabChip(
-                  label: 'الاختبارات',
-                  selected: _tab == 0,
-                  onTap: () => setState(() => _tab = 0),
-                ),
-                _TabChip(
-                  label: 'النشاطات',
-                  selected: _tab == 1,
-                  onTap: () => setState(() => _tab = 1),
-                ),
-              ],
+            child: _TabsBar(
+              labels: const ['إختبارات', 'نشاطات يومية'],
+              selected: _tab,
+              onChanged: (i) => setState(() => _tab = i),
             ),
           ),
           Expanded(
@@ -105,7 +122,8 @@ class _TestsScreenState extends State<TestsScreen> {
                     child: CircularProgressIndicator(color: AppColors.main600),
                   );
                 }
-                final items = _tab == 0 ? data.exams : data.activities;
+                final all = _tab == 0 ? data.exams : data.activities;
+                final items = _filter(all);
                 return RefreshIndicator(
                   color: AppColors.main600,
                   onRefresh: () => cubit.load(silent: true),
@@ -116,9 +134,11 @@ class _TestsScreenState extends State<TestsScreen> {
                             SizedBox(height: 120.h),
                             Center(
                               child: Text(
-                                _tab == 0
-                                    ? 'لا توجد اختبارات بعد'
-                                    : 'لا توجد نشاطات بعد',
+                                all.isNotEmpty
+                                    ? 'لا توجد نتائج'
+                                    : _tab == 0
+                                        ? 'لا توجد اختبارات بعد'
+                                        : 'لا توجد نشاطات بعد',
                                 style: AppTextStyles.font14Regular.copyWith(
                                   color: AppColors.grey300,
                                 ),
@@ -130,7 +150,7 @@ class _TestsScreenState extends State<TestsScreen> {
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
                           itemCount: items.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                          separatorBuilder: (_, _) => SizedBox(height: 12.h),
                           itemBuilder: (_, i) => _TestCard(
                             item: items[i],
                             onTap: () => _open(items[i]),
@@ -146,50 +166,74 @@ class _TestsScreenState extends State<TestsScreen> {
   }
 }
 
-/// Widget that shows the tab chip.
-class _TabChip extends StatelessWidget {
-  const _TabChip({
-    required this.label,
+/// Full-width segmented tabs (grey track, teal selected segment).
+class _TabsBar extends StatelessWidget {
+  const _TabsBar({
+    required this.labels,
     required this.selected,
-    required this.onTap,
+    required this.onChanged,
   });
 
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
+  static const Color _track = Color(0xFFAFB6BC);
+
+  final List<String> labels;
+  final int selected;
+  final ValueChanged<int> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: selected ? AppColors.main600 : AppColors.main50,
-      borderRadius: BorderRadius.circular(20.r),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20.r),
-        onTap: onTap,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-          child: Text(
-            label,
-            style: AppTextStyles.font14Medium.copyWith(
-              color: selected ? AppColors.white : AppColors.main700,
-            ),
-          ),
+    final radius = BorderRadius.circular(12.r);
+    return ClipRRect(
+      borderRadius: radius,
+      child: Container(
+        color: _track,
+        child: Row(
+          children: [
+            for (var i = 0; i < labels.length; i++)
+              Expanded(
+                child: Material(
+                  color: i == selected ? const Color(0xFF34BBBD) : Colors.transparent,
+                  borderRadius: radius,
+                  child: InkWell(
+                    borderRadius: radius,
+                    onTap: () => onChanged(i),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 11.h),
+                      child: Center(
+                        child: Text(
+                          labels[i],
+                          style: AppTextStyles.font14Medium.copyWith(
+                            color: i == selected
+                                ? AppColors.white
+                                : AppColors.grey400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
   }
 }
 
-/// Card widget for the test.
+/// Card widget for the test: illustration on the start side, then title,
+/// professor + points, and the questions count.
 class _TestCard extends StatelessWidget {
   const _TestCard({required this.item, required this.onTap});
+
+  // Fixed points value shown on every card (not coming from the API).
+  static const int _points = 22;
 
   final QuizListItem item;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final radius = BorderRadius.circular(12.r);
+    final radius = BorderRadius.circular(10.r);
     return Material(
       color: AppColors.white,
       borderRadius: radius,
@@ -197,28 +241,20 @@ class _TestCard extends StatelessWidget {
         borderRadius: radius,
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.all(12.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
           decoration: BoxDecoration(
             borderRadius: radius,
-            border: Border.all(color: AppColors.grey50),
+            border: Border.all(color: const Color(0xFF7CA4F2)),
           ),
           child: Row(
             spacing: 12.w,
             children: [
-              Container(
-                width: 44.w,
-                height: 44.w,
-                decoration: const BoxDecoration(
-                  color: AppColors.main50,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  item.isActivity
-                      ? Icons.bolt_rounded
-                      : Icons.quiz_outlined,
-                  color: AppColors.main600,
-                  size: 22.w,
-                ),
+              // Replace with Image.asset(...) once the Figma illustrations
+              // are added to assets/images.
+              Icon(
+                item.isActivity ? Icons.psychology_rounded : Icons.quiz_rounded,
+                size: 52.w,
+                color: AppColors.second400,
               ),
               Expanded(
                 child: Column(
@@ -229,27 +265,52 @@ class _TestCard extends StatelessWidget {
                       item.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.font14Medium.copyWith(
-                        color: AppColors.grey700,
+                      style: AppTextStyles.font16Medium.copyWith(
+                        color: AppColors.main600,
                       ),
                     ),
-                    Text(
-                      [
-                        if (item.professor.isNotEmpty) item.professor,
-                        if (item.questionsCount > 0)
-                          '${item.questionsCount} سؤال',
-                      ].join(' · '),
-                      style: AppTextStyles.font12Regular.copyWith(
-                        color: AppColors.grey300,
-                      ),
+                    Row(
+                      spacing: 24.w,
+                      children: [
+                        if (item.professor.isNotEmpty)
+                          Flexible(
+                            child: Text(
+                              item.professor,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.font12Regular.copyWith(
+                                color: AppColors.grey500,
+                              ),
+                            ),
+                          ),
+                        Row(
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: 4.w,
+                            children: [
+                              Icon(
+                                Icons.toll_outlined,
+                                size: 14.w,
+                                color: AppColors.grey200,
+                              ),
+                              Text(
+                                '$_points',
+                                style: AppTextStyles.font14Regular.copyWith(
+                                  color: AppColors.second500,
+                                ),
+                              ),
+                            ],
+                          ),
+                      ],
                     ),
+                    if (item.questionsCount > 0)
+                      Text(
+                        '${item.questionsCount} سؤال',
+                        style: AppTextStyles.font14Medium.copyWith(
+                          color: AppColors.main600,
+                        ),
+                      ),
                   ],
                 ),
-              ),
-              Icon(
-                Icons.chevron_left_rounded,
-                color: AppColors.grey200,
-                size: 22.w,
               ),
             ],
           ),

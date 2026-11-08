@@ -41,3 +41,28 @@ Future<void> openCourseWithAccess(
     arguments: course,
   );
 }
+
+/// True when the user can open the course without paying.
+bool hasCourseAccess(CourseModel course) =>
+    course.isFree || course.isSubscription;
+
+/// Home course tap: opens the course when the user has access, otherwise
+/// goes straight to the subscription page.
+///
+/// If the user subscribes there (the page pops with `true`), [onSubscribed]
+/// is called and the course is opened.
+Future<void> openCourseOrSubscription(
+  BuildContext context,
+  CourseModel course, {
+  VoidCallback? onSubscribed,
+}) async {
+  final navigator = Navigator.of(context);
+
+  if (!hasCourseAccess(course)) {
+    final subscribed = await navigator.pushNamed<bool>(AppRoutes.subscription);
+    if (subscribed != true) return;
+    onSubscribed?.call();
+  }
+
+  await navigator.pushNamed(AppRoutes.courseDetails, arguments: course);
+}
