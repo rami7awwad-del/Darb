@@ -61,27 +61,41 @@ void main() async {
   final apiService = ApiService(dio);
 
   final authRemoteDataSource = AuthRemoteDataSource(apiService);
-  final authRepository = AuthRepository(
-    authRemoteDataSource,
-    storageService,
+  final authRepository = AuthRepository(authRemoteDataSource, storageService);
 
-  );
   final registrationRepository = RegistrationRepository(
     RegistrationRemoteDataSource(apiService),
   );
 
-final homeRepository = HomeRepository(HomeRemoteDataSource(apiService));
-final profileRepository = ProfileRepository(ProfileRemoteDataSource(apiService));
-final galleryRepository = GalleryRepository(GalleryRemoteDataSource(apiService));
-final libraryRepository = LibraryRepository(LibraryRemoteDataSource(apiService));
-final supportRepository = SupportRepository(SupportRemoteDataSource(apiService));
-final subjectsRepository = SubjectsRepository(SubjectsRemoteDataSource(apiService));
-final notificationsRepository = NotificationsRepository(NotificationsRemoteDataSource(apiService));
-final coursesRepository = CoursesRepository(CoursesRemoteDataSource(apiService));
-final lessonsRepository = LessonsRepository(LessonsRemoteDataSource(apiService));
-
-final quizRepository = QuizRepository(QuizRemoteDataSource(apiService));
-final subscriptionRepository = SubscriptionRepository(SubscriptionRemoteDataSource(apiService));
+  final homeRepository = HomeRepository(HomeRemoteDataSource(apiService));
+  final profileRepository = ProfileRepository(
+    ProfileRemoteDataSource(apiService),
+  );
+  final galleryRepository = GalleryRepository(
+    GalleryRemoteDataSource(apiService),
+  );
+  final libraryRepository = LibraryRepository(
+    LibraryRemoteDataSource(apiService),
+  );
+  final supportRepository = SupportRepository(
+    SupportRemoteDataSource(apiService),
+  );
+  final subjectsRepository = SubjectsRepository(
+    SubjectsRemoteDataSource(apiService),
+  );
+  final notificationsRepository = NotificationsRepository(
+    NotificationsRemoteDataSource(apiService),
+  );
+  final coursesRepository = CoursesRepository(
+    CoursesRemoteDataSource(apiService),
+  );
+  final lessonsRepository = LessonsRepository(
+    LessonsRemoteDataSource(apiService),
+  );
+  final quizRepository = QuizRepository(QuizRemoteDataSource(apiService));
+  final subscriptionRepository = SubscriptionRepository(
+    SubscriptionRemoteDataSource(apiService),
+  );
 
   runApp(
     MultiRepositoryProvider(
@@ -92,16 +106,24 @@ final subscriptionRepository = SubscriptionRepository(SubscriptionRemoteDataSour
         RepositoryProvider<LibraryRepository>.value(value: libraryRepository),
         RepositoryProvider<SupportRepository>.value(value: supportRepository),
         RepositoryProvider<SubjectsRepository>.value(value: subjectsRepository),
-        RepositoryProvider<NotificationsRepository>.value(value: notificationsRepository),
+        RepositoryProvider<NotificationsRepository>.value(
+          value: notificationsRepository,
+        ),
         RepositoryProvider<CoursesRepository>.value(value: coursesRepository),
         RepositoryProvider<LessonsRepository>.value(value: lessonsRepository),
         RepositoryProvider<QuizRepository>.value(value: quizRepository),
-        RepositoryProvider<SubscriptionRepository>.value(value: subscriptionRepository),
+        RepositoryProvider<SubscriptionRepository>.value(
+          value: subscriptionRepository,
+        ),
         RepositoryProvider<StorageService>.value(value: storageService),
         RepositoryProvider<ApiService>.value(value: apiService),
-        RepositoryProvider<AuthRemoteDataSource>.value(value: authRemoteDataSource,),
+        RepositoryProvider<AuthRemoteDataSource>.value(
+          value: authRemoteDataSource,
+        ),
         RepositoryProvider<AuthRepository>.value(value: authRepository),
-        RepositoryProvider<RegistrationRepository>.value(value: registrationRepository,),
+        RepositoryProvider<RegistrationRepository>.value(
+          value: registrationRepository,
+        ),
       ],
       child: const MyApp(),
     ),
